@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>software.cxode</groupId>
+		<artifactId>framework.core.vaadin8</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>framework.core.vaadin8.widgetset</artifactId>
+
+	<name>framework.widgetset</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>vaadin-addons</id>
+			<url>http://maven.vaadin.com/vaadin-addons</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-widgetset</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<!-- Numberfield addon -->
+		<dependency>
+			<groupId>org.vaadin.ui</groupId>
+			<artifactId>numberfield</artifactId>
+		</dependency>
+		<!-- End of Numberfield addon -->
+
+		<!-- Multiselect addon -->
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-combobox-multiselect</artifactId>
+		</dependency>
+		<!-- End of Multiselect addon -->
+
+		<!-- Confirmdialog addon -->
+		<dependency>
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>confirmdialog</artifactId>
+		</dependency>
+		<!-- End of Confirmdialog addon -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.flowingcode.vaadin.addons</groupId> -->
+		<!-- <artifactId>error-window-vaadin</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- Vaadin compatibility -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.vaadin</groupId> -->
+		<!-- <artifactId>vaadin-compatibility-server</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.vaadin</groupId> -->
+		<!-- <artifactId>vaadin-compatibility-client</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.vaadin</groupId> -->
+		<!-- <artifactId>vaadin-compatibility-client-compiled</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- End of Vaadin compatibility -->
+
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>autocomplete</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.wcs.wcslib</groupId>
+			<artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
+		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>pl.pdfviewer</groupId> -->
+		<!-- <artifactId>pdfviewer</artifactId> -->
+		<!-- </dependency> -->
+
+		<dependency>
+			<groupId>com.whitestein.vaadin.widgets</groupId>
+			<artifactId>wt-pdf-viewer</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>popupbutton</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>aceeditor</artifactId>
+		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.vaadin.hene.splitbutton</groupId> -->
+		<!-- <artifactId>splitbutton</artifactId> -->
+		<!-- </dependency> -->
+	</dependencies>
+</project>

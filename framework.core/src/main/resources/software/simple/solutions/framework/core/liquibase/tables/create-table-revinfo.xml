@@ -1,0 +1,24 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!-- REVINFO TABLE -->
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1538430422045">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="revinfo" />
+			</not>
+		</preConditions>
+		<createTable tableName="revinfo">
+			<!-- <column autoIncrement="true" name="REV" type="BIGINT"> -->
+			<!-- <constraints primaryKey="true" /> -->
+			<!-- </column> -->
+			<column name="REV" type="BIGINT">
+			</column>
+			<column name="REVTSTMP" type="BIGINT" />
+			<column name="USERNAME" type="VARCHAR(1000)" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,106 @@
+@mixin mainview {
+
+	.main-view-header-margins {
+		margin-top: 5px;
+		margin-right: 5px;
+		margin-bottom: 5px;
+		margin-left: 5px;
+	}	
+	
+	.main-view-header-paddings {
+		padding-top: 5px;
+		padding-right: 5px;
+		padding-bottom: 5px;
+		padding-left: 5px;
+	}
+	
+	.main-view-application-logo{
+		border-radius: 10px;
+		border: solid 1px;
+		padding: 2px;
+	}
+	
+	.filter-view-overflow{
+		overflow: initial;
+	}
+	
+	.v-menubar > .v-menubar-menuitem-action-bar-more .v-icon {
+		font-size: large;
+		vertical-align: middle;
+		height: 80%;
+	}
+	
+	@if $include-additional-styles {
+    	.v-gridlayout-well {
+      		@include valo-panel-well-style;
+      		@include valo-panel-adjust-content-margins;
+    	}
+
+    	.v-gridlayout-card{
+      		@include valo-panel-style;
+      		@include valo-panel-adjust-content-margins;
+    	}
+  	}
+  	
+	.resized-icon img.v-icon {
+		height: 100%;
+	}
+	
+	.resized-icon-80 img.v-icon {
+		height: 80%;
+	}
+	
+	.v-button-dangerous {
+      color: $v-error-indicator-color;
+      &:hover {
+      		color: lighten($v-error-indicator-color,75%);
+  		}
+    }
+    
+    .v-button-no-padding{
+    	padding: 0px;
+   	}
+    
+    .content-align-right {
+     	text-align: right;
+    }
+    
+    .v-grid-header{
+    	.v-grid-cell{
+    		&.header-column-centered{
+    			text-align: center;
+    		}
+    	}
+    }
+    
+    .v-grid-cell{
+    	padding-left: 2px;
+    	padding-right: 2px;
+   	}
+   	
+   	.v-upload .v-button {
+		box-sizing: border-box;
+		display: inline-block;
+		vertical-align: top;
+		text-align: left;
+		white-space: nowrap !important;
+	}
+	
+	.v-button:focus{
+		&:after{
+			border-color: none !important;
+			-webkit-box-shadow: none !important;
+			box-shadow: none !important;
+		}
+	}
+	
+	.v-popupbutton .v-popup-indicator:before {
+		content: '' !important;
+	}
+	
+	.error-background-reddish {
+		background: #fce3e3;
+	}
+	
+	
+}

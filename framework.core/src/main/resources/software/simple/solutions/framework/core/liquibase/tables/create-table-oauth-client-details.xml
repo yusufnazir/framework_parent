@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simple.solutions" id="1552061722839">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="oauth_client_details" />
+			</not>
+		</preConditions>
+		<createTable tableName="oauth_client_details">
+			<column name="client_id" type="VARCHAR(256)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="resource_ids" type="VARCHAR(256)" />
+			<column name="client_secret" type="VARCHAR(256)" />
+			<column name="scope" type="VARCHAR(256)" />
+			<column name="authorized_grant_types" type="VARCHAR(256)" />
+			<column name="web_server_redirect_uri" type="VARCHAR(256)" />
+			<column name="authorities" type="VARCHAR(256)" />
+			<column name="access_token_validity" type="BIGINT" />
+			<column name="refresh_token_validity" type="BIGINT" />
+			<column name="additional_information" type="VARCHAR(4096)" />
+			<column name="autoapprove" type="VARCHAR(256)" />
+
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

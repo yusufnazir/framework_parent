@@ -1,0 +1,15 @@
+@mixin usermenu {
+
+	.v-menubar-menuitem-user-menu-old {
+      img.v-icon {
+        height: 30px;
+        border-radius: 30px;
+        } 
+     }
+     
+     .v-menubar-menuitem-user-menu-old .v-menubar-menuitem-selected{
+        background: transparent;
+        color: black;
+     }
+
+}

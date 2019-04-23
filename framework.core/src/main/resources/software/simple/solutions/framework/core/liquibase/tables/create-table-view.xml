@@ -1,0 +1,48 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1541813546910">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="views_" />
+			</not>
+		</preConditions>
+		<createTable tableName="views_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="DESCRIPTION_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(255)" />
+			<column name="VIEW_CLASS_NAME_" type="VARCHAR(255)" />
+
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1541813554138">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="views_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="views_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="DESCRIPTION_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(255)" />
+			<column name="VIEW_CLASS_NAME_" type="VARCHAR(255)" />
+
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

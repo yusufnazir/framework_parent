@@ -1,0 +1,30 @@
+package software.simple.solutions.framework.core.util;
+
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ContextProvider implements ApplicationContextAware {
+	private static ApplicationContext ctx = null;
+
+	public static ApplicationContext getApplicationContext() {
+		return ctx;
+	}
+
+	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+		ContextProvider.ctx = ctx;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getBean(Class<?> cl) {
+		Object bean = ctx.getBean(cl);
+		return (T) ctx.getBean(cl);
+	}
+
+	public static Object getBean(String name) {
+		return ctx.getBean(name);
+	}
+
+}

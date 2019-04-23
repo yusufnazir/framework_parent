@@ -1,0 +1,13 @@
+@mixin lookupfield {
+
+	.lookup-value-field {
+		display: flex;
+	}
+	
+	.v-tabsheet-tabitemcell-lookup-view-tab-highlight {
+		background-color: #ddd;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+	}
+   
+}

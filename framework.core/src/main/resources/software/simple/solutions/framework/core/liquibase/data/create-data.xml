@@ -1,0 +1,47 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<include file="create-data-configurations.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-genders.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-persons.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-application-users.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-views.xml" relativeToChangelogFile="true" />
+
+	<include file="create-data-menus.xml" relativeToChangelogFile="true" />
+
+	<include file="create-data-sub-menus.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-roles.xml" relativeToChangelogFile="true" />
+
+	<include file="create-data-role-categories.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-privileges.xml"
+		relativeToChangelogFile="true" />
+		
+		<include file="create-data-role-view.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-role-view-privileges.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-role-privileges.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-user-roles.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-languages.xml"
+		relativeToChangelogFile="true" />
+
+</databaseChangeLog>

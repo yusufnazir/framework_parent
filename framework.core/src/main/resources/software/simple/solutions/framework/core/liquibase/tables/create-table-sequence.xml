@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!-- SEQUENCES TABLE -->
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1538430449815">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="SEQUENCES_" />
+			</not>
+		</preConditions>
+		<createTable tableName="SEQUENCES_">
+			<column name="PK_NAME" type="VARCHAR(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="PK_VALUE" type="BIGINT" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

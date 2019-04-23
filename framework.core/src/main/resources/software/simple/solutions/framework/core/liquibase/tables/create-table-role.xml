@@ -1,0 +1,62 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1500330516290-33">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="roles_" />
+			</not>
+		</preConditions>
+		<createTable tableName="roles_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="DESCRIPTION_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(255)" />
+
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1500330516290-34">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="roles_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="roles_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="DESCRIPTION_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(255)" />
+
+		</createTable>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1551556767900">
+		<preConditions>
+			<not>
+				<columnExists tableName="roles_" columnName="role_category_id_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="roles_">
+			<column name="role_category_id_" type="BIGINT"></column>
+		</addColumn>
+		<addColumn tableName="roles_aud">
+			<column name="role_category_id_" type="BIGINT"></column>
+		</addColumn>
+	</changeSet>
+
+</databaseChangeLog>

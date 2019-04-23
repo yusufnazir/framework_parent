@@ -1,0 +1,56 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1546346169070">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="generated_mails_" />
+			</not>
+		</preConditions>
+		<createTable tableName="generated_mails_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+			
+			<column name="FROM_" type="VARCHAR(4000)" />
+			<column name="TO_" type="VARCHAR(4000)" />
+			<column name="SUBJECT_" type="VARCHAR(4000)" />
+			<column name="MESSAGE_" type="VARCHAR(4000)" />
+			<column name="STATE_" type="VARCHAR(255)" />
+			<column name="RETRY_COUNT_" type="BIGINT" />
+			<column name="ERROR_MESSAGE_" type="VARCHAR(4000)" />
+
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1546346179039">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="generated_mails_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="generated_mails_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="FROM_" type="VARCHAR(4000)" />
+			<column name="TO_" type="VARCHAR(4000)" />
+			<column name="SUBJECT_" type="VARCHAR(4000)" />
+			<column name="MESSAGE_" type="VARCHAR(4000)" />
+			<column name="STATE_" type="VARCHAR(255)" />
+			<column name="RETRY_COUNT_" type="BIGINT" />
+			<column name="ERROR_MESSAGE_" type="VARCHAR(4000)" />
+
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

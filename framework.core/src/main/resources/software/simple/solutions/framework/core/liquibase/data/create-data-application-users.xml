@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_application_user_1"
+		author="simplesolutions">
+		<customChange
+			class="software.simple.solutions.framework.core.liquibase.DataApplicationUser">
+			<param name="id" value="1"></param>
+			<param name="password"
+				value="$2a$10$LrA3j31nu1XstnNVe7f0yuBGHcM74FAfoZIA0QWYj4G57PSzmowqe"></param>
+			<param name="username" value="admin"></param>
+		</customChange>
+	</changeSet>
+</databaseChangeLog>

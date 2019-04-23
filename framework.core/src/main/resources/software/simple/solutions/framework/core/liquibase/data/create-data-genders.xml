@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_gender_1" author="i-frontier"> <customChange class="software.simple.solutions.framework.core.liquibase.DataGender"><param name="id" value="1"></param><param name="name"><![CDATA[Male]]></param><param name="key" value="system.gender.male"></param></customChange></changeSet>
+	<changeSet onValidationFail="MARK_RAN" id="data_gender_2" author="i-frontier"> <customChange class="software.simple.solutions.framework.core.liquibase.DataGender"><param name="id" value="2"></param><param name="name"><![CDATA[Female]]></param><param name="key" value="system.gender.female"></param></customChange></changeSet>
+</databaseChangeLog>

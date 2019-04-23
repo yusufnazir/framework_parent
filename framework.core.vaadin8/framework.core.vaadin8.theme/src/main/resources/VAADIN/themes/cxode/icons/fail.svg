@@ -1,0 +1,14 @@
+<svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="38" width="38" y="-1" x="-1"/>
+ </g>
+ <g>
+  <g id="svg_2">
+   <title>Layer 1</title>
+   <circle stroke="null" fill="#D72828" r="16" id="BG" cy="18" cx="18"/>
+   <path fill="#E6E6E6" id="Exclamatory_x5F_Sign" d="m16.5,27l3,0l0,-3l-3,0l0,3zm0,-19l0,13l3,0l0,-13l-3,0z"/>
+  </g>
+ </g>
+</svg>

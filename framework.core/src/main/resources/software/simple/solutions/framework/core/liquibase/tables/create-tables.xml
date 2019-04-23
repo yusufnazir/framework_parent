@@ -1,0 +1,102 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!-- Revision -->
+	<include file="create-table-revinfo.xml"
+		relativeToChangelogFile="true" />
+
+	<!-- Sequences -->
+	<include file="create-table-sequence.xml"
+		relativeToChangelogFile="true" />
+
+	<!-- User/Person -->
+	<include file="create-table-gender.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-person.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-person-information.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-application-user.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-application-user-request-password-reset.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-view.xml" relativeToChangelogFile="true" />
+
+	<include file="create-table-menu.xml" relativeToChangelogFile="true" />
+
+	<include file="create-table-sub-menu.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-role.xml" relativeToChangelogFile="true" />
+
+	<include file="create-table-role-category.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-privileges.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-role-privileges.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-role-views.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-role-view-privileges.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-user-role.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-language.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-property.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-properties-per-locale.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-configuration.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-application-user-configuration.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-message.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-messages-per-locale.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-mail-template.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-generated-mail.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-entity-files.xml"
+		relativeToChangelogFile="true" />
+
+	<!-- Open Authentication -->
+	<include file="create-table-oauth-client-details.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-oauth-client-token.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-oauth-access-token.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-oauth-refresh-token.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-oauth-code.xml"
+		relativeToChangelogFile="true" />
+
+</databaseChangeLog>

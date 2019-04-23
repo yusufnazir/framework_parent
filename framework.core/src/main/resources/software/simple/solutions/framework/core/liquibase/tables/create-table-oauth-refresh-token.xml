@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simple.solutions" id="1552062279190">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="oauth_refresh_token" />
+			</not>
+		</preConditions>
+		<createTable tableName="oauth_refresh_token">
+			<column name="token_id" type="VARCHAR(256)">
+			</column>
+			<column name="token" type="LONGVARBINARY" />
+			<column name="authentication" type="LONGVARBINARY" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>
