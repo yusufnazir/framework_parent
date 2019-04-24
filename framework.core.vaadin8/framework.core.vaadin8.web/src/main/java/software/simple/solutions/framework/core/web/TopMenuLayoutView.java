@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.text.WordUtils;
@@ -157,38 +158,40 @@ public class TopMenuLayoutView extends VerticalLayout {
 				/*
 				 * Add the roles
 				 */
-				MenuItem roleItem = parentRole.addItem(userRole.getRole().getName(), new Command() {
+				if (userRole.getRole() != null) {
+					MenuItem roleItem = parentRole.addItem(userRole.getRole().getName(), new Command() {
 
-					private static final long serialVersionUID = -493308176706441856L;
+						private static final long serialVersionUID = -493308176706441856L;
 
-					@Override
-					public void menuSelected(MenuItem selectedItem) {
-						try {
-							createMenu(userRole.getRole());
-							parentRole.getChildren().stream().forEach(p -> p.setChecked(false));
-							selectedItem.setCheckable(true);
-							selectedItem.setChecked(true);
-							sessionHolder.setSelectedRole(userRole.getRole());
-							tabSheet.removeAllComponents();
+						@Override
+						public void menuSelected(MenuItem selectedItem) {
+							try {
+								createMenu(userRole.getRole());
+								parentRole.getChildren().stream().forEach(p -> p.setChecked(false));
+								selectedItem.setCheckable(true);
+								selectedItem.setChecked(true);
+								sessionHolder.setSelectedRole(userRole.getRole());
+								tabSheet.removeAllComponents();
 
-							/*
-							 * update the parent description to show selected
-							 * role
-							 */
-							userMenuItem.setText(sessionHolder.getApplicationUser().getUsername() + " ("
-									+ userRole.getRole().getName() + ")");
-						} catch (FrameworkException e) {
-							logger.error("Something went wrong [" + e.getMessage() + "]");
-							new MessageWindowHandler(e);
+								/*
+								 * update the parent description to show
+								 * selected role
+								 */
+								userMenuItem.setText(sessionHolder.getApplicationUser().getUsername() + " ("
+										+ userRole.getRole().getName() + ")");
+							} catch (FrameworkException e) {
+								logger.error("Something went wrong [" + e.getMessage() + "]");
+								new MessageWindowHandler(e);
+							}
 						}
+					});
+					/*
+					 * Create menulayout for the first role
+					 */
+					Optional<UserRole> findFirst = userRoles.stream().filter(p -> p.getRole() != null).findFirst();
+					if (findFirst.isPresent() && findFirst.get().equals(userRole)) {
+						roleItem.getCommand().menuSelected(roleItem);
 					}
-				});
-
-				/*
-				 * Create menulayout for the first role
-				 */
-				if (userRoles.get(0).equals(userRole)) {
-					roleItem.getCommand().menuSelected(roleItem);
 				}
 			}
 		}
