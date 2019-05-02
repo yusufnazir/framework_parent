@@ -11,7 +11,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.antMatcher("/resources/**").authorizeRequests().mvcMatchers("/resources/userinfo")
-				.access("#oauth2.hasScope('read')");
+		http.authorizeRequests().antMatchers("/rest/**").authenticated();
 	}
 }

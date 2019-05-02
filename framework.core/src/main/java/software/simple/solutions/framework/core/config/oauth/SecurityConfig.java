@@ -27,13 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
 		http.csrf().disable();
 		http.authorizeRequests()
 				.antMatchers("/app**", "/actuator/**", "/vaadinServlet/**", "/VAADIN/**", "/HEARTBEAT/**", "/UIDL/**",
 						"/resources/**")
 				.permitAll().anyRequest().authenticated().and().formLogin().and().logout()
 				.logoutSuccessUrl("/login?logout");
-		// @formatter:on
+		// http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+		// .antMatchers("/rest/**").authenticated().anyRequest().authenticated();
 	}
 }

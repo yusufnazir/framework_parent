@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.repository;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -13,7 +14,7 @@ import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
 
 @NoRepositoryBean
-public interface IGenericRepository {
+public interface IGenericRepository extends Serializable {
 
 	String createSearchQuery(Object o, ConcurrentMap<String, Object> paramMap, PagingSetting pagingSetting)
 			throws FrameworkException;

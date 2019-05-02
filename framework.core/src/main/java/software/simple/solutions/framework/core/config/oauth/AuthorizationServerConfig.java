@@ -26,21 +26,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
+	private SimpleUserDetailsService simpleUserDetailsService;
+
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	AuthorizationServerConfig(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
-
-	// @Override
-	// public void configure(ClientDetailsServiceConfigurer clients) throws
-	// Exception {
-	// // @formatter:off
-	// clients.inMemory().withClient("escontrol").secret(passwordEncoder.encode("escontrol"))
-	// .authorizedGrantTypes("authorization_code").scopes("profile")
-	// .redirectUris("http://localhost:8082/login/oauth2/code/escontrol-client");
-	// // @formatter:on
-	// }
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
@@ -50,7 +43,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(this.tokenStore()).accessTokenConverter(jwtAccessTokenConverter())
-				.authenticationManager(this.authenticationManager);
+				.userDetailsService(simpleUserDetailsService).authenticationManager(this.authenticationManager);
 	}
 
 	@Bean
