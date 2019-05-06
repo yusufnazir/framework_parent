@@ -117,6 +117,11 @@
 			<artifactId>aceeditor</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.teemu</groupId>
+			<artifactId>switch</artifactId>
+		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>org.vaadin.hene.splitbutton</groupId> -->
 		<!-- <artifactId>splitbutton</artifactId> -->

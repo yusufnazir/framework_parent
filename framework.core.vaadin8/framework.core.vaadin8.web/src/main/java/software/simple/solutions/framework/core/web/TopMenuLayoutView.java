@@ -577,9 +577,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 								SystemProperty.CANCEL);
 						confirmWindow.execute(new ConfirmationHandler() {
 
-							@SuppressWarnings({ "unchecked", "rawtypes" })
 							@Override
-							public void handlePositive() throws FrameworkException {
+							public void handlePositive() {
 								closeTab(tabsheet, tabContent);
 							}
 

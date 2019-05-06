@@ -159,6 +159,11 @@
 			<artifactId>popupbutton</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.teemu</groupId>
+			<artifactId>switch</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>

@@ -42,12 +42,12 @@ public class ConfirmWindow {
 					public void onClose(ConfirmDialog dialog) {
 						if (confirmationHandler != null) {
 							if (dialog.isConfirmed()) {
-								try {
+//								try {
 									confirmationHandler.handlePositive();
-								} catch (FrameworkException e) {
-									logger.error(e.getMessage(), e);
-									new MessageWindowHandler(e);
-								}
+//								} catch (FrameworkException e) {
+//									logger.error(e.getMessage(), e);
+//									new MessageWindowHandler(e);
+//								}
 							} else {
 								confirmationHandler.handleNegative();
 							}
@@ -68,7 +68,7 @@ public class ConfirmWindow {
 
 	public interface ConfirmationHandler {
 
-		public void handlePositive() throws FrameworkException;
+		public void handlePositive();
 
 		public void handleNegative();
 	}

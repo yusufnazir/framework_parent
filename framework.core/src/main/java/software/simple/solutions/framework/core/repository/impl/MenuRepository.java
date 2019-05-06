@@ -110,7 +110,7 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		if (parentMenuId == null) {
 			return null;
 		}
-		String query = " from Menu m where m.parentMenu.id=:parentMenu and m.type=:type";
+		String query = " from Menu m where m.parentMenu.id=:parentMenu and m.type=:type order by m.index";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("parentMenu", parentMenuId);
 		paramMap.put("type", MenuType.TAB);

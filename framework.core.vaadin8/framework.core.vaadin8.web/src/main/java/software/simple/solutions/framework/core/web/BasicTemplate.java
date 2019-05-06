@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.vaadin.hene.popupbutton.PopupButton;
 
@@ -723,7 +724,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 				@SuppressWarnings({ "unchecked", "rawtypes" })
 				@Override
-				public void handlePositive() throws FrameworkException {
+				public void handlePositive() {
 					doForBack();
 				}
 
@@ -858,12 +859,21 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 					@SuppressWarnings({ "unchecked", "rawtypes" })
 					@Override
-					public void handlePositive() throws FrameworkException {
+					public void handlePositive() {
 						if (toDeleteEntities != null && !toDeleteEntities.isEmpty()) {
-							int deleted = superService.delete(new ArrayList(toDeleteEntities),
-									getSessionHolder().getApplicationUser().getId());
-							NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
-									new Object[] { deleted });
+							try {
+								try {
+									int deleted = superService.delete(new ArrayList(toDeleteEntities),
+											getSessionHolder().getApplicationUser().getId());
+//									NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
+//											new Object[] { deleted });
+								} catch (DataIntegrityViolationException e) {
+									throw new FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
+								}
+							} catch (FrameworkException e) {
+//								logger.error(e.getMessage(), e);
+								updateErrorContent(e);
+							}
 						} else {
 							NotificationWindow.notificationNormalWindow(SystemProperty.NO_RECORD_SELECTED);
 						}
@@ -872,7 +882,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 							setViewContentUpdated(false);
 							handleBackFromForm();
 						}
-						handleResetSearch();
+						try {
+							handleResetSearch();
+						} catch (FrameworkException e) {
+							logger.error(e.getMessage(), e);
+							updateErrorContent(e);
+						}
 					}
 
 					@Override
@@ -896,7 +911,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				confirmWindow.execute(new ConfirmationHandler() {
 
 					@Override
-					public void handlePositive() throws FrameworkException {
+					public void handlePositive() {
 						try {
 							try {
 								entity = superService.restore(entityClass, ((IMappedSuperClass) entity).getId());
@@ -1109,6 +1124,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		PagingInfo pagingInfo = getPagingInfo();
 		SuperVO vo = (SuperVO) filterView.getCriteria();
 		vo.setEntityClass(entityClass);
+		if (vo.getSortingHelper() != null) {
+			sortingHelper = vo.getSortingHelper();
+		}
 		vo.setSortingHelper(sortingHelper);
 		vo.setPagingInfo(pagingInfo);
 		vo.setCurrentUserId(getSessionHolder().getApplicationUser().getId());

@@ -20,5 +20,6 @@ public class SystemMessageProperty {
 	public static final String UNABLE_TO_STORE_FILE_ON_SYSTEM = SYSTEM_EXCEPTION + "unable.to.store.file.on.system";
 	public static final String FILE_IO_EXCEPTION = SYSTEM_EXCEPTION + "file.io.exception";
 	public static final String NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE = "notification.date.cannot.be.in.the.future";
+	public static final String DATA_FOREIGN_KEY_CONSTRAINT = SYSTEM_EXCEPTION + "data.foreign.key.constraint";
 
 }
