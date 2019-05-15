@@ -42,7 +42,7 @@ public class ApplicationUserRepository extends GenericRepository implements IApp
 	}
 
 	@Override
-	public <T> Integer deleteAll(List<T> entities, Long userId) throws FrameworkException {
+	public <T> Integer deleteAll(List<T> entities) throws FrameworkException {
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		for (T t : entities) {
 			ApplicationUser applicationUser = (ApplicationUser) t;

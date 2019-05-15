@@ -863,8 +863,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 						if (toDeleteEntities != null && !toDeleteEntities.isEmpty()) {
 							try {
 								try {
-									int deleted = superService.delete(new ArrayList(toDeleteEntities),
-											getSessionHolder().getApplicationUser().getId());
+									int deleted = superService.delete(new ArrayList(toDeleteEntities));
 //									NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
 //											new Object[] { deleted });
 								} catch (DataIntegrityViolationException e) {

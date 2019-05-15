@@ -812,22 +812,18 @@ public class GenericRepository implements IGenericRepository {
 	}
 
 	@Override
-	public <T> Integer deleteAll(Class<T> cl, List<Long> ids, Long userId) throws FrameworkException {
+	public <T> Integer deleteAll(Class<T> cl, List<Long> ids) throws FrameworkException {
 		for (Long id : ids) {
 			T t = get(cl, id);
-			// ((IMappedSuperClass)
-			// t).setUpdatedByUser(get(ApplicationUser.class, userId));
 			entityManager.remove(t);
 		}
 		return ids.size();
 	}
 
 	@Override
-	public <T> Integer deleteAll(List<T> entities, Long userId) throws FrameworkException {
+	public <T> Integer deleteAll(List<T> entities) throws FrameworkException {
 		for (T t : entities) {
 			t = entityManager.contains(t) ? t : entityManager.merge(t);
-			// ((IMappedSuperClass)
-			// t).setUpdatedByUser(get(ApplicationUser.class, userId));
 			entityManager.remove(t);
 		}
 		return entities.size();

@@ -93,19 +93,16 @@ public interface ISuperService extends Serializable {
 
 	/**
 	 * Handles deleting objects. Basic method called from templates.
-	 * 
-	 * @param userId
-	 *            TODO
 	 * @param ids
 	 * 
 	 * @return
 	 * @throws FrameworkException
 	 */
-	public <T> Integer delete(Class<T> cl, List<Long> entities, Long userId) throws FrameworkException;
+	public <T> Integer delete(Class<T> cl, List<Long> entities) throws FrameworkException;
 
-	public <T> Integer delete(Class<T> cl, Long id, Long userId) throws FrameworkException;
+	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException;
 
-	public <T> Integer delete(List<T> entities, Long userId) throws FrameworkException;
+	public <T> Integer delete(List<T> entities) throws FrameworkException;
 
 	public interface ContentUpdate {
 

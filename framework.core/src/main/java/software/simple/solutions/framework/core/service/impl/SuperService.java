@@ -53,20 +53,20 @@ public abstract class SuperService implements ISuperService {
 	}
 
 	@Override
-	public <T> Integer delete(Class<T> cl, Long id, Long userId) throws FrameworkException {
-		Integer deleted = delete(cl, Arrays.asList(id), userId);
+	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException {
+		Integer deleted = delete(cl, Arrays.asList(id));
 		return deleted;
 	}
 
 	@Override
-	public <T> Integer delete(Class<T> cl, List<Long> ids, Long userId) throws FrameworkException {
-		Integer deleted = getGenericRepository().deleteAll(cl, ids, userId);
+	public <T> Integer delete(Class<T> cl, List<Long> ids) throws FrameworkException {
+		Integer deleted = getGenericRepository().deleteAll(cl, ids);
 		return deleted;
 	}
 
 	@Override
-	public <T> Integer delete(List<T> entities, Long userId) throws FrameworkException {
-		Integer deleted = getGenericRepository().deleteAll(entities, userId);
+	public <T> Integer delete(List<T> entities) throws FrameworkException {
+		Integer deleted = getGenericRepository().deleteAll(entities);
 		return deleted;
 	}
 

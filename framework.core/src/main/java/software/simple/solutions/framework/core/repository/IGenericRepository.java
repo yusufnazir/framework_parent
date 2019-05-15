@@ -90,9 +90,9 @@ public interface IGenericRepository extends Serializable {
 
 	<T> T updateSingle(T entity, boolean newEntity) throws FrameworkException;
 
-	<T> Integer deleteAll(Class<T> cl, List<Long> ids, Long userid) throws FrameworkException;
+	<T> Integer deleteAll(Class<T> cl, List<Long> ids) throws FrameworkException;
 
-	<T> Integer deleteAll(List<T> entities, Long userId) throws FrameworkException;
+	<T> Integer deleteAll(List<T> entities) throws FrameworkException;
 
 	<T> T getByCode(Class<T> cl, String code) throws FrameworkException;
 
