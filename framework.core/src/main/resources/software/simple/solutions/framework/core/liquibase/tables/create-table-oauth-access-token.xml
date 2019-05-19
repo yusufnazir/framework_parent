@@ -13,7 +13,9 @@
 			<column name="token_id" type="VARCHAR(256)">
 			</column>
 			<column name="token" type="LONGVARBINARY" />
-			<column name="authentication_id" type="VARCHAR(256)" />
+			<column name="authentication_id" type="VARCHAR(256)">
+				<constraints primaryKey="true" />
+			</column>
 			<column name="user_name" type="VARCHAR(256)" />
 			<column name="client_id" type="VARCHAR(256)" />
 			<column name="authentication" type="LONGVARBINARY" />
