@@ -355,9 +355,30 @@ public class GenericRepository implements IGenericRepository {
 	}
 
 	@Override
+	public Integer updateBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException {
+		if (StringUtils.isBlank(queryString)) {
+			return null;
+		}
+		javax.persistence.Query query = entityManager.createNativeQuery(queryString);
+		if ((paramMap != null) && (!paramMap.isEmpty())) {
+			Set<Map.Entry<String, Object>> entrySet = paramMap.entrySet();
+			for (Map.Entry<String, Object> entry : entrySet) {
+				query.setParameter((String) entry.getKey(), entry.getValue());
+			}
+		}
+		return query.executeUpdate();
+	}
+
+	@Override
 	public Integer deleteByHql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException {
-		// return updateByHql(queryString, paramMap);
-		return null;
+		return updateByHql(queryString, paramMap);
+		// return null;
+	}
+
+	@Override
+	public Integer deleteBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException {
+		return updateBySql(queryString, paramMap);
+		// return null;
 	}
 
 	/**

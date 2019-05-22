@@ -11,4 +11,6 @@ public interface IApplicationUserRepository extends IGenericRepository {
 
 	public List<ApplicationUser> findAll() throws FrameworkException;
 
+	void removeOauthAccessToken(String authenticationId) throws FrameworkException;
+
 }

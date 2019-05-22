@@ -101,4 +101,8 @@ public interface IGenericRepository extends Serializable {
 
 	<T> T restore(Class<T> cl, Long id) throws FrameworkException;
 
+	Integer updateBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException;
+
+	Integer deleteBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException;
+
 }

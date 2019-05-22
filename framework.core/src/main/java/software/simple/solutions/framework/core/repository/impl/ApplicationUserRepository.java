@@ -65,4 +65,12 @@ public class ApplicationUserRepository extends GenericRepository implements IApp
 		return createListQuery(query);
 	}
 
+	@Override
+	public void removeOauthAccessToken(String authenticationId) throws FrameworkException {
+		String delete = "delete from oauth_access_token where authentication_id = :authentication_id";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("authentication_id", authenticationId);
+		deleteBySql(delete, paramMap);
+	}
+
 }

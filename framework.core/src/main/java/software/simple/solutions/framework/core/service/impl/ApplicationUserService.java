@@ -486,4 +486,9 @@ public class ApplicationUserService extends SuperService implements IApplication
 		return applicationUserRepository.findAll();
 	}
 
+	@Override
+	public void removeOauthAccessToken(String authenticationId) throws FrameworkException {
+		applicationUserRepository.removeOauthAccessToken(authenticationId);
+	}
+
 }
