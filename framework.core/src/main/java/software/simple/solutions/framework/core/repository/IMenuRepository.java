@@ -13,7 +13,7 @@ public interface IMenuRepository extends IGenericRepository {
 
 	List<Menu> findAuthorizedMenus(Long roleId) throws FrameworkException;
 
-	List<Menu> findTabMenus(Long parentMenuId) throws FrameworkException;
+	List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException;
 
 	Menu getLookUpByViewClass(Long roleId, String name) throws FrameworkException;
 

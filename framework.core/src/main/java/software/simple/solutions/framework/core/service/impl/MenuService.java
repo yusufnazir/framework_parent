@@ -63,8 +63,8 @@ public class MenuService extends SuperService implements IMenuService {
 	}
 
 	@Override
-	public List<Menu> findTabMenus(Long parentMenuId) throws FrameworkException {
-		return menuRepository.findTabMenus(parentMenuId);
+	public List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException {
+		return menuRepository.findTabMenus(parentMenuId, roleId);
 	}
 
 	@Override

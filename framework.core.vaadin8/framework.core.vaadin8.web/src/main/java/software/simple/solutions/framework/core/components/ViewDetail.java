@@ -78,10 +78,16 @@ public class ViewDetail implements Serializable {
 	}
 
 	public List<String> getPrivileges() {
+		if (this.privileges == null) {
+			this.privileges = new ArrayList<String>();
+		}
 		return privileges;
 	}
 
 	public void setPrivileges(List<String> privileges) {
+		if (this.privileges == null) {
+			this.privileges = new ArrayList<String>();
+		}
 		this.privileges = privileges;
 	}
 

@@ -9,6 +9,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 
+import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CPopupDateField;
@@ -16,6 +17,7 @@ import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
+import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
@@ -30,6 +32,7 @@ import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
 @SpringView(name = "software.simple.solutions.framework.core.web.view.PersonView")
+@SupportedPrivileges(extraPrivileges = { Privileges.PERSON_SHOW_GENDER, Privileges.PERSON_SHOW_DOB })
 public class PersonView extends BasicTemplate<Person> {
 
 	private static final long serialVersionUID = 6503015064562511801L;
@@ -100,6 +103,10 @@ public class PersonView extends BasicTemplate<Person> {
 			lastNameFld = createField(CTextField.class, PersonProperty.LAST_NAME, 1, 0);
 
 			genderFld = createField(GenderSelect.class, PersonProperty.GENDER, 2, 0);
+			genderFld.setVisible(false);
+			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_GENDER)) {
+				genderFld.setVisible(true);
+			}
 
 		}
 
@@ -155,8 +162,16 @@ public class PersonView extends BasicTemplate<Person> {
 
 			dateOfBirthFld = formGrid.addField(CPopupDateField.class, PersonProperty.DATE_OF_BIRTH, 1, 0);
 			dateOfBirthFld.setRangeEnd(LocalDate.now());
+			dateOfBirthFld.setVisible(false);
+			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_DOB)) {
+				dateOfBirthFld.setVisible(true);
+			}
 
 			genderFld = formGrid.addField(GenderSelect.class, GenderProperty.GENDER, 1, 1);
+			genderFld.setVisible(false);
+			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_GENDER)) {
+				genderFld.setVisible(true);
+			}
 
 			activeFld = formGrid.addField(CCheckBox.class, PersonProperty.ACTIVE, 1, 2);
 

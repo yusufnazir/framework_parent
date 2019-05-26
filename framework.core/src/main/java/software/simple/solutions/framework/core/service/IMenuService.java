@@ -13,7 +13,7 @@ public interface IMenuService extends ISuperService {
 
 	List<Menu> findAuthorizedMenus(Long roleId) throws FrameworkException;
 
-	List<Menu> findTabMenus(Long id) throws FrameworkException;
+	List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException;
 
 	Menu getLookUpByViewClass(Long roleId, String name) throws FrameworkException;
 

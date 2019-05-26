@@ -8,10 +8,11 @@ import com.vaadin.ui.UI;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
-public class CPopupDateField extends DateField implements IField {
+public class CPopupDateField extends DateField implements IField, Captionable {
 
 	private static final long serialVersionUID = 2495694014542106728L;
 	private boolean isThisRequired = false;
+	private CaptionLabel captionLabel;
 
 	public CPopupDateField() {
 		addStyleName(Style.TINY);
@@ -72,4 +73,21 @@ public class CPopupDateField extends DateField implements IField {
 		}
 	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if(captionLabel!=null){
+			captionLabel.setVisible(visible);
+		}
+	}
+
+	@Override
+	public CaptionLabel getLabel() {
+		return captionLabel;
+	}
+
+	@Override
+	public void setLabel(CaptionLabel label) {
+		this.captionLabel = label;
+	}
 }

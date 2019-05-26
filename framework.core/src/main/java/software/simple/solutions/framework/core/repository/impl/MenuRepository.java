@@ -106,23 +106,27 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 	}
 
 	@Override
-	public List<Menu> findTabMenus(Long parentMenuId) throws FrameworkException {
+	public List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException {
 		if (parentMenuId == null) {
 			return null;
 		}
-		String query = " from Menu m where m.parentMenu.id=:parentMenu and m.type=:type order by m.index";
+		String query = "SELECT menus FROM Menu menus " + "LEFT JOIN View views ON views.id=menus.view.id "
+				+ "LEFT JOIN RoleView roleviews ON roleviews.view.id=views.id " + "WHERE roleviews.role.id=:roleId "
+				+ "and menus.parentMenu.id=:parentMenu and menus.type=:type order by menus.index";
+		// String query = " from Menu m where m.parentMenu.id=:parentMenu and
+		// m.type=:type order by m.index";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("parentMenu", parentMenuId);
+		paramMap.put("roleId", roleId);
 		paramMap.put("type", MenuType.TAB);
 		return createListQuery(query, paramMap);
 	}
 
 	@Override
 	public Menu getLookUpByViewClass(Long roleId, String name) throws FrameworkException {
-		String query = "select men from Menu men "
-				+ "left join RoleView rv on rv.view.id=men.view.id "
-				+ "left join View vie on vie.id=rv.view.id "
-				+ "where rv.role.id=:roleId and men.type=4 " + "and vie.viewClassName=:className";
+		String query = "select men from Menu men " + "left join RoleView rv on rv.view.id=men.view.id "
+				+ "left join View vie on vie.id=rv.view.id " + "where rv.role.id=:roleId and men.type=4 "
+				+ "and vie.viewClassName=:className";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("roleId", roleId);
 		paramMap.put("className", name);

@@ -11,6 +11,7 @@ import com.vaadin.ui.ItemCaptionGenerator;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -43,7 +44,7 @@ public class RolePrivilgesView extends AbstractBaseView {
 
 	private void initializePrivileges() throws FrameworkException {
 		IPrivilegeService privilegeService = ContextProvider.getBean(IPrivilegeService.class);
-		List<Privilege> privileges = privilegeService.getPrivileges();
+		List<Privilege> privileges = privilegeService.getPrivileges(Privileges.DEFAULT_PRIVILEGES);
 		privilegesFld.setValues(privileges);
 		privilegesFld.setItemCaptionGenerator(new ItemCaptionGenerator<ComboItem>() {
 
@@ -66,8 +67,7 @@ public class RolePrivilgesView extends AbstractBaseView {
 				Set<ComboItem> values = event.getValue();
 				List<Long> privilegeIds = values.parallelStream().map(ComboItem::getLongId)
 						.collect(Collectors.toList());
-				IRolePrivilegeService rolePrivilegeService = ContextProvider
-						.getBean(IRolePrivilegeService.class);
+				IRolePrivilegeService rolePrivilegeService = ContextProvider.getBean(IRolePrivilegeService.class);
 				try {
 					rolePrivilegeService.updateRolePrivileges(role.getId(), privilegeIds);
 				} catch (FrameworkException e) {
@@ -82,8 +82,7 @@ public class RolePrivilgesView extends AbstractBaseView {
 		try {
 			List<Privilege> privileges = rolePrivilegeService.getPrivilegesByRole(role.getId());
 			if (privileges != null) {
-				Set<Long> privilegeIds = privileges.parallelStream().map(Privilege::getId)
-						.collect(Collectors.toSet());
+				Set<Long> privilegeIds = privileges.parallelStream().map(Privilege::getId).collect(Collectors.toSet());
 				privilegesFld.setLongValues(privilegeIds);
 			}
 		} catch (FrameworkException e) {

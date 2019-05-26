@@ -1,20 +1,24 @@
 package software.simple.solutions.framework.core.web.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.vaadin.data.ValueProvider;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ItemCaptionGenerator;
 
+import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.entities.RoleView;
@@ -146,12 +150,11 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 			privilegesFld.setHeight("300px");
 			privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
 			mainLayout.addComponent(privilegesFld);
-			initializePrivileges();
 		}
 
-		private void initializePrivileges() throws FrameworkException {
+		private void initializePrivileges(List<String> privilegeCodes) throws FrameworkException {
 			IPrivilegeService privilegeService = ContextProvider.getBean(IPrivilegeService.class);
-			List<Privilege> privileges = privilegeService.getPrivileges();
+			List<Privilege> privileges = privilegeService.getPrivileges(privilegeCodes);
 			privilegesFld.setValues(privileges);
 			privilegesFld.setItemCaptionGenerator(new ItemCaptionGenerator<ComboItem>() {
 
@@ -171,8 +174,11 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 			viewLookUpFld.setValue(roleView.getView());
 			roleLookUpFld.setValue(roleView.getRole());
 
+			String viewClassName = roleView.getView().getViewClassName();
+			List<String> privilegeCodes = Privileges.getPrivilegeCodes(viewClassName);
+			initializePrivileges(privilegeCodes);
 			setPrivilegeValues();
-			
+
 			privilegesFld.addValueChangeListener(new ValueChangeListener<Set<ComboItem>>() {
 
 				private static final long serialVersionUID = -2456888062255464291L;

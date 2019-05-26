@@ -14,9 +14,10 @@ import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortUtils;
 
-public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable<CComboBox> {
+public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable<CComboBox>, Captionable {
 	private static final long serialVersionUID = -6297946915884259838L;
 	private boolean isThisRequired = false;
+	private CaptionLabel captionLabel;
 
 	public CComboBox() {
 		setItemCaptionGenerator(ComboItem::getCaption);
@@ -127,6 +128,24 @@ public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable
 	public void clear() {
 		if (!isReadOnly()) {
 			super.clear();
+		}
+	}
+
+	@Override
+	public CaptionLabel getLabel() {
+		return captionLabel;
+	}
+
+	@Override
+	public void setLabel(CaptionLabel label) {
+		this.captionLabel = label;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if(captionLabel!=null){
+			captionLabel.setVisible(visible);
 		}
 	}
 

@@ -14,13 +14,13 @@ public class ViewActionStateUtil {
 		super();
 	}
 
-	public static ActionState createActionState(List<String> supportedPrivileges, Long viewId, Long roleId)
+	public static ActionState createActionState(List<String> privileges, Long viewId, Long roleId)
 			throws FrameworkException {
-		IRoleViewPrivilegeService roleViewPrivilegeService = ContextProvider.getBean(IRoleViewPrivilegeService.class);
-		List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(viewId, roleId);
-		if (privileges != null && supportedPrivileges != null) {
-			privileges = supportedPrivileges.stream().filter(privileges::contains).collect(Collectors.toList());
-		}
+//		IRoleViewPrivilegeService roleViewPrivilegeService = ContextProvider.getBean(IRoleViewPrivilegeService.class);
+//		List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(viewId, roleId);
+//		if (privileges != null && supportedPrivileges != null) {
+//			privileges = supportedPrivileges.stream().filter(privileges::contains).collect(Collectors.toList());
+//		}
 		return new ActionState(privileges);
 	}
 }

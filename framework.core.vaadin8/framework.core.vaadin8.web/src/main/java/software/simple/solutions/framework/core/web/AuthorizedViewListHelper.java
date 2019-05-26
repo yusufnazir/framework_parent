@@ -4,20 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.UI;
 
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.IMenuService;
-import software.simple.solutions.framework.core.service.ISubMenuService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class AuthorizedViewListHelper {
 
 	public List<SimpleSolutionsMenuItem> viewItems;
+	private SessionHolder sessionHolder;
 
 	public AuthorizedViewListHelper() {
 		super();
 		viewItems = new ArrayList<SimpleSolutionsMenuItem>();
+		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 	}
 
 	public List<SimpleSolutionsMenuItem> createMenuItems(Menu parentMenu) throws FrameworkException {
@@ -43,7 +46,7 @@ public class AuthorizedViewListHelper {
 	public List<SimpleSolutionsMenuItem> getTabMenus(Long id) throws FrameworkException {
 		List<SimpleSolutionsMenuItem> viewItems = new ArrayList<SimpleSolutionsMenuItem>();
 		IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-		List<Menu> menus = menuService.findTabMenus(id);
+		List<Menu> menus = menuService.findTabMenus(id, sessionHolder.getSelectedRole().getId());
 
 		if (menus != null && !menus.isEmpty()) {
 			for (Menu menu : menus) {

@@ -4,14 +4,15 @@ import java.util.List;
 
 import com.vaadin.ui.UI;
 
-import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.components.ViewDetail;
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
 import software.simple.solutions.framework.core.service.ISubMenuService;
+import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class ViewUtil {
@@ -22,13 +23,6 @@ public class ViewUtil {
 			view = (AbstractBaseView) classToBe.newInstance();
 			ViewDetail viewDetail = view.getViewDetail();
 			view.setViewDetail(viewDetail);
-
-			if (classToBe.isAnnotationPresent(SupportedPrivileges.class)) {
-				SupportedPrivileges supportedPrivileges = classToBe.getAnnotation(SupportedPrivileges.class);
-				viewDetail.addPrivileges(supportedPrivileges.privileges());
-				viewDetail.addPrivileges(supportedPrivileges.extraPrivileges());
-			}
-
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -45,18 +39,25 @@ public class ViewUtil {
 		return null;
 	}
 
-	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem) throws FrameworkException {
-		return initView(menuItem, false);
+	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, Long roleId) throws FrameworkException {
+		return initView(menuItem, false, roleId);
 	}
 
-	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, boolean popUpMode)
+	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, boolean popUpMode, Long roleId)
 			throws FrameworkException {
 		String viewClassName = menuItem.getMenu().getView().getViewClassName();
 		AbstractBaseView view = initView(viewClassName);
 		if (view != null) {
 			view.setSearchForward(menuItem.getSearchedEntity());
 			view.setPopUpMode(popUpMode);
+			
+			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
+					.getBean(IRoleViewPrivilegeService.class);
+			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
+					menuItem.getMenu().getView().getId(), roleId);
 			ViewDetail viewDetail = view.getViewDetail();
+			viewDetail.setPrivileges(privileges);
+			
 			viewDetail.setMenu(menuItem.getMenu());
 			viewDetail.setView(menuItem.getMenu().getView());
 

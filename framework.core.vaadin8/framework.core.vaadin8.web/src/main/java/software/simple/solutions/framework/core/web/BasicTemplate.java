@@ -96,7 +96,9 @@ import software.simple.solutions.framework.core.properties.ConfigurationProperty
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IConfigurationService;
+import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
 import software.simple.solutions.framework.core.service.ISuperService;
+import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -292,8 +294,15 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void setUpActionBar() throws FrameworkException {
 		actionBar = new ActionBar();
 
-		ActionState actionState = ViewActionStateUtil.createActionState(getViewDetail().getPrivileges(),
-				getViewDetail().getView().getId(), getSessionHolder().getSelectedRole().getId());
+		RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider.getBean(IRoleViewPrivilegeService.class);
+		List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
+				getViewDetail().getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+
+		// ActionState actionState =
+		// ViewActionStateUtil.createActionState(getViewDetail().getPrivileges(),
+		// getViewDetail().getView().getId(),
+		// getSessionHolder().getSelectedRole().getId());
+		ActionState actionState = new ActionState(privileges);
 		getViewDetail().setActionState(actionState);
 		actionBar.setActionState(actionState);
 		topBarLayout.addComponent(actionBar);
@@ -611,13 +620,20 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		try {
 			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass());
 
-			ViewDetail viewDetail = new ViewDetail();
+			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
+					.getBean(IRoleViewPrivilegeService.class);
+			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
+					viewItem.getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+			ViewDetail viewDetail = view.getViewDetail();
+			viewDetail.setPrivileges(privileges);
 			viewDetail.setMenu(viewItem.getMenu());
 			viewDetail.setViewId(viewItem.getMenu().getView().getId());
 
-			ActionState actionState = ViewActionStateUtil.createActionState(viewDetail.getPrivileges(),
-					viewItem.getMenu().getView().getId(), getSessionHolder().getApplicationUser().getId());
-			viewDetail.setActionState(actionState);
+			// ActionState actionState =
+			// ViewActionStateUtil.createActionState(viewDetail.getPrivileges(),
+			// viewItem.getMenu().getView().getId(),
+			// getSessionHolder().getApplicationUser().getId());
+			viewDetail.setActionState(new ActionState(privileges));
 
 			view.setViewDetail(viewDetail);
 			view.setSessionHolder(getSessionHolder());
@@ -676,6 +692,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				| IllegalAccessException | InvocationTargetException e) {
 			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
+		filterView.setViewDetail(getViewDetail());
 		filterView.setParentEntity(getParentEntity());
 		filterView.executeBuild();
 		filterPanel = new Panel();
@@ -864,13 +881,13 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 							try {
 								try {
 									int deleted = superService.delete(new ArrayList(toDeleteEntities));
-//									NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
-//											new Object[] { deleted });
+									// NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
+									// new Object[] { deleted });
 								} catch (DataIntegrityViolationException e) {
 									throw new FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
 								}
 							} catch (FrameworkException e) {
-//								logger.error(e.getMessage(), e);
+								// logger.error(e.getMessage(), e);
 								updateErrorContent(e);
 							}
 						} else {

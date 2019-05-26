@@ -11,6 +11,7 @@ import com.vaadin.ui.ItemCaptionGenerator;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
@@ -40,7 +41,9 @@ public class RoleViewPrivilegeView extends AbstractBaseView {
 
 	private void initializePrivileges() throws FrameworkException {
 		IPrivilegeService privilegeService = ContextProvider.getBean(IPrivilegeService.class);
-		List<Privilege> privileges = privilegeService.getPrivileges();
+		String viewClassName = roleView.getView().getViewClassName();
+		List<String> privilegeCodes = Privileges.getPrivilegeCodes(viewClassName);
+		List<Privilege> privileges = privilegeService.getPrivileges(privilegeCodes);
 		privilegesFld.setValues(privileges);
 		privilegesFld.setItemCaptionGenerator(new ItemCaptionGenerator<ComboItem>() {
 

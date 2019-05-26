@@ -20,6 +20,7 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = IPrivilegeRepository.class)
 public class PrivilegeService extends SuperService implements IPrivilegeService {
 
+	private static final long serialVersionUID = 1091461735328519788L;
 	@Autowired
 	private IPrivilegeRepository privilegeRepository;
 
@@ -38,8 +39,8 @@ public class PrivilegeService extends SuperService implements IPrivilegeService 
 	}
 
 	@Override
-	public List<Privilege> getPrivileges() throws FrameworkException {
-		return privilegeRepository.getPrivileges();
+	public List<Privilege> getPrivileges(List<String> privilegeCodes) throws FrameworkException {
+		return privilegeRepository.getPrivileges(privilegeCodes);
 	}
 
 }

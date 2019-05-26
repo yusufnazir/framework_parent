@@ -7,6 +7,6 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 
 public interface IPrivilegeService extends ISuperService {
 
-	List<Privilege> getPrivileges() throws FrameworkException;
+	List<Privilege> getPrivileges(List<String> privilegeCodes) throws FrameworkException;
 
 }

@@ -34,14 +34,14 @@ public class MainView extends HorizontalLayout {
 	private static final Logger logger = LogManager.getLogger(MainView.class);
 
 	private TabSheet tabSheet;
-	
+
 	private SessionHolder sessionHolder;
 
 	public MainView() throws FrameworkException {
 		setSizeFull();
 		addStyleName("mainview");
 		setSpacing(false);
-		
+
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		SimpleSolutionsEventBus.register(this);
 
@@ -75,12 +75,11 @@ public class MainView extends HorizontalLayout {
 	@Subscribe
 	public void updateMainTabSheetContent(final MenuSelectedEvent event) throws FrameworkException {
 		SimpleSolutionsMenuItem viewItem = sessionHolder.getSimpleSolutionsMenuItem();
-		AbstractBaseView view = ViewUtil.initView(viewItem);
+		AbstractBaseView view = ViewUtil.initView(viewItem, sessionHolder.getSelectedRole().getId());
 		sessionHolder.setSimpleSolutionsMenuItem(null);
 		if (view == null) {
 			// TODO: handle null view event.
 		}
-		
 
 		Tab tab = tabSheet.addTab(view);
 		tab.setCaption(viewItem.getMenuName());
