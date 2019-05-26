@@ -382,6 +382,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		actionBar.setBackDisabled();
 		actionBar.setInfoDisabled();
 		actionBar.setAuditDisabled();
+		actionBar.hideCreatingItem();
 
 		actionBar.authorizeNew();
 		actionBar.authorizeSearch();
@@ -1233,6 +1234,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		actionBar.setSearchDisabled();
 		actionBar.authorizeSave();
 		actionBar.authorizeBack();
+		
+		if(entity==null){
+			actionBar.authorizeCreatingItem();
+		}
 
 		if (entity != null) {
 			actionBar.authorizeDelete();

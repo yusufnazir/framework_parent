@@ -30,6 +30,7 @@ public class ActionBar extends MenuBar implements SearchEvent {
 	private MenuItem importButton;
 	private MenuItem uploadDocumentBtn;
 	private MenuItem infoMenuBtn;
+	private MenuItem creatingItemLbl;
 	private ActionState actionState;
 
 	private boolean saveHidden = false;
@@ -171,6 +172,10 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		}
 	}
 
+	public void authorizeCreatingItem() {
+		creatingItemLbl.setVisible(true);
+	}
+
 	public void setDeleteDisabled() {
 		deleteBtn.setEnabled(false);
 		deleteBtn.setVisible(false);
@@ -310,7 +315,7 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		// deleteBtn.setIcon(VaadinIcons.TRASH);
 		deleteBtn.setIcon(CxodeIcons.DELETE);
 		deleteBtn.setStyleName(Style.ACTION_BAR_MORE);
-		
+
 		restoreBtn = addItem("");
 		restoreBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_RESTORE));
 		restoreBtn.setIcon(CxodeIcons.RESTORE);
@@ -339,7 +344,7 @@ public class ActionBar extends MenuBar implements SearchEvent {
 				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_MORE_ACTIONS));
 		infoMenuBtn.setIcon(CxodeIcons.MORE);
 		infoMenuBtn.setStyleName(Style.ACTION_BAR_MORE);
-		
+
 		auditBtn = infoMenuBtn.addItem("");
 		auditBtn.setCheckable(false);
 		auditBtn.setIcon(CxodeIcons.AUDIT);
@@ -348,6 +353,8 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		helpBtn = addItem("");
 		helpBtn.setIcon(VaadinIcons.QUESTION_CIRCLE);
 		helpBtn.setStyleName(Style.ACTION_BAR_MORE);
+
+		creatingItemLbl = addItem("Creating a new item...");
 	}
 
 	public MenuItem getSaveBtn() {
@@ -463,6 +470,10 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		infoHidden = true;
 	}
 
+	public void hideCreatingItem() {
+		creatingItemLbl.setVisible(false);
+	}
+
 	private void handleActions() {
 		eraseBtn.setCommand(new Command() {
 
@@ -523,7 +534,7 @@ public class ActionBar extends MenuBar implements SearchEvent {
 	public void setActionDelete(Command command) {
 		this.deleteBtn.setCommand(command);
 	}
-	
+
 	public void setActionRestore(Command command) {
 		this.restoreBtn.setCommand(command);
 	}
@@ -531,7 +542,7 @@ public class ActionBar extends MenuBar implements SearchEvent {
 	public void setActionExportToExcel(Command command) {
 		this.exportExcelBtn.setCommand(command);
 	}
-	
+
 	public void setActionAudit(Command command) {
 		this.auditBtn.setCommand(command);
 	}
