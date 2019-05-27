@@ -1238,7 +1238,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		if(entity==null){
 			actionBar.authorizeCreatingItem();
 		}
-
 		if (entity != null) {
 			actionBar.authorizeDelete();
 		}
