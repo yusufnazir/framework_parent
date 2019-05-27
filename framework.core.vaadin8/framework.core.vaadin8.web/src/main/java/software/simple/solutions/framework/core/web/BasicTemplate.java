@@ -619,7 +619,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private AbstractBaseView initSubView(SimpleSolutionsMenuItem viewItem) throws FrameworkException {
 		try {
-			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass());
+			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass(),
+					getSessionHolder().getSelectedRole().getId());
 
 			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
 					.getBean(IRoleViewPrivilegeService.class);
@@ -1234,7 +1235,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		actionBar.setSearchDisabled();
 		actionBar.authorizeSave();
 		actionBar.authorizeBack();
-		if(entity==null){
+		if (entity == null) {
 			actionBar.authorizeCreatingItem();
 		}
 		if (entity != null) {

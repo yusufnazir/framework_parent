@@ -17,7 +17,7 @@ import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class ViewUtil {
 
-	public static AbstractBaseView initView(Class<?> classToBe) throws FrameworkException {
+	public static AbstractBaseView initView(Class<?> classToBe, Long roleId) throws FrameworkException {
 		AbstractBaseView view = null;
 		try {
 			view = (AbstractBaseView) classToBe.newInstance();
@@ -29,10 +29,10 @@ public class ViewUtil {
 		return view;
 	}
 
-	public static AbstractBaseView initView(String className) throws FrameworkException {
+	public static AbstractBaseView initView(String className, Long roleId) throws FrameworkException {
 		try {
 			Class<?> classToBe = Class.forName(className);
-			return initView(classToBe);
+			return initView(classToBe, roleId);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -46,18 +46,18 @@ public class ViewUtil {
 	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, boolean popUpMode, Long roleId)
 			throws FrameworkException {
 		String viewClassName = menuItem.getMenu().getView().getViewClassName();
-		AbstractBaseView view = initView(viewClassName);
+		AbstractBaseView view = initView(viewClassName, roleId);
 		if (view != null) {
 			view.setSearchForward(menuItem.getSearchedEntity());
 			view.setPopUpMode(popUpMode);
-			
+
 			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
 					.getBean(IRoleViewPrivilegeService.class);
-			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
-					menuItem.getMenu().getView().getId(), roleId);
+			List<String> privileges = roleViewPrivilegeService
+					.getPrivilegesByViewIdAndRoleId(menuItem.getMenu().getView().getId(), roleId);
 			ViewDetail viewDetail = view.getViewDetail();
 			viewDetail.setPrivileges(privileges);
-			
+
 			viewDetail.setMenu(menuItem.getMenu());
 			viewDetail.setView(menuItem.getMenu().getView());
 

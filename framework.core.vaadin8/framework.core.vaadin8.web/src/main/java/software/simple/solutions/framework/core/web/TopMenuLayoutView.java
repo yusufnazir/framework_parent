@@ -65,7 +65,9 @@ import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.ILanguageService;
 import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.service.IRoleService;
+import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
 import software.simple.solutions.framework.core.service.IViewService;
+import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.MenuIndexComparator;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -287,7 +289,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 				tabSheet.setVisible(true);
 			}
 			View view = viewService.getById(View.class, viewId);
-			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName());
+			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName(),
+					sessionHolder.getSelectedRole().getId());
 			if (abstractBaseView == null) {
 				Notification notification = new Notification(PropertyResolver.getPropertyValueByLocale(
 						"core.menu.no.view.found", UI.getCurrent().getLocale()), Type.ERROR_MESSAGE);
@@ -296,6 +299,12 @@ public class TopMenuLayoutView extends VerticalLayout {
 				notification.show(UI.getCurrent().getPage());
 				return null;
 			}
+			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
+					.getBean(IRoleViewPrivilegeService.class);
+			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(viewId,
+					sessionHolder.getSelectedRole().getId());
+			abstractBaseView.getViewDetail().setPrivileges(privileges);
+
 			abstractBaseView.getViewDetail().setMenu(menu);
 			abstractBaseView.getViewDetail().setView(view);
 			abstractBaseView.executeBuild();

@@ -160,7 +160,8 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 
 	private AbstractBaseView initSubView(SimpleSolutionsMenuItem viewItem) throws FrameworkException {
 		try {
-			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass());
+			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass(),
+					getSessionHolder().getSelectedRole().getId());
 			// AbstractBaseView view = (AbstractBaseView)
 			// viewItem.getViewClass().newInstance();
 
