@@ -1234,7 +1234,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		actionBar.setSearchDisabled();
 		actionBar.authorizeSave();
 		actionBar.authorizeBack();
-		
 		if(entity==null){
 			actionBar.authorizeCreatingItem();
 		}
