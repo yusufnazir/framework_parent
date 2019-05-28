@@ -33,18 +33,42 @@ public class PropertyHolder {
 					.collect(Collectors.groupingBy(p -> p.getLanguage().getCode().toLowerCase()));
 			for (Entry<String, List<PropertyPerLocale>> entry : perLocale.entrySet()) {
 				Properties properties = new Properties();
-//				entry.getValue().stream().forEach(p -> System.out.println(p.getProperty() == null ? p.getId() : null));
-				entry.getValue().parallelStream()
-						.forEach(p -> {
-							if(p.getProperty()!=null){
-								properties.setProperty(p.getProperty().getKey(), p.getValue());
-							}
-						});
+				// entry.getValue().stream().forEach(p ->
+				// System.out.println(p.getProperty() == null ? p.getId() :
+				// null));
+				entry.getValue().parallelStream().forEach(p -> {
+					if (p.getProperty() != null) {
+						properties.setProperty(p.getProperty().getKey(), p.getValue());
+					}
+				});
 				propertyLocalized.put(entry.getKey(), properties);
 			}
 		} catch (FrameworkException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void updateKeyValue(String locale, String key, String value) {
+		Properties properties = propertyLocalized.get(locale);
+		if (properties != null) {
+			properties.setProperty(key, value);
+		}
+	}
+
+	public static void updateKeyValue(PropertyPerLocale propertyPerLocale) {
+		if (propertyPerLocale != null) {
+			String locale = propertyPerLocale.getLanguage().getCode();
+
+			if (locale != null) {
+				Properties properties = propertyLocalized.get(locale.toLowerCase());
+				if (properties != null) {
+					String key = propertyPerLocale.getProperty().getKey();
+					String value = propertyPerLocale.getValue();
+					properties.setProperty(key, value);
+				}
+			}
+		}
+
 	}
 
 }

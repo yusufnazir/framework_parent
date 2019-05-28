@@ -43,9 +43,9 @@ public class PropertyPerLocaleService extends SuperService implements IPropertyP
 		}
 		propertyPerLocale.setLanguage(get(Language.class, vo.getLanguageId()));
 
-		createKeyifNotExists(vo.getProperty());
+		Property property = createKeyifNotExists(vo.getProperty());
 
-		propertyPerLocale.setProperty(getByCode(Property.class, vo.getProperty()));
+		propertyPerLocale.setProperty(property);
 		propertyPerLocale.setValue(vo.getValue());
 		propertyPerLocale.setActive(vo.getActive());
 

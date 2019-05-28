@@ -387,6 +387,47 @@ public class GenericCriteriaBuilder {
 			wherePredicates.add(predicate);
 		}
 		return predicate;
+
+	}
+
+	private Predicate createPredicateForDateTruncTimeInterval(Expression<LocalDateTime> expression,
+			DateInterval dateInterval) {
+		Predicate predicate = null;
+		LocalDate from = dateInterval.getFrom();
+		LocalDate to = dateInterval.getTo();
+		LocalDateTime dateTimeFrom = LocalDateTime.from(from.atStartOfDay()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		String operator = dateInterval.getOperator();
+		if (from != null) {
+			switch (operator) {
+			case Operator.EQ:
+				predicate = criteriaBuilder.between(expression, dateTimeFrom, dateTimeFrom.plusDays(1));
+				break;
+			case Operator.NE:
+				predicate = criteriaBuilder
+						.not(criteriaBuilder.between(expression, dateTimeFrom, dateTimeFrom.plusDays(1)));
+				break;
+			case Operator.GT:
+				predicate = criteriaBuilder.greaterThan(expression, dateTimeFrom.plusDays(1));
+				break;
+			case Operator.GE:
+				predicate = criteriaBuilder.greaterThanOrEqualTo(expression, dateTimeFrom);
+				break;
+			case Operator.LT:
+				predicate = criteriaBuilder.lessThan(expression, dateTimeFrom);
+				break;
+			case Operator.LE:
+				predicate = criteriaBuilder.lessThanOrEqualTo(expression, dateTimeFrom.plusDays(1));
+				break;
+			case Operator.BE:
+				if (to != null) {
+					LocalDateTime dateTimeTo = LocalDateTime.from(to.atStartOfDay()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+					predicate = criteriaBuilder.between(expression, dateTimeFrom, dateTimeTo.plusDays(1));
+				}
+				break;
+			}
+			wherePredicates.add(predicate);
+		}
+		return predicate;
 	}
 
 	private Predicate createPredicateForDateTimeInterval(Expression<LocalDateTime> expression,
@@ -458,8 +499,14 @@ public class GenericCriteriaBuilder {
 					DecimalInterval decimalInterval = (DecimalInterval) object;
 					createPredicateForBigDecimalInterval(path, decimalInterval);
 				} else if (object instanceof DateInterval) {
-					DateInterval dateInterval = (DateInterval) object;
-					createPredicateForDateInterval(path, dateInterval);
+					if (entityDeclaredField.getType().isAssignableFrom(LocalDateTime.class)) {
+						DateInterval dateInterval = (DateInterval) object;
+						createPredicateForDateTruncTimeInterval(path, dateInterval);
+					} else {
+						DateInterval dateInterval = (DateInterval) object;
+						createPredicateForDateInterval(path, dateInterval);
+					}
+
 				} else if (object instanceof DateTimeInterval) {
 					DateTimeInterval dateTimeInterval = (DateTimeInterval) object;
 					createPredicateForDateTimeInterval(path, dateTimeInterval);

@@ -23,25 +23,25 @@ public class AuthorizedViewListHelper {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 	}
 
-	public List<SimpleSolutionsMenuItem> createMenuItems(Menu parentMenu) throws FrameworkException {
-		viewItems.clear();
-		IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-		List<Menu> listOfMenus = null;
-		if (parentMenu == null) {
-			listOfMenus = menuService.listParentMenus();
-		} else {
-			listOfMenus = menuService.listChildMenus(parentMenu.getId());
-			parentMenu.setIcon(FontAwesome.ARROW_LEFT.getCodepoint());
-			SimpleSolutionsMenuItem simpleSolutionsViewItem = new SimpleSolutionsMenuItem(parentMenu, true);
-			viewItems.add(simpleSolutionsViewItem);
-			viewItems.add(new MenuDivider());
-		}
-		for (Menu menu : listOfMenus) {
-			viewItems.add(new SimpleSolutionsMenuItem(menu));
-		}
-
-		return viewItems;
-	}
+//	public List<SimpleSolutionsMenuItem> createMenuItems(Menu parentMenu) throws FrameworkException {
+//		viewItems.clear();
+//		IMenuService menuService = ContextProvider.getBean(IMenuService.class);
+//		List<Menu> listOfMenus = null;
+//		if (parentMenu == null) {
+//			listOfMenus = menuService.listParentMenus();
+//		} else {
+//			listOfMenus = menuService.listChildMenus(parentMenu.getId());
+//			parentMenu.setIcon(FontAwesome.ARROW_LEFT.getCodepoint());
+//			SimpleSolutionsMenuItem simpleSolutionsViewItem = new SimpleSolutionsMenuItem(parentMenu, true);
+//			viewItems.add(simpleSolutionsViewItem);
+//			viewItems.add(new MenuDivider());
+//		}
+//		for (Menu menu : listOfMenus) {
+//			viewItems.add(new SimpleSolutionsMenuItem(menu));
+//		}
+//
+//		return viewItems;
+//	}
 
 	public List<SimpleSolutionsMenuItem> getTabMenus(Long id) throws FrameworkException {
 		List<SimpleSolutionsMenuItem> viewItems = new ArrayList<SimpleSolutionsMenuItem>();

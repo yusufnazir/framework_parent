@@ -32,6 +32,7 @@ import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
+import software.simple.solutions.framework.core.entities.Property;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.DateInterval;
 import software.simple.solutions.framework.core.pojo.LongInterval;
@@ -868,6 +869,14 @@ public class GenericRepository implements IGenericRepository {
 		T t = get(cl, id);
 		IMappedSuperClass mappedSuperClass = (IMappedSuperClass) t;
 		return entityManager.merge(t);
+	}
+
+	@Override
+	public Property getBypropertyKey(Class<Property> class1, String key) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from Property where key=:key";
+		paramMap.put("key", key);
+		return getByQuery(query, paramMap);
 	}
 
 }

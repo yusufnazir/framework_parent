@@ -266,30 +266,30 @@ public final class SimpleSolutionsMenu extends CustomComponent {
 		UI.getCurrent().getNavigator().navigateTo(simpleSolutionsMenuItem.getViewName());
 	}
 
-	@Subscribe
-	public void buildMenuItems(final MenuStructureEvent event) throws FrameworkException {
-		SimpleSolutionsMenuItem simpleSolutionsMenuItem = sessionHolder.getSimpleSolutionsMenuItem();
-		Menu parentMenu = simpleSolutionsMenuItem.getMenu();
-		menuItemsLayout.removeAllComponents();
-		AuthorizedViewListHelper authorizedViewListHelper = new AuthorizedViewListHelper();
-		List<SimpleSolutionsMenuItem> views = authorizedViewListHelper.createMenuItems(parentMenu);
-		sessionHolder.setAuthorizedViews(views);
+//	@Subscribe
+//	public void buildMenuItems(final MenuStructureEvent event) throws FrameworkException {
+//		SimpleSolutionsMenuItem simpleSolutionsMenuItem = sessionHolder.getSimpleSolutionsMenuItem();
+//		Menu parentMenu = simpleSolutionsMenuItem.getMenu();
+//		menuItemsLayout.removeAllComponents();
+//		AuthorizedViewListHelper authorizedViewListHelper = new AuthorizedViewListHelper();
+//		List<SimpleSolutionsMenuItem> views = authorizedViewListHelper.createMenuItems(parentMenu);
+//		sessionHolder.setAuthorizedViews(views);
 
-		if (views != null) {
-			for (final SimpleSolutionsMenuItem view : views) {
-				if (view.isDivider()) {
-					Label label = new Label("", ContentMode.HTML);
-					label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
-					label.addStyleName(ValoTheme.LABEL_H4);
-					menuItemsLayout.addComponent(label);
-				} else {
-					Component menuItemComponent = new ValoMenuItemButton(view);
-
-					menuItemsLayout.addComponent(menuItemComponent);
-				}
-			}
-		}
-	}
+//		if (views != null) {
+//			for (final SimpleSolutionsMenuItem view : views) {
+//				if (view.isDivider()) {
+//					Label label = new Label("", ContentMode.HTML);
+//					label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+//					label.addStyleName(ValoTheme.LABEL_H4);
+//					menuItemsLayout.addComponent(label);
+//				} else {
+//					Component menuItemComponent = new ValoMenuItemButton(view);
+//
+//					menuItemsLayout.addComponent(menuItemComponent);
+//				}
+//			}
+//		}
+//	}
 
 	@Subscribe
 	public void updateTabSheetContent(final TabSheetViewEvent event) throws FrameworkException {

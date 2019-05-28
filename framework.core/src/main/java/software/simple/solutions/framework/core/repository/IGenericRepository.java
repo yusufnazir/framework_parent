@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.data.repository.NoRepositoryBean;
 
+import software.simple.solutions.framework.core.entities.Property;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
@@ -104,5 +105,7 @@ public interface IGenericRepository extends Serializable {
 	Integer updateBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException;
 
 	Integer deleteBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException;
+
+	Property getBypropertyKey(Class<Property> class1, String key) throws FrameworkException;
 
 }

@@ -2,6 +2,7 @@ package software.simple.solutions.framework.core.web.view;
 
 import com.vaadin.data.ValueProvider;
 
+import io.reactivex.functions.Consumer;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextArea;
@@ -10,7 +11,7 @@ import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.components.select.LanguageSelect;
-import software.simple.solutions.framework.core.constants.Operator;
+import software.simple.solutions.framework.core.config.PropertyHolder;
 import software.simple.solutions.framework.core.entities.ILocalized;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Property;
@@ -31,6 +32,16 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 		setServiceClass(IPropertyPerLocaleService.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
+
+		getUpdateObserver().subscribe(new Consumer<Object>() {
+
+			@Override
+			public void accept(Object t) throws Exception {
+				if (t != null) {
+					PropertyHolder.updateKeyValue((PropertyPerLocale) t);
+				}
+			}
+		});
 	}
 
 	@Override

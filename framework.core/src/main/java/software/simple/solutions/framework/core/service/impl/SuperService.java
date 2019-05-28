@@ -40,16 +40,18 @@ public abstract class SuperService implements ISuperService {
 
 	private IGenericRepository genericRepository;
 
-	public void createKeyifNotExists(String key) throws FrameworkException {
+	public Property createKeyifNotExists(String key) throws FrameworkException {
+		Property property = null;
 		if (StringUtils.isNotBlank(key)) {
-			Property property = genericRepository.getByCode(Property.class, key);
+			property = genericRepository.getBypropertyKey(Property.class, key);
 			if (property == null) {
 				property = new Property();
 				property.setActive(true);
 				property.setKey(key);
-				saveOrUpdate(property, true);
+				property = saveOrUpdate(property, true);
 			}
 		}
+		return property;
 	}
 
 	@Override

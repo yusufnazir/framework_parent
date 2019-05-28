@@ -29,6 +29,7 @@ public class TokenEndpointRetryInterceptor {
 				return aJoinPoint.proceed();
 			} catch (DuplicateKeyException e) {
 				String message = e.getMessage();
+				System.out.println(message);
 				Pattern p = Pattern.compile("(?:^|\\s)'([^']*?)'(?:$|\\s)", Pattern.MULTILINE);
 				Matcher m = p.matcher(message);
 				if (m.find()) {
