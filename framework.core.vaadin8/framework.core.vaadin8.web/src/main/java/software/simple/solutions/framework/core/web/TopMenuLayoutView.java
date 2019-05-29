@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,9 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -412,8 +417,12 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 					@Override
 					public void menuSelected(MenuItem selectedItem) {
+						VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+						HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest)
+								.getHttpServletRequest();
+						String requestUrl = httpServletRequest.getServletContext().getContextPath();
 						getUI().getSession().close();
-						getUI().getPage().setLocation("");
+						getUI().getPage().setLocation(requestUrl + "/app");
 					}
 				});
 
