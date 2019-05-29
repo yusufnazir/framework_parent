@@ -10,4 +10,6 @@ public interface IFileService extends ISuperService {
 
 	EntityFile findFileByEntityAndType(String entityId, String entityName, String typeOfFile) throws FrameworkException;
 
+	void deleteFileByEntityAndType(String entityId, String entityName, String typeOfFile) throws FrameworkException;
+
 }

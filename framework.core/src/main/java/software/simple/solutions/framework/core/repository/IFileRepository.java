@@ -7,4 +7,6 @@ public interface IFileRepository extends IGenericRepository {
 
 	EntityFile findFileByEntityAndType(String entityId, String entityName, String typeOfFile) throws FrameworkException;
 
+	void deleteFileByEntityAndType(String entityId, String entityName, String typeOfFile) throws FrameworkException;
+
 }

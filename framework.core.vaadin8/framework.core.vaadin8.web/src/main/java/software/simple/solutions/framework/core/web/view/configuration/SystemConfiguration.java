@@ -7,17 +7,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
@@ -33,9 +37,12 @@ import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
+import software.simple.solutions.framework.core.components.ConfirmWindow;
+import software.simple.solutions.framework.core.components.ConfirmWindow.ConfirmationHandler;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.SessionHolder;
+import software.simple.solutions.framework.core.config.SystemObserver;
 import software.simple.solutions.framework.core.constants.MimeType;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
@@ -63,13 +70,16 @@ public class SystemConfiguration extends CGridLayout {
 	private CTextField applicationURLFld;
 	private CDiscreetNumberField exportRowCountFld;
 	private CTextField dateFormatFld;
-	private Image logoImageHolder;
 	private Upload upload;
 	private UploadFieldReceiver receiver;
+	private CDiscreetNumberField applicationLogoHeight;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
 	private UI ui;
+	private Configuration applicationLogoConfiguration;
+	private CButton deleteImgBtn;
+	private Image applicationLogoImage;
 
 	public SystemConfiguration() throws FrameworkException {
 		ui = UI.getCurrent();
@@ -82,10 +92,26 @@ public class SystemConfiguration extends CGridLayout {
 				++i);
 		dateFormatFld = addField(CTextField.class, ConfigurationProperty.APPLICATION_DATE_FORMAT, 0, ++i);
 
-		logoImageHolder = createLogoImageHolder();
+		HorizontalLayout horizontalLayout = createLogoImageHolder();
 		VerticalLayout logoImageLayout = addField(VerticalLayout.class, ConfigurationProperty.APPLICATION_LOGO, 0, ++i);
-		logoImageLayout.addComponent(logoImageHolder);
+		logoImageLayout.addComponent(horizontalLayout);
 		receiver = new FileBuffer();
+
+		applicationLogoHeight = addField(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_LOGO_HEIGHT, 0,
+				++i);
+		applicationLogoHeight.addValueChangeListener(new ValueChangeListener<String>() {
+
+			private static final long serialVersionUID = 9054423098753143647L;
+
+			@Override
+			public void valueChange(ValueChangeEvent<String> event) {
+				applicationLogoImage.setHeight("40px");
+				Long height = applicationLogoHeight.getLongValue();
+				if (height != null && height.compareTo(0L) > 0) {
+					applicationLogoImage.setHeight(height + "px");
+				}
+			}
+		});
 
 		upload = new Upload();
 		logoImageLayout.addComponent(upload);
@@ -122,7 +148,7 @@ public class SystemConfiguration extends CGridLayout {
 						return receiver.getContentAsStream();
 					}
 				}, UUID.randomUUID().toString());
-				logoImageHolder.setSource(resource);
+				applicationLogoImage.setSource(resource);
 			}
 		});
 
@@ -142,7 +168,8 @@ public class SystemConfiguration extends CGridLayout {
 				configurations.add(
 						getValue(ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, exportRowCountFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_DATE_FORMAT, dateFormatFld.getValue()));
-
+				configurations
+						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_HEIGHT, applicationLogoHeight.getValue()));
 				try {
 					if (receiver.getLastFileSize() > 0) {
 						InputStream inputStream = receiver.getContentAsStream();
@@ -157,7 +184,18 @@ public class SystemConfiguration extends CGridLayout {
 
 				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
-					configurationService.update(configurations);
+					List<Configuration> configs = configurationService.update(configurations);
+					if (configs != null) {
+						Optional<Configuration> optional = configs.stream()
+								.filter(p -> p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO))
+								.findFirst();
+						if (optional.isPresent()) {
+							applicationLogoConfiguration = optional.get();
+							deleteImgBtn.setVisible(true);
+							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+							systemObserver.getApplicationLogoChangeObserver().onNext(true);
+						}
+					}
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -169,13 +207,59 @@ public class SystemConfiguration extends CGridLayout {
 		setValues();
 	}
 
-	private Image createLogoImageHolder() {
-		Image image = new Image();
-		image.setWidth("200px");
-		image.setHeight("40px");
-		image.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
-		image.addStyleName(Style.MAIN_VIEW_APPLICATION_LOGO);
-		return image;
+	private HorizontalLayout createLogoImageHolder() {
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setSpacing(true);
+		applicationLogoImage = new Image();
+		horizontalLayout.addComponent(applicationLogoImage);
+		applicationLogoImage.setWidth("200px");
+		applicationLogoImage.setHeight("40px");
+
+		applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
+		applicationLogoImage.addStyleName(Style.MAIN_VIEW_APPLICATION_LOGO);
+
+		deleteImgBtn = new CButton();
+		horizontalLayout.addComponent(deleteImgBtn);
+		deleteImgBtn.setVisible(false);
+		deleteImgBtn.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_DELETE);
+		deleteImgBtn.addStyleName(ValoTheme.BUTTON_QUIET);
+		deleteImgBtn.addStyleName(ValoTheme.BUTTON_DANGER);
+		deleteImgBtn.addStyleName(Style.BUTTON_DANGEROUS);
+		deleteImgBtn.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = 8073994137493967329L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if (applicationLogoConfiguration != null) {
+					ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.DELETE_HEADER,
+							SystemProperty.DELETE_CONFIRMATION_REQUEST, SystemProperty.CONFIRM, SystemProperty.CANCEL);
+					confirmWindow.execute(new ConfirmationHandler() {
+
+						@Override
+						public void handlePositive() {
+							IFileService fileService = ContextProvider.getBean(IFileService.class);
+							try {
+								fileService.deleteFileByEntityAndType(applicationLogoConfiguration.getId().toString(),
+										Configuration.class.getName(), ConfigurationProperty.APPLICATION_LOGO);
+								applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
+								SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+								systemObserver.getApplicationLogoChangeObserver().onNext(true);
+							} catch (FrameworkException e) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+
+						@Override
+						public void handleNegative() {
+							return;
+						}
+					});
+				}
+			}
+		});
+
+		return horizontalLayout;
 	}
 
 	private void setValues() throws FrameworkException {
@@ -196,6 +280,7 @@ public class SystemConfiguration extends CGridLayout {
 				dateFormatFld.setValue(configuration.getValue());
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO:
+				applicationLogoConfiguration = configuration;
 				Resource resource = new StreamResource(new StreamSource() {
 
 					private static final long serialVersionUID = 7941811283553249939L;
@@ -207,16 +292,21 @@ public class SystemConfiguration extends CGridLayout {
 							EntityFile entityFile = fileService.findFileByEntityAndType(
 									configuration.getId().toString(), Configuration.class.getName(),
 									ConfigurationProperty.APPLICATION_LOGO);
-							if (entityFile!=null && entityFile.getFileObject() != null) {
+							if (entityFile != null && entityFile.getFileObject() != null) {
+								deleteImgBtn.setVisible(true);
 								return new ByteArrayInputStream(entityFile.getFileObject());
 							}
 						} catch (FrameworkException e) {
 							logger.error(e.getMessage(), e);
 						}
+						applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
 						return null;
 					}
 				}, UUID.randomUUID().toString());
-				logoImageHolder.setSource(resource);
+				applicationLogoImage.setSource(resource);
+				break;
+			case ConfigurationProperty.APPLICATION_LOGO_HEIGHT:
+				applicationLogoHeight.setLongValue(configuration.getLong());
 				break;
 			default:
 				break;

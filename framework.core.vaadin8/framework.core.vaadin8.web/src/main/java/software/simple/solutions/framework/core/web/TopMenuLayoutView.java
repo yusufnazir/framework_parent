@@ -43,11 +43,13 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import io.reactivex.functions.Consumer;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.ConfirmWindow;
 import software.simple.solutions.framework.core.components.ConfirmWindow.ConfirmationHandler;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
+import software.simple.solutions.framework.core.config.SystemObserver;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
@@ -103,6 +105,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private HorizontalLayout headerLayout;
 	private UI ui;
 
+	private Image applicationLogoImage;
+
 	public TopMenuLayoutView() throws FrameworkException {
 		super();
 		ui = UI.getCurrent();
@@ -118,6 +122,15 @@ public class TopMenuLayoutView extends VerticalLayout {
 		buildLayout();
 
 		setUpMenus();
+
+		SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+		systemObserver.getApplicationLogoChangeObserver().subscribe(new Consumer<Boolean>() {
+
+			@Override
+			public void accept(Boolean t) throws Exception {
+				updateApplicationLogo();
+			}
+		});
 	}
 
 	private void setUpMenus() throws FrameworkException {
@@ -461,6 +474,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 		HorizontalLayout headerLayout = new HorizontalLayout();
 		headerLayout.setWidth("100%");
 		headerLayout.setMargin(false);
+		// headerLayout.setHeight("100px");
 
 		Image logoImageHolder = createLogoImageHolder();
 		headerLayout.addComponent(logoImageHolder);
@@ -476,17 +490,31 @@ public class TopMenuLayoutView extends VerticalLayout {
 		userInfoMenuBar = createUserMenuStructure();
 		headerLayout.addComponent(userInfoMenuBar);
 		headerLayout.setExpandRatio(userInfoMenuBar, 1);
-		headerLayout.setComponentAlignment(userInfoMenuBar, Alignment.MIDDLE_RIGHT);
+		headerLayout.setComponentAlignment(userInfoMenuBar, Alignment.TOP_RIGHT);
 
 		return headerLayout;
 	}
 
-	private Image createLogoImageHolder() {
-		Image image = new Image();
-		image.setWidth("200px");
-		image.setHeight("40px");
-		image.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
-		image.addStyleName(Style.MAIN_VIEW_APPLICATION_LOGO);
+	private Image createLogoImageHolder() throws FrameworkException {
+		applicationLogoImage = new Image();
+		applicationLogoImage.setWidth("200px");
+		applicationLogoImage.setHeight("40px");
+		updateApplicationLogo();
+
+		return applicationLogoImage;
+	}
+
+	private void updateApplicationLogo() throws FrameworkException {
+		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+		Configuration configuration = configurationService.getByCode(ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
+		if (configuration != null) {
+			Long height = configuration.getLong();
+			if (height != null && height.compareTo(0L) > 0) {
+				applicationLogoImage.setHeight(height + "px");
+			}
+		}
+		applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
+		applicationLogoImage.addStyleName(Style.MAIN_VIEW_APPLICATION_LOGO);
 
 		new Thread(new Runnable() {
 
@@ -508,13 +536,14 @@ public class TopMenuLayoutView extends VerticalLayout {
 								EntityFile entityFile = fileService.findFileByEntityAndType(
 										configuration.getId().toString(), Configuration.class.getName(),
 										ConfigurationProperty.APPLICATION_LOGO);
-								if (entityFile.getFileObject() != null) {
+								if (entityFile != null && entityFile.getFileObject() != null) {
 									return new ByteArrayInputStream(entityFile.getFileObject());
 								}
 							}
 						} catch (FrameworkException e) {
 							logger.error(e.getMessage(), e);
 						}
+						applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
 						return null;
 					}
 				}, UUID.randomUUID().toString());
@@ -522,13 +551,11 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 					@Override
 					public void run() {
-						image.setSource(resource);
+						applicationLogoImage.setSource(resource);
 					}
 				});
 			}
 		}).start();
-
-		return image;
 	}
 
 	private MenuBar createMenuStructure() {

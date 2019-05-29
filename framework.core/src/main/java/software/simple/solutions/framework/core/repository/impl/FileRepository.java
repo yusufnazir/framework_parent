@@ -22,4 +22,15 @@ public class FileRepository extends GenericRepository implements IFileRepository
 		return getByQuery(query, paramMap);
 	}
 
+	@Override
+	public void deleteFileByEntityAndType(String entityId, String entityName, String typeOfFile)
+			throws FrameworkException {
+		String query = "delete from EntityFile where entityId=:entityId and entity=:entity and typeOfFile=:typeOfFile";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("entityId", entityId);
+		paramMap.put("entity", entityName);
+		paramMap.put("typeOfFile", typeOfFile);
+		deleteByHql(query, paramMap);
+	}
+
 }

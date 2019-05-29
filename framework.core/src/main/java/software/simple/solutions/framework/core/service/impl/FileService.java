@@ -53,6 +53,12 @@ public class FileService extends SuperService implements IFileService {
 	}
 
 	@Override
+	public void deleteFileByEntityAndType(String entityId, String entityName, String typeOfFile)
+			throws FrameworkException {
+		fileRepository.deleteFileByEntityAndType(entityId, entityName, typeOfFile);
+	}
+
+	@Override
 	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException {
 		EntityFile entityFile = (EntityFile) get(cl, id);
 		String filePath = entityFile.getFilePath();
