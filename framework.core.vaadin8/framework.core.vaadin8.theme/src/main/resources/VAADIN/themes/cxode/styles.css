@@ -16318,6 +16318,10 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: normal;
 }
 
+.cxode .label-caption-mode {
+	font-weight: bold;
+}
+
 .cxode div.wtpdfviewer {
 	cursor: pointer;
 	user-select: none;

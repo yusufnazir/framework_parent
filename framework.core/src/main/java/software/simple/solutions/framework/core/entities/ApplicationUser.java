@@ -55,7 +55,7 @@ public class ApplicationUser extends MappedSuperClass {
 	private LocalDateTime passwordChangeDate;
 
 	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = PersonProperty.FIRST_NAME),
-			@FilterFieldProperty(fieldProperty = PersonProperty.FIRST_NAME) })
+			@FilterFieldProperty(fieldProperty = PersonProperty.LAST_NAME) })
 	@ManyToOne
 	@JoinColumn(name = CxodeTables.APPLICATION_USER.COLUMNS.PERSON_ID, referencedColumnName = CxodeTables.PERSON.COLUMNS.ID)
 	private Person person;

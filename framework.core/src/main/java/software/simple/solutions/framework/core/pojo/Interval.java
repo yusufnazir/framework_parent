@@ -1,6 +1,8 @@
 package software.simple.solutions.framework.core.pojo;
 
-public interface Interval<T> {
+import java.io.Serializable;
+
+public interface Interval<T> extends Serializable {
 
 	String getOperator();
 

@@ -9,9 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
@@ -73,6 +75,7 @@ public class SystemConfiguration extends CGridLayout {
 	private Upload upload;
 	private UploadFieldReceiver receiver;
 	private CDiscreetNumberField applicationLogoHeight;
+	private CDiscreetNumberField applicationLogoWidth;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
@@ -109,6 +112,21 @@ public class SystemConfiguration extends CGridLayout {
 				Long height = applicationLogoHeight.getLongValue();
 				if (height != null && height.compareTo(0L) > 0) {
 					applicationLogoImage.setHeight(height + "px");
+				}
+			}
+		});
+		applicationLogoWidth = addField(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_LOGO_WIDTH, 0,
+				++i);
+		applicationLogoWidth.addValueChangeListener(new ValueChangeListener<String>() {
+
+			private static final long serialVersionUID = 9054423098753143647L;
+
+			@Override
+			public void valueChange(ValueChangeEvent<String> event) {
+				applicationLogoImage.setWidth("200px");
+				Long width = applicationLogoWidth.getLongValue();
+				if (width != null && width.compareTo(0L) > 0) {
+					applicationLogoImage.setWidth(width + "px");
 				}
 			}
 		});
@@ -160,6 +178,7 @@ public class SystemConfiguration extends CGridLayout {
 
 			private static final long serialVersionUID = 3418895031034445319L;
 
+			@Autowired
 			@Override
 			public void buttonClick(ClickEvent event) {
 				List<ConfigurationVO> configurations = new ArrayList<ConfigurationVO>();
@@ -170,6 +189,8 @@ public class SystemConfiguration extends CGridLayout {
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_DATE_FORMAT, dateFormatFld.getValue()));
 				configurations
 						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_HEIGHT, applicationLogoHeight.getValue()));
+				configurations
+						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_WIDTH, applicationLogoWidth.getValue()));
 				try {
 					if (receiver.getLastFileSize() > 0) {
 						InputStream inputStream = receiver.getContentAsStream();
@@ -186,12 +207,15 @@ public class SystemConfiguration extends CGridLayout {
 				try {
 					List<Configuration> configs = configurationService.update(configurations);
 					if (configs != null) {
-						Optional<Configuration> optional = configs.stream()
-								.filter(p -> p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO))
-								.findFirst();
-						if (optional.isPresent()) {
-							applicationLogoConfiguration = optional.get();
-							deleteImgBtn.setVisible(true);
+						List<String> configurationCodes = configs.stream()
+								.filter(p -> (p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO)
+										|| p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO_HEIGHT)
+										|| p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO_WIDTH)))
+								.map(p->p.getCode()).collect(Collectors.toList());
+						if (configurationCodes!=null && !configurationCodes.isEmpty()) {
+							if(configurationCodes.contains(ConfigurationProperty.APPLICATION_LOGO)){
+								deleteImgBtn.setVisible(true);
+							}
 							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
 							systemObserver.getApplicationLogoChangeObserver().onNext(true);
 						}
@@ -306,7 +330,10 @@ public class SystemConfiguration extends CGridLayout {
 				applicationLogoImage.setSource(resource);
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO_HEIGHT:
-				applicationLogoHeight.setLongValue(configuration.getLong());
+				applicationLogoHeight.setLongValue(configuration.getLong() == null ? 40L : configuration.getLong());
+				break;
+			case ConfigurationProperty.APPLICATION_LOGO_WIDTH:
+				applicationLogoWidth.setLongValue(configuration.getLong() == null ? 200L : configuration.getLong());
 				break;
 			default:
 				break;

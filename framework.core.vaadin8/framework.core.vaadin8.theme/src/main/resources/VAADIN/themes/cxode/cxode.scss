@@ -6,6 +6,7 @@
 @import "views/loginview.scss";
 @import "components/lookupfield.scss";
 @import "components/multiline-label.scss";
+@import "components/captionlabelfield.scss";
 
 @mixin cxode {
 	
@@ -15,5 +16,6 @@
 	@include loginview;
 	@include lookupfield;
 	@include multiline-label;
+	@include captionlabelfield;
 	@include pdfviewer;
 }

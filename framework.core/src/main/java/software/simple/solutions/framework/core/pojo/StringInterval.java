@@ -2,6 +2,8 @@ package software.simple.solutions.framework.core.pojo;
 
 public class StringInterval implements Interval<String> {
 
+	private static final long serialVersionUID = 4835205285216588674L;
+	
 	private String from;
 	private String operator;
 

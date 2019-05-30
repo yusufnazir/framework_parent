@@ -506,13 +506,21 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 	private void updateApplicationLogo() throws FrameworkException {
 		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		Configuration configuration = configurationService.getByCode(ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
-		if (configuration != null) {
-			Long height = configuration.getLong();
+		Configuration applicationLogoHeightConfiguration = configurationService.getByCode(ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
+		if (applicationLogoHeightConfiguration != null) {
+			Long height = applicationLogoHeightConfiguration.getLong();
 			if (height != null && height.compareTo(0L) > 0) {
 				applicationLogoImage.setHeight(height + "px");
 			}
 		}
+		Configuration applicationLogoWidthConfiguration = configurationService.getByCode(ConfigurationProperty.APPLICATION_LOGO_WIDTH);
+		if (applicationLogoWidthConfiguration != null) {
+			Long width = applicationLogoWidthConfiguration.getLong();
+			if (width != null && width.compareTo(0L) > 0) {
+				applicationLogoImage.setWidth(width + "px");
+			}
+		}
+		
 		applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
 		applicationLogoImage.addStyleName(Style.MAIN_VIEW_APPLICATION_LOGO);
 

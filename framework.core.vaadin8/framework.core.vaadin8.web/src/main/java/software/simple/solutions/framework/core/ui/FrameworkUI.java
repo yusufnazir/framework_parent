@@ -52,8 +52,8 @@ public class FrameworkUI extends UI {
 
 	private SessionHolder sessionHolder;
 
-	@Autowired
-	private SpringViewProvider viewProvider;
+//	@Autowired
+//	private SpringViewProvider viewProvider;
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
@@ -105,16 +105,16 @@ public class FrameworkUI extends UI {
 				removeStyleName("loginview");
 				// getNavigator().navigateTo(getNavigator().getState());
 
-				Navigator navigator = new Navigator(this, new ViewDisplay() {
-
-					private static final long serialVersionUID = 6700359619962516252L;
-
-					@Override
-					public void showView(View view) {
-						SimpleSolutionsEventBus.post(new MenuSelectedEvent(view));
-					}
-				});
-				navigator.addProvider(viewProvider);
+//				Navigator navigator = new Navigator(this, new ViewDisplay() {
+//
+//					private static final long serialVersionUID = 6700359619962516252L;
+//
+//					@Override
+//					public void showView(View view) {
+//						SimpleSolutionsEventBus.post(new MenuSelectedEvent(view));
+//					}
+//				});
+//				navigator.addProvider(viewProvider);
 			}
 		} else {
 			getNavigator().setErrorView(ErrorView.class);
