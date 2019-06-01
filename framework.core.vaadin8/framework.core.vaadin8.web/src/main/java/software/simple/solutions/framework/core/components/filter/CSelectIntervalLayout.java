@@ -123,7 +123,9 @@ public class CSelectIntervalLayout extends CustomComponent implements Interval<S
 	}
 
 	public void clear() {
-		setDefault();
+		if (!operatorSelect.isReadOnly()) {
+			setDefault();
+		}
 	}
 
 	@Override

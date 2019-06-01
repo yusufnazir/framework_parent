@@ -152,9 +152,11 @@ public class CDateTimeIntervalLayout extends CustomComponent implements Interval
 	}
 
 	public void clear() {
-		this.operatorSelect.setValue(new ComboItem(Operator.EQ));
-		this.fromDateFld.setValue(null);
-		this.toDateFld.setValue(null);
+		if (!operatorSelect.isReadOnly()) {
+			this.operatorSelect.setValue(new ComboItem(Operator.EQ));
+			this.fromDateFld.setValue(null);
+			this.toDateFld.setValue(null);
+		}
 	}
 
 	@Override

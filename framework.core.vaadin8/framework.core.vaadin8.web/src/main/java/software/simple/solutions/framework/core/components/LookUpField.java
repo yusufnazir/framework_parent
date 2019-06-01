@@ -26,7 +26,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 import software.simple.solutions.framework.core.web.ViewUtil;
 
-public class LookUpField extends CustomField<Object> implements IField {
+public class LookUpField extends CustomField<Object> implements IField, IParentEntity {
 
 	private static final long serialVersionUID = -6953072556831688132L;
 
@@ -217,7 +217,9 @@ public class LookUpField extends CustomField<Object> implements IField {
 
 	@Override
 	public void clear() {
-		setValue(null);
+		if (entity == null) {
+			setValue(null);
+		}
 	}
 
 	@Override

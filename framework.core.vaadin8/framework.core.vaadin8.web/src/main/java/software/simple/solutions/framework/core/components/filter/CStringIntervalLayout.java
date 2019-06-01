@@ -125,7 +125,9 @@ public class CStringIntervalLayout extends CustomComponent implements Interval<S
 	}
 
 	public void clear() {
-		setDefault();
+		if (!operatorSelect.isReadOnly()) {
+			setDefault();
+		}
 	}
 
 	@Override
@@ -168,5 +170,4 @@ public class CStringIntervalLayout extends CustomComponent implements Interval<S
 	public void setRequired() {
 
 	}
-
 }

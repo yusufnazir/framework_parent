@@ -135,9 +135,11 @@ public class CDecimalNumberIntervalLayout extends CustomComponent implements Int
 	}
 
 	public void clear() {
-		this.operatorSelect.setValue(new ComboItem(Operator.EQ));
-		this.fromNumberFld.setBigDecimalValue(null);
-		this.toNumberFld.setBigDecimalValue(null);
+		if (!operatorSelect.isReadOnly()) {
+			this.operatorSelect.setValue(new ComboItem(Operator.EQ));
+			this.fromNumberFld.setBigDecimalValue(null);
+			this.toNumberFld.setBigDecimalValue(null);
+		}
 	}
 
 	@Override

@@ -123,7 +123,9 @@ public class CMultiIntervalLayout extends CustomComponent implements Interval<Se
 	}
 
 	public void clear() {
-		setDefault();
+		if (!operatorSelect.isReadOnly()) {
+			setDefault();
+		}
 	}
 
 	@Override

@@ -144,8 +144,8 @@ public abstract class FilterView extends CGridLayout implements Filterable, Eras
 	@Override
 	public <T extends Component> T addField(Class<?> componentClass, String key, int column, int row) {
 		Component component = super.addField(componentClass, key, column, row);
-		if (component instanceof LookUpField) {
-			((LookUpField) component).handleForParentEntity(getParentEntity());
+		if (component instanceof IParentEntity) {
+			((IParentEntity) component).handleForParentEntity(getParentEntity());
 		}
 		return (T) component;
 	}
