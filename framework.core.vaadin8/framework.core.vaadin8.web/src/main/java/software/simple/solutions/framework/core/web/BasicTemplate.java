@@ -560,7 +560,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
 		formPanel.setWidth("100%");
 		formPanel.setHeight("-1px");
-		formView.setWidth("-1px");
+//		formView.setWidth("-1px");
 		formPanel.setContent(formView);
 		formLayout.removeAllComponents();
 		formLayout.addComponentAsFirst(formPanel);

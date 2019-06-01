@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
@@ -98,6 +99,7 @@ public class CGridLayout extends GridLayout {
 			setUpComponent(component);
 
 			addComponent((Component) component, newColumn + 1, row);
+			setComponentAlignment(component, Alignment.MIDDLE_LEFT);
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -135,6 +137,7 @@ public class CGridLayout extends GridLayout {
 	private CaptionLabel addCaptionLabel(String key, int column, int row) {
 		CaptionLabel captionLbl = new CaptionLabel(key);
 		addComponent(captionLbl, column, row);
+		setComponentAlignment(captionLbl, Alignment.MIDDLE_LEFT);
 		return captionLbl;
 	}
 

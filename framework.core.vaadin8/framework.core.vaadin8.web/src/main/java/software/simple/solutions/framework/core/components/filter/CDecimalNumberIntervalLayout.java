@@ -12,6 +12,7 @@ import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.CDecimalField;
 import software.simple.solutions.framework.core.components.IField;
 import software.simple.solutions.framework.core.components.Listing;
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.pojo.Interval;
@@ -29,8 +30,10 @@ public class CDecimalNumberIntervalLayout extends CustomComponent implements Int
 	private CDecimalField toNumberFld;
 	private CDecimalField fromNumberFld;
 	private CComboBox operatorSelect;
+	private SessionHolder sessionHolder;
 
-	public CDecimalNumberIntervalLayout() {
+	public CDecimalNumberIntervalLayout(SessionHolder sessionHolder) {
+		this.sessionHolder = sessionHolder;
 		buildMainLayout();
 		setCompositionRoot(this.mainLayout);
 		setStaticProperties();
@@ -84,13 +87,13 @@ public class CDecimalNumberIntervalLayout extends CustomComponent implements Int
 		this.mainLayout.addComponent(this.operatorSelect);
 		mainLayout.setComponentAlignment(operatorSelect, Alignment.MIDDLE_LEFT);
 
-		this.fromNumberFld = new CDecimalField();
+		this.fromNumberFld = new CDecimalField(sessionHolder);
 		this.fromNumberFld.setWidth("100px");
 		this.fromNumberFld.setHeight("-1px");
 		this.mainLayout.addComponent(this.fromNumberFld);
 		mainLayout.setComponentAlignment(fromNumberFld, Alignment.MIDDLE_LEFT);
 
-		this.toNumberFld = new CDecimalField();
+		this.toNumberFld = new CDecimalField(sessionHolder);
 		this.toNumberFld.setWidth("100px");
 		this.toNumberFld.setHeight("-1px");
 		this.mainLayout.addComponent(this.toNumberFld);

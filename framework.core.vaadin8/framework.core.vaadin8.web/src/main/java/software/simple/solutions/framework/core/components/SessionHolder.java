@@ -2,6 +2,7 @@ package software.simple.solutions.framework.core.components;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.common.eventbus.EventBus;
 
@@ -21,6 +22,7 @@ public class SessionHolder implements Serializable {
 	private Role selectedRole;
 	private List<SimpleSolutionsMenuItem> authorizedViews;
 	private SimpleSolutionsMenuItem simpleSolutionsMenuItem;
+	private Locale locale;
 
 	public ApplicationUser getApplicationUser() {
 		return applicationUser;
@@ -84,6 +86,14 @@ public class SessionHolder implements Serializable {
 
 	public void setSelectedRole(Role selectedRole) {
 		this.selectedRole = selectedRole;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 }

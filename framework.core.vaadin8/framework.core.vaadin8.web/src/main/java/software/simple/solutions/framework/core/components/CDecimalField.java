@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import org.vaadin.ui.NumberField;
 
-import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.constants.Style;
@@ -18,8 +17,10 @@ public class CDecimalField extends NumberField implements IField {
 
 	private boolean isThisRequired = false;
 	private boolean wasReadOnly = false;
+	private SessionHolder sessionHolder;
 
-	public CDecimalField() {
+	public CDecimalField(SessionHolder sessionHolder) {
+		this.sessionHolder = sessionHolder;
 		setDecimalAllowed(true);
 		addStyleName(Style.TINY);
 		addStyleName(Style.RIGHT_ALIGN);
@@ -28,7 +29,7 @@ public class CDecimalField extends NumberField implements IField {
 		setDecimalPrecision(10);
 
 		setErrorText(PropertyResolver.getPropertyValueByLocale(SystemProperty.INVALID_NUMBER_FORMAT,
-				UI.getCurrent().getLocale()));
+				sessionHolder.getLocale()));
 	}
 
 	public void setRequired() {
@@ -102,7 +103,7 @@ public class CDecimalField extends NumberField implements IField {
 
 	@Override
 	public void setCaptionByKey(String key) {
-		super.setCaption(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+		super.setCaption(PropertyResolver.getPropertyValueByLocale(key, sessionHolder.getLocale()));
 	}
 
 	@Override

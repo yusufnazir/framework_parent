@@ -59,6 +59,7 @@ public class FrameworkUI extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 		sessionHolder = new SessionHolder();
 		sessionHolder.setLogoutPageLocation(vaadinRequest.getContextPath() + "/app");
+		sessionHolder.setLocale(UI.getCurrent().getLocale());
 		UI.getCurrent().setData(sessionHolder);
 		UI.getCurrent().setErrorHandler(new ErrorHandler() {
 
