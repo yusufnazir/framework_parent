@@ -1149,9 +1149,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		vo.setPagingInfo(pagingInfo);
 		vo.setCurrentUserId(getSessionHolder().getApplicationUser().getId());
 		vo.setCurrentRoleId(getSessionHolder().getSelectedRole().getId());
-		if (getParentEntity() != null) {
-			vo.setId(((IMappedSuperClass) getParentEntity()).getId());
-		}
+//		if (getParentEntity() != null) {
+//			vo.setId(((IMappedSuperClass) getParentEntity()).getId());
+//		}
 		return vo;
 	}
 
