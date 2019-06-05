@@ -42,6 +42,7 @@ import software.simple.solutions.framework.core.pojo.StringInterval;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.GenericCriteriaBuilder;
 import software.simple.solutions.framework.core.repository.IGenericRepository;
+import software.simple.solutions.framework.core.repository.JoinLeftBuilder;
 import software.simple.solutions.framework.core.util.ColumnSort;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
@@ -616,23 +617,26 @@ public class GenericRepository implements IGenericRepository {
 	}
 
 	@Override
-	public CriteriaQuery<Object> createGenericCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder)
-			throws FrameworkException {
+	public CriteriaQuery<Object> createGenericCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder,
+			JoinLeftBuilder joinLeftBuilder) throws FrameworkException {
 		GenericCriteriaBuilder genericCriteriaBuilder = new GenericCriteriaBuilder();
+		genericCriteriaBuilder.setJoinLeftBuilder(joinLeftBuilder);
 		SuperVO vo = (SuperVO) o;
 		return genericCriteriaBuilder.build(vo.getEntityClass(), o, criteriaBuilder);
 	}
 
 	@Override
-	public CriteriaQuery<Long> createGenericCountCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder)
-			throws FrameworkException {
+	public CriteriaQuery<Long> createGenericCountCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder,
+			JoinLeftBuilder joinLeftBuilder) throws FrameworkException {
 		GenericCriteriaBuilder genericCriteriaBuilder = new GenericCriteriaBuilder();
+		genericCriteriaBuilder.setJoinLeftBuilder(joinLeftBuilder);
 		SuperVO vo = (SuperVO) o;
 		return genericCriteriaBuilder.buildCount(vo.getEntityClass(), o, criteriaBuilder);
 	}
 
 	@Override
 	public <T> PagingResult<T> findBySearch(Object o, PagingSetting pagingSetting) throws FrameworkException {
+
 		if (o == null) {
 			return null;
 		}
@@ -671,9 +675,11 @@ public class GenericRepository implements IGenericRepository {
 				return pagingResult;
 			} else {
 				CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-				CriteriaQuery<Object> criteriaQuery = createGenericCriteriaBuilder(o, criteriaBuilder);
+				JoinLeftBuilder joinLeftBuilder = createJoinleftBuilder(o, criteriaBuilder);
+				CriteriaQuery<Object> criteriaQuery = createGenericCriteriaBuilder(o, criteriaBuilder, joinLeftBuilder);
 				if (criteriaQuery != null) {
-					CriteriaQuery<Long> countQuery = createGenericCountCriteriaBuilder(o, criteriaBuilder);
+					CriteriaQuery<Long> countQuery = createGenericCountCriteriaBuilder(o, criteriaBuilder,
+							joinLeftBuilder);
 					Long count = entityManager.createQuery(countQuery).getSingleResult();
 					pagingResult.setCount(count);
 					TypedQuery<Object> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -685,6 +691,12 @@ public class GenericRepository implements IGenericRepository {
 			}
 		}
 
+		return null;
+
+	}
+
+	@Override
+	public JoinLeftBuilder createJoinleftBuilder(Object o, CriteriaBuilder criteriaBuilder) {
 		return null;
 	}
 

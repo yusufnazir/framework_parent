@@ -23,8 +23,8 @@ public interface IGenericRepository extends Serializable {
 	String createNativeSearchQuery(Object o, ConcurrentMap<String, Object> paramMap, PagingSetting pagingSetting)
 			throws FrameworkException;
 
-	CriteriaQuery<Object> createGenericCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder)
-			throws FrameworkException;
+	CriteriaQuery<Object> createGenericCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder,
+			JoinLeftBuilder joinLeftBuilder) throws FrameworkException;
 
 	<T> T getById(Class<T> entityType, Long id) throws FrameworkException;
 
@@ -97,8 +97,8 @@ public interface IGenericRepository extends Serializable {
 
 	<T> T getByCode(Class<T> cl, String code) throws FrameworkException;
 
-	CriteriaQuery<Long> createGenericCountCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder)
-			throws FrameworkException;
+	CriteriaQuery<Long> createGenericCountCriteriaBuilder(Object o, CriteriaBuilder criteriaBuilder,
+			JoinLeftBuilder joinLeftBuilder) throws FrameworkException;
 
 	<T> T restore(Class<T> cl, Long id) throws FrameworkException;
 
@@ -107,5 +107,7 @@ public interface IGenericRepository extends Serializable {
 	Integer deleteBySql(String queryString, ConcurrentMap<String, Object> paramMap) throws FrameworkException;
 
 	Property getBypropertyKey(Class<Property> class1, String key) throws FrameworkException;
+
+	JoinLeftBuilder createJoinleftBuilder(Object o, CriteriaBuilder criteriaBuilder) throws FrameworkException;
 
 }

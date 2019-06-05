@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperties;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.constants.Operator;
+import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.DateInterval;
 import software.simple.solutions.framework.core.pojo.DateTimeInterval;
 import software.simple.solutions.framework.core.pojo.DecimalInterval;
@@ -50,6 +51,7 @@ public class GenericCriteriaBuilder {
 	private Map<String, Object> queryValuesMap;
 	private List<Order> orders;
 	private Long currentUserRoleId;
+	private JoinLeftBuilder joinLeftBuilder;
 
 	public GenericCriteriaBuilder() {
 		super();
@@ -58,7 +60,7 @@ public class GenericCriteriaBuilder {
 		queryValuesMap = new HashMap<String, Object>();
 	}
 
-	public <T> CriteriaQuery<Object> build(Class<T> cl, Object vo, CriteriaBuilder criteriaBuilder) {
+	public <T> CriteriaQuery<Object> build(Class<T> cl, Object vo, CriteriaBuilder criteriaBuilder) throws FrameworkException {
 		this.entity = cl;
 		this.criteriaBuilder = criteriaBuilder;
 
@@ -90,6 +92,8 @@ public class GenericCriteriaBuilder {
 
 			determineWherePredicates(root);
 
+			criteriaBuilder = createLeftJoin(root, criteriaBuilder);
+
 			/*
 			 * Create whereclause
 			 */
@@ -110,7 +114,14 @@ public class GenericCriteriaBuilder {
 		return query;
 	}
 
-	public <T> CriteriaQuery<Long> buildCount(Class<T> cl, Object vo, CriteriaBuilder criteriaBuilder) {
+	public CriteriaBuilder createLeftJoin(Root<?> root, CriteriaBuilder criteriaBuilder) throws FrameworkException {
+		if (joinLeftBuilder != null) {
+			criteriaBuilder = joinLeftBuilder.build(root, criteriaBuilder);
+		}
+		return criteriaBuilder;
+	}
+
+	public <T> CriteriaQuery<Long> buildCount(Class<T> cl, Object vo, CriteriaBuilder criteriaBuilder) throws FrameworkException {
 		this.entity = cl;
 		this.criteriaBuilder = criteriaBuilder;
 
@@ -132,6 +143,8 @@ public class GenericCriteriaBuilder {
 			}
 
 			determineWherePredicates(root);
+
+			criteriaBuilder = createLeftJoin(root, criteriaBuilder);
 
 			/*
 			 * Create whereclause
@@ -192,27 +205,6 @@ public class GenericCriteriaBuilder {
 			orders.add(order);
 		}
 	}
-
-	// private void builCountQuery() throws IllegalArgumentException,
-	// IllegalAccessException {
-	// countQuery = criteriaBuilder.createQuery(Long.class);
-	// Root<?> root = countQuery.from(entity);
-	// countQuery.select(criteriaBuilder.count(root));
-	//
-	// determineWherePredicates(root);
-	//
-	// /*
-	// * Create whereclause
-	// */
-	// whereClause = criteriaBuilder.and(wherePredicates.toArray(new
-	// Predicate[wherePredicates.size()]));
-	//
-	// /*
-	// * Add where clause
-	// */
-	// countQuery.where(whereClause);
-	//
-	// }
 
 	private Predicate createPredicateForStringInterval(Expression<String> expression, StringInterval stringInterval) {
 		Predicate predicate = null;
@@ -395,7 +387,8 @@ public class GenericCriteriaBuilder {
 		Predicate predicate = null;
 		LocalDate from = dateInterval.getFrom();
 		LocalDate to = dateInterval.getTo();
-		LocalDateTime dateTimeFrom = LocalDateTime.from(from.atStartOfDay()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		LocalDateTime dateTimeFrom = LocalDateTime.from(from.atStartOfDay()).withHour(0).withMinute(0).withSecond(0)
+				.withNano(0);
 		String operator = dateInterval.getOperator();
 		if (from != null) {
 			switch (operator) {
@@ -420,7 +413,8 @@ public class GenericCriteriaBuilder {
 				break;
 			case Operator.BE:
 				if (to != null) {
-					LocalDateTime dateTimeTo = LocalDateTime.from(to.atStartOfDay()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+					LocalDateTime dateTimeTo = LocalDateTime.from(to.atStartOfDay()).withHour(0).withMinute(0)
+							.withSecond(0).withNano(0);
 					predicate = criteriaBuilder.between(expression, dateTimeFrom, dateTimeTo.plusDays(1));
 				}
 				break;
@@ -582,28 +576,12 @@ public class GenericCriteriaBuilder {
 		}
 	}
 
-	// private void retrieveCurrentUserRole(Object vo, Root root) {
-	// try {
-	// Field declaredField =
-	// vo.getClass().getSuperclass().getDeclaredField("currentRoleId");
-	// declaredField.setAccessible(true);
-	// currentUserRoleId = (Long) declaredField.get(vo);
-	//
-	// } catch (NoSuchFieldException | SecurityException |
-	// IllegalArgumentException | IllegalAccessException e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	// handleSoftDeleteCriteria(root);
-	// }
+	public JoinLeftBuilder getJoinLeftBuilder() {
+		return joinLeftBuilder;
+	}
 
-	// private void handleSoftDeleteCriteria(From from) {
-	// if (currentUserRoleId == null || currentUserRoleId.compareTo(1L) != 0) {
-	// Path path = from.get("softDelete");
-	// Predicate predicate = criteriaBuilder.equal(path, false);
-	// Predicate isNullPredicate = criteriaBuilder.isNull(path);
-	// Predicate or = criteriaBuilder.or(predicate,isNullPredicate);
-	// wherePredicates.add(or);
-	// }
-	// }
+	public void setJoinLeftBuilder(JoinLeftBuilder joinLeftBuilder) {
+		this.joinLeftBuilder = joinLeftBuilder;
+	}
 
 }
