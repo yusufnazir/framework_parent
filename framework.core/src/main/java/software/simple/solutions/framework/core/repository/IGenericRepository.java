@@ -108,6 +108,6 @@ public interface IGenericRepository extends Serializable {
 
 	Property getBypropertyKey(Class<Property> class1, String key) throws FrameworkException;
 
-	JoinLeftBuilder createJoinleftBuilder(Object o, CriteriaBuilder criteriaBuilder) throws FrameworkException;
+	JoinLeftBuilder createJoinBuilder(Object o, CriteriaBuilder criteriaBuilder) throws FrameworkException;
 
 }

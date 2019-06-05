@@ -675,7 +675,7 @@ public class GenericRepository implements IGenericRepository {
 				return pagingResult;
 			} else {
 				CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-				JoinLeftBuilder joinLeftBuilder = createJoinleftBuilder(o, criteriaBuilder);
+				JoinLeftBuilder joinLeftBuilder = createJoinBuilder(o, criteriaBuilder);
 				CriteriaQuery<Object> criteriaQuery = createGenericCriteriaBuilder(o, criteriaBuilder, joinLeftBuilder);
 				if (criteriaQuery != null) {
 					CriteriaQuery<Long> countQuery = createGenericCountCriteriaBuilder(o, criteriaBuilder,
@@ -696,7 +696,7 @@ public class GenericRepository implements IGenericRepository {
 	}
 
 	@Override
-	public JoinLeftBuilder createJoinleftBuilder(Object o, CriteriaBuilder criteriaBuilder) {
+	public JoinLeftBuilder createJoinBuilder(Object o, CriteriaBuilder criteriaBuilder) {
 		return null;
 	}
 
