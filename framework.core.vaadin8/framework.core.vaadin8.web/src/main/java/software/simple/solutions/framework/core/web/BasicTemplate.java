@@ -149,7 +149,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private PagingSearchEvent pagingSearchEvent;
 	private Set<AbstractBaseView> selectedTabs;
 	private Object entity;
-	public Object selectedEntity;
+//	public Object selectedEntity;
 	private PagingSetting pagingSetting;
 	private PagingResult<Object> pagingResult;
 	private Orientation orientation = Orientation.VERTICAL;
@@ -768,7 +768,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 		setUpActionButtons();
 		formMode = false;
-		selectedEntity = null;
 		setSelectedEntity(null);
 	}
 
@@ -1106,7 +1105,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	protected void initNewForm() {
 		try {
-			selectedEntity = null;
 			setSelectedEntity(null);
 
 			setUpFormActions();
@@ -1192,9 +1190,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			selectedEntity = entity;
+			setSelectedEntity(entity);
 			try {
-				selectedEntity = superService.get(entityClass, ((MappedSuperClass) entity).getId());
+				Object selectedEntity = superService.get(entityClass, ((MappedSuperClass) entity).getId());
 				setSelectedEntity(selectedEntity);
 				switchToForm(selectedEntity);
 			} catch (Exception e) {
@@ -1235,10 +1233,11 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		actionBar.setSearchDisabled();
 		actionBar.authorizeSave();
 		actionBar.authorizeBack();
-		if (entity == null) {
+		if (getSelectedEntity() == null) {
 			actionBar.authorizeCreatingItem();
 		}
-		if (entity != null) {
+		if (getSelectedEntity() != null) {
+			actionBar.hideCreatingItem();
 			actionBar.authorizeDelete();
 		}
 
