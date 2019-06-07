@@ -3,6 +3,7 @@ package software.simple.solutions.framework.core.components;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentMap;
 
 import com.google.common.eventbus.EventBus;
 
@@ -23,6 +24,7 @@ public class SessionHolder implements Serializable {
 	private List<SimpleSolutionsMenuItem> authorizedViews;
 	private SimpleSolutionsMenuItem simpleSolutionsMenuItem;
 	private Locale locale;
+	private ConcurrentMap<String, Object> referenceKeys;
 
 	public ApplicationUser getApplicationUser() {
 		return applicationUser;
@@ -94,6 +96,18 @@ public class SessionHolder implements Serializable {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public ConcurrentMap<String, Object> getReferenceKeys() {
+		return referenceKeys;
+	}
+
+	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
+		this.referenceKeys = referenceKeys;
+	}
+
+	public void addReferenceKey(String key, Object value) {
+		referenceKeys.put(key, value);
 	}
 
 }

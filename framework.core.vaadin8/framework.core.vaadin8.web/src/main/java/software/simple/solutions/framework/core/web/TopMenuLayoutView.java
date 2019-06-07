@@ -4,10 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -92,6 +95,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private MenuBar menuBar;
 	private MenuBar userInfoMenuBar;
 	private SessionHolder sessionHolder;
+	private ConcurrentMap<String, Object> referenceKeys;
 
 	private List<Menu> menus;
 
@@ -115,6 +119,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 		viewService = ContextProvider.getBean(IViewService.class);
 		roleService = ContextProvider.getBean(IRoleService.class);
 		languageService = ContextProvider.getBean(ILanguageService.class);
+		referenceKeys = new ConcurrentHashMap<String, Object>();
+		sessionHolder.setReferenceKeys(referenceKeys);
 		SimpleSolutionsEventBus.register(this);
 
 		setMargin(true);

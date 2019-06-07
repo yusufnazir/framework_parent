@@ -54,6 +54,7 @@ import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.themes.ValoTheme;
 
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.ActionBar;
 import software.simple.solutions.framework.core.components.Build;
@@ -149,10 +150,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private PagingSearchEvent pagingSearchEvent;
 	private Set<AbstractBaseView> selectedTabs;
 	private Object entity;
-//	public Object selectedEntity;
 	private PagingSetting pagingSetting;
 	private PagingResult<Object> pagingResult;
 	private Orientation orientation = Orientation.VERTICAL;
+	private String updateObserverReferenceKey;
 
 	Action action_ok = new ShortcutAction("Default key", ShortcutAction.KeyCode.ENTER, null);
 
@@ -200,14 +201,16 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 			@Override
 			public void accept(Object t) throws Exception {
-				Optional<T> optional = dataProvider.getItems().stream()
-						.filter(p -> (((MappedSuperClass) p).getId().compareTo(((MappedSuperClass) t).getId()) == 0))
-						.findFirst();
-				if (optional.isPresent()) {
-					dataProvider.getItems().remove(optional.get());
+				if (t instanceof MappedSuperClass) {
+					Optional<T> optional = dataProvider.getItems().stream()
+							.filter(p -> ((MappedSuperClass) p).getId().compareTo(((MappedSuperClass) t).getId()) == 0)
+							.findFirst();
+					if (optional.isPresent()) {
+						dataProvider.getItems().remove(optional.get());
+					}
+					dataProvider.getItems().add((T) t);
+					dataProvider.refreshAll();
 				}
-				dataProvider.getItems().add((T) t);
-				dataProvider.refreshAll();
 			}
 		});
 	}
@@ -560,7 +563,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
 		formPanel.setWidth("100%");
 		formPanel.setHeight("-1px");
-//		formView.setWidth("-1px");
+		// formView.setWidth("-1px");
 		formPanel.setContent(formView);
 		formLayout.removeAllComponents();
 		formLayout.addComponentAsFirst(formPanel);
@@ -882,8 +885,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 							try {
 								try {
 									int deleted = superService.delete(new ArrayList(toDeleteEntities));
-									// NotificationWindow.notificationWarningWindow(SystemProperty.TOTAL_RECORDS_DELETED,
-									// new Object[] { deleted });
+									handleReactiveUpdate(toDeleteEntities);
 								} catch (DataIntegrityViolationException e) {
 									throw new FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
 								}
@@ -1078,7 +1080,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 			try {
 				entity = superService.updateSingle(formValues);
-				getUpdateObserver().onNext(entity);
+				handleReactiveUpdate(entity);
 				// updateExistingResultSet();
 				updateTabs();
 				setSelectedEntity(entity);
@@ -1089,6 +1091,16 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			}
 		}
 		return null;
+	}
+
+	private void handleReactiveUpdate(Object item) {
+		getUpdateObserver().onNext(item);
+		if (updateObserverReferenceKey != null) {
+			BehaviorSubject<Object> observer = getReferenceKey(updateObserverReferenceKey);
+			if (observer != null) {
+				observer.onNext(item);
+			}
+		}
 	}
 
 	public void postUpdate(software.simple.solutions.framework.core.web.Action action) {
@@ -1147,9 +1159,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		vo.setPagingInfo(pagingInfo);
 		vo.setCurrentUserId(getSessionHolder().getApplicationUser().getId());
 		vo.setCurrentRoleId(getSessionHolder().getSelectedRole().getId());
-//		if (getParentEntity() != null) {
-//			vo.setId(((IMappedSuperClass) getParentEntity()).getId());
-//		}
+		// if (getParentEntity() != null) {
+		// vo.setId(((IMappedSuperClass) getParentEntity()).getId());
+		// }
 		return vo;
 	}
 
@@ -1439,6 +1451,14 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	public void setFormLayout(VerticalLayout formLayout) {
 		this.formLayout = formLayout;
+	}
+
+	public void setUpdateObserverReferenceKey(String updateObserverReferenceKey) {
+		this.updateObserverReferenceKey = updateObserverReferenceKey;
+	}
+
+	public String getUpdateObserverReferenceKey() {
+		return updateObserverReferenceKey;
 	}
 
 }

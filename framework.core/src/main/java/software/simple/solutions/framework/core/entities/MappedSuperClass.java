@@ -23,6 +23,8 @@ public abstract class MappedSuperClass implements Serializable, IMappedSuperClas
 	public static final String CODE_ = "CODE_";
 	public static final String NAME_ = "NAME_";
 	public static final String DESCRIPTION_ = "DESCRIPTION_";
+	
+	public static final String VAR_ID = "id";
 
 	protected MappedSuperClass() {
 		uuId = UUID.randomUUID().toString();
