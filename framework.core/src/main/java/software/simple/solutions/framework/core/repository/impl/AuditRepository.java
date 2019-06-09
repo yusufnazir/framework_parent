@@ -13,6 +13,8 @@ import software.simple.solutions.framework.core.repository.IAuditRepository;
 @Repository
 public class AuditRepository extends GenericRepository implements IAuditRepository {
 
+	private static final long serialVersionUID = 8000651299576764401L;
+
 	@Override
 	public <T, A> PagingResult<A> createAuditQuery(Class<T> cl, Long id, PagingSetting pagingSetting) {
 

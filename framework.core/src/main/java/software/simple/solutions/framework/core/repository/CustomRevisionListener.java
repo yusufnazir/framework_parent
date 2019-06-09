@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.repository;
 
+import java.util.Date;
+
 import org.hibernate.envers.RevisionListener;
 
 import software.simple.solutions.framework.core.entities.UserRevEntity;
@@ -13,6 +15,7 @@ public class CustomRevisionListener implements RevisionListener {
 		UserRevEntity userRevEntity = (UserRevEntity) revisionEntity;
 		ThreadAttributes threadAttributes = ThreadContext.get();
 		userRevEntity.setUsername(threadAttributes == null ? "SYSTEM" : threadAttributes.getUsername());
+		userRevEntity.setTimestamp(new Date().getTime());
 	}
 
 }

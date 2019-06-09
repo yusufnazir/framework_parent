@@ -24,6 +24,8 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = IConfigurationRepository.class)
 public class ConfigurationService extends SuperService implements IConfigurationService {
 
+	private static final long serialVersionUID = 3486090073648582056L;
+
 	@Autowired
 	private IConfigurationRepository configurationRepository;
 

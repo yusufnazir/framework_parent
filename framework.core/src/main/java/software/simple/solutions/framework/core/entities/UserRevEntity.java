@@ -24,28 +24,28 @@ public class UserRevEntity {
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = "REV")
 	@RevisionNumber
-	private int id;
+	private Long id;
 
 	@RevisionTimestamp
 	@Column(name = "REVTSTMP")
-	private long timestamp;
+	private Long timestamp;
 
 	@Column(name = "USERNAME")
 	private String username;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public long getTimestamp() {
+	public Long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(long timestamp) {
+	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
 

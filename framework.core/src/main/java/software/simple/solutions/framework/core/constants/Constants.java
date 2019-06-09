@@ -15,10 +15,11 @@ public class Constants {
 
 	public static final DecimalFormat TIME_FORMAT = new DecimalFormat("00");
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat SIMPLE_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	public static final DecimalFormat LONG_FORMAT = new DecimalFormat("#");
 	public static final DecimalFormat DF = new DecimalFormat("#####0.00");
 
 	public static final String[] IMAGE_EXTENSIONS = { "png", "jpeg", "jpg", "gif", "bmp" };
-	
+
 	public static File APPLICATION_HOME;
 }

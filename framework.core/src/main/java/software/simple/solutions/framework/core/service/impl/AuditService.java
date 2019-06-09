@@ -16,6 +16,7 @@ import software.simple.solutions.framework.core.service.IAuditService;
 @ServiceRepository(claz = IAuditRepository.class)
 public class AuditService extends SuperService implements IAuditService {
 
+	private static final long serialVersionUID = 7358543794266926766L;
 	@Autowired
 	private IAuditRepository auditRepository;
 
