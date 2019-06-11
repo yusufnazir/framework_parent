@@ -5,6 +5,7 @@ public class RevisionPojo {
 	private Long revision;
 	private String revisionType;
 	private String revisionDate;
+	private String username;
 	private Object entity;
 
 	public Long getRevision() {
@@ -37,6 +38,14 @@ public class RevisionPojo {
 
 	public void setEntity(Object entity) {
 		this.entity = entity;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

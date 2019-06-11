@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.server.FontAwesome;
@@ -441,6 +441,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 						HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest)
 								.getHttpServletRequest();
 						String requestUrl = httpServletRequest.getServletContext().getContextPath();
+						SecurityContextHolder.clearContext();
 						getUI().getSession().close();
 						getUI().getPage().setLocation(requestUrl + "/app");
 					}

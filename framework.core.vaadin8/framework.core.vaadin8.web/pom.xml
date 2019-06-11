@@ -164,6 +164,18 @@
 			<artifactId>switch</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-security -->
+		<dependency>
+			<groupId>org.vaadin.spring.extensions</groupId>
+			<artifactId>vaadin-spring-ext-security</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-boot -->
+		<dependency>
+			<groupId>org.vaadin.spring.extensions</groupId>
+			<artifactId>vaadin-spring-ext-boot</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>

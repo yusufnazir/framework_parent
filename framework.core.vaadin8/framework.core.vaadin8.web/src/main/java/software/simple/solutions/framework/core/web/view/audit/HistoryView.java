@@ -79,15 +79,19 @@ public class HistoryView extends Window {
 		// grid.setHeightMode(HeightMode.UNDEFINED);
 		Column<RevisionPojo, Long> revisionColumn = grid.addColumn(RevisionPojo::getRevision);
 		revisionColumn.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.REVISION, ui.getLocale()));
-		revisionColumn.setWidth(100);
+		revisionColumn.setWidth(75);
 		Column<RevisionPojo, String> revisionTypeColumn = grid.addColumn(RevisionPojo::getRevisionType);
 		revisionTypeColumn
 				.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.REVISION_TYPE, ui.getLocale()));
-		revisionTypeColumn.setWidth(100);
+		revisionTypeColumn.setWidth(75);
 		Column<RevisionPojo, String> revisionDateColumn = grid.addColumn(RevisionPojo::getRevisionDate);
 		revisionDateColumn
 				.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.REVISION_DATE, ui.getLocale()));
-		grid.setWidth("350px");
+		Column<RevisionPojo, String> revisionUserColumn = grid.addColumn(RevisionPojo::getUsername);
+		revisionUserColumn
+				.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.REVISION_USERNAME, ui.getLocale()));
+		revisionUserColumn.setWidth(100);
+		grid.setWidth("400px");
 
 		grid.addItemClickListener(new ItemClickListener<RevisionPojo>() {
 
@@ -127,6 +131,8 @@ public class HistoryView extends Window {
 							.format(DateTimeFormatter.ofPattern(Constants.SIMPLE_DATE_TIME_FORMAT.toPattern()));
 				}
 				revisionPojo.setRevisionDate(dateFormatted);
+
+				revisionPojo.setUsername(userRevEntity.getUsername());
 
 				revisionPojo.setEntity(oArray[0]);
 

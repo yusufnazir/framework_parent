@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 public class CustomUser implements UserDetails {
 
+	private static final long serialVersionUID = 6649976338334723663L;
 	private String password;
 	private String username;
 	private Set<GrantedAuthority> authorities;

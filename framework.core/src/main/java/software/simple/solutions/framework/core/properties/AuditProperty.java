@@ -6,4 +6,5 @@ public class AuditProperty {
 	public static final String REVISION = "system.audit.revision";
 	public static final String REVISION_TYPE = "system.audit.revision.type";
 	public static final String REVISION_DATE = "system.audit.revision.date";
+	public static final String REVISION_USERNAME = "system.audit.revision.username";
 }

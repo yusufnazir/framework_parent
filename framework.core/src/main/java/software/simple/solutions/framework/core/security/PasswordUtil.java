@@ -2,6 +2,8 @@ package software.simple.solutions.framework.core.security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import software.simple.solutions.framework.core.util.ContextProvider;
+
 public class PasswordUtil {
 
 	public PasswordUtil() {
@@ -15,7 +17,7 @@ public class PasswordUtil {
 	 * @return
 	 */
 	public String getEncryptedPassword(String password) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		BCryptPasswordEncoder bCryptPasswordEncoder = ContextProvider.getBean(BCryptPasswordEncoder.class);
 		return bCryptPasswordEncoder.encode(password);
 	}
 
@@ -27,7 +29,7 @@ public class PasswordUtil {
 	 * @return
 	 */
 	public Boolean isCorrectPassword(String password, String encrypted) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		BCryptPasswordEncoder bCryptPasswordEncoder = ContextProvider.getBean(BCryptPasswordEncoder.class);
 		return bCryptPasswordEncoder.matches(password, encrypted);
 	}
 
@@ -56,10 +58,11 @@ public class PasswordUtil {
 		// digester.setIterations(50000);
 		// String digest = digester.digest("@dm1n");
 		// System.out.println(digest);
+		
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-		PasswordUtil passwordUtil = new PasswordUtil();
-		System.out.println(passwordUtil.getEncryptedPassword("@dm1n"));
-		System.out.println(passwordUtil.isCorrectPassword("@dm1n",
+		System.out.println(bCryptPasswordEncoder.encode("@dm1n"));
+		System.out.println(bCryptPasswordEncoder.matches("@dm1n",
 				"$2a$10$LrA3j31nu1XstnNVe7f0yuBGHcM74FAfoZIA0QWYj4G57PSzmowqe"));
 	}
 }

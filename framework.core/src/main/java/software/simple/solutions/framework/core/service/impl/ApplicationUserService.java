@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -61,7 +62,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 	@Autowired
 	private IConfigurationService configurationService;
-
+	
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R entityVO) throws FrameworkException {
 		ApplicationUserVO vo = (ApplicationUserVO) entityVO;
@@ -366,7 +367,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 				.getByUserByResetKey(resetPasswordKey);
 		ApplicationUser applicationUser = applicationUserRequestResetPassword.getApplicationUser();
 
-		ThreadContext.add(new ThreadAttributes(applicationUser.getId(), applicationUser.getUsername()));
+//		ThreadContext.add(new ThreadAttributes(applicationUser.getId(), applicationUser.getUsername()));
 
 		PasswordUtil passwordUtil = new PasswordUtil();
 		String encryptedPassword = passwordUtil.getEncryptedPassword(newPassword);
