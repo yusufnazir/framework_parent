@@ -29,8 +29,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class ChangePasswordView extends VerticalLayout {
@@ -100,14 +99,13 @@ public class ChangePasswordView extends VerticalLayout {
 			@Override
 			public void buttonClick(final ClickEvent event) {
 				try {
-					IApplicationUserService applicationUserService = ContextProvider
-							.getBean(IApplicationUserService.class);
 					ApplicationUser applicationUser = sessionHolder.getApplicationUser();
-					SecurityValidation securityValidation = applicationUserService.validateChangePassword(
-							applicationUser.getId(), oldPasswordFld.getValue(), newPasswordFld.getValue(),
-							confirmNewPassword.getValue());
+					SecurityValidation securityValidation = ApplicationUserServiceFacade.get(UI.getCurrent())
+							.validateChangePassword(applicationUser.getId(), oldPasswordFld.getValue(),
+									newPasswordFld.getValue(), confirmNewPassword.getValue());
 					if (securityValidation.isSuccess()) {
-						applicationUserService.changePassword(applicationUser.getId(), newPasswordFld.getValue());
+						ApplicationUserServiceFacade.get(UI.getCurrent()).changePassword(applicationUser.getId(),
+								newPasswordFld.getValue());
 						if (mandatory) {
 							SimpleSolutionsEventBus.post(new UserLoginRequestedEvent(applicationUser.getUsername(),
 									newPasswordFld.getValue()));

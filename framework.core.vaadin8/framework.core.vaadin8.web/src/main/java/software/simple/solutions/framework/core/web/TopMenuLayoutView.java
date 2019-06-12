@@ -1,6 +1,9 @@
 package software.simple.solutions.framework.core.web;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.eventbus.Subscribe;
@@ -70,14 +74,13 @@ import software.simple.solutions.framework.core.pojo.SimpleMenuItem;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IFileService;
-import software.simple.solutions.framework.core.service.ILanguageService;
-import software.simple.solutions.framework.core.service.IMenuService;
-import software.simple.solutions.framework.core.service.IRoleService;
-import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
-import software.simple.solutions.framework.core.service.IViewService;
-import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.FileServiceFacade;
+import software.simple.solutions.framework.core.service.facade.LanguageServiceFacade;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ViewServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.MenuIndexComparator;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -99,11 +102,6 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 	private List<Menu> menus;
 
-	private IMenuService menuService;
-	private IViewService viewService;
-	private IRoleService roleService;
-	private ILanguageService languageService;
-
 	private MenuItem userMenuItem;
 
 	private HorizontalLayout headerLayout;
@@ -115,10 +113,6 @@ public class TopMenuLayoutView extends VerticalLayout {
 		super();
 		ui = UI.getCurrent();
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
-		menuService = ContextProvider.getBean(IMenuService.class);
-		viewService = ContextProvider.getBean(IViewService.class);
-		roleService = ContextProvider.getBean(IRoleService.class);
-		languageService = ContextProvider.getBean(ILanguageService.class);
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		sessionHolder.setReferenceKeys(referenceKeys);
 		SimpleSolutionsEventBus.register(this);
@@ -174,7 +168,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 					}
 				});
 
-		List<UserRole> userRoles = roleService.findRolesByUserId(sessionHolder.getApplicationUser().getId());
+		List<UserRole> userRoles = RoleServiceFacade.get(UI.getCurrent())
+				.findRolesByUserId(sessionHolder.getApplicationUser().getId());
 		/*
 		 * Add the roles as childeren of the parent, which is the caption of the
 		 * role menu.
@@ -227,7 +222,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 		menuBar.setVisible(true);
 		sessionHolder.setSelectedRole(role);
 		menuBar.removeItems();
-		menus = menuService.findAuthorizedMenus(role.getId());
+		menus = MenuServiceFacade.get(UI.getCurrent()).findAuthorizedMenus(role.getId());
 		List<SimpleMenuItem> parents = new ArrayList<SimpleMenuItem>();
 		Collections.sort(menus, new MenuIndexComparator());
 
@@ -312,7 +307,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 			if (!tabSheet.isVisible()) {
 				tabSheet.setVisible(true);
 			}
-			View view = viewService.getById(View.class, viewId);
+			View view = ViewServiceFacade.get(UI.getCurrent()).getById(View.class, viewId);
 			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName(),
 					sessionHolder.getSelectedRole().getId());
 			if (abstractBaseView == null) {
@@ -323,10 +318,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 				notification.show(UI.getCurrent().getPage());
 				return null;
 			}
-			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
-					.getBean(IRoleViewPrivilegeService.class);
-			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(viewId,
-					sessionHolder.getSelectedRole().getId());
+			List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+					.getPrivilegesByViewIdAndRoleId(viewId, sessionHolder.getSelectedRole().getId());
 			abstractBaseView.getViewDetail().setPrivileges(privileges);
 
 			abstractBaseView.getViewDetail().setMenu(menu);
@@ -355,7 +348,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 		LanguageVO vo = new LanguageVO();
 		vo.setEntityClass(Language.class);
 		vo.setActive(true);
-		PagingResult<Language> languageResult = languageService.findBySearch(vo, new PagingSetting());
+		PagingResult<Language> languageResult = LanguageServiceFacade.get(UI.getCurrent()).findBySearch(vo,
+				new PagingSetting());
 
 		if (languageResult != null && languageResult.getResult() != null) {
 			for (final Language language : languageResult.getResult()) {
@@ -513,8 +507,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 	}
 
 	private void updateApplicationLogo() throws FrameworkException {
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		Configuration applicationLogoHeightConfiguration = configurationService
+		Configuration applicationLogoHeightConfiguration = ConfigurationServiceFacade.get(UI.getCurrent())
 				.getByCode(ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
 		if (applicationLogoHeightConfiguration != null) {
 			Long height = applicationLogoHeightConfiguration.getLong();
@@ -522,7 +515,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 				applicationLogoImage.setHeight(height + "px");
 			}
 		}
-		Configuration applicationLogoWidthConfiguration = configurationService
+		Configuration applicationLogoWidthConfiguration = ConfigurationServiceFacade.get(UI.getCurrent())
 				.getByCode(ConfigurationProperty.APPLICATION_LOGO_WIDTH);
 		if (applicationLogoWidthConfiguration != null) {
 			Long width = applicationLogoWidthConfiguration.getLong();
@@ -545,13 +538,10 @@ public class TopMenuLayoutView extends VerticalLayout {
 					@Override
 					public InputStream getStream() {
 						try {
-							IConfigurationService configurationService = ContextProvider
-									.getBean(IConfigurationService.class);
-							Configuration configuration = configurationService
+							Configuration configuration = ConfigurationServiceFacade.get(ui)
 									.getByCode(ConfigurationProperty.APPLICATION_LOGO);
 							if (configuration != null) {
-								IFileService fileService = ContextProvider.getBean(IFileService.class);
-								EntityFile entityFile = fileService.findFileByEntityAndType(
+								EntityFile entityFile = FileServiceFacade.get(ui).findFileByEntityAndType(
 										configuration.getId().toString(), Configuration.class.getName(),
 										ConfigurationProperty.APPLICATION_LOGO);
 								if (entityFile != null && entityFile.getFileObject() != null) {
@@ -561,7 +551,12 @@ public class TopMenuLayoutView extends VerticalLayout {
 						} catch (FrameworkException e) {
 							logger.error(e.getMessage(), e);
 						}
-						applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
+						try {
+							File file = new ClassPathResource("VAADIN/themes/cxode/img/your-logo-here.png").getFile();
+							return new FileInputStream(file);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 						return null;
 					}
 				}, UUID.randomUUID().toString());

@@ -25,6 +25,7 @@ public class SessionHolder implements Serializable {
 	private SimpleSolutionsMenuItem simpleSolutionsMenuItem;
 	private Locale locale;
 	private ConcurrentMap<String, Object> referenceKeys;
+	private String password;
 
 	public ApplicationUser getApplicationUser() {
 		return applicationUser;
@@ -108,6 +109,14 @@ public class SessionHolder implements Serializable {
 
 	public void addReferenceKey(String key, Object value) {
 		referenceKeys.put(key, value);
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

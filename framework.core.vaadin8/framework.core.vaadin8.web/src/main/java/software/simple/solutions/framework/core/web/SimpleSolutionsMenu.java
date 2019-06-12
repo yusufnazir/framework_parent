@@ -1,7 +1,5 @@
 package software.simple.solutions.framework.core.web;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,15 +27,13 @@ import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Menu;
-import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.MenuStructureEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.PostViewChangeEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.ProfileUpdatedEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.TabSheetViewEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.UserLoggedOutEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEventBus;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.IMenuService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 /**
@@ -266,36 +262,39 @@ public final class SimpleSolutionsMenu extends CustomComponent {
 		UI.getCurrent().getNavigator().navigateTo(simpleSolutionsMenuItem.getViewName());
 	}
 
-//	@Subscribe
-//	public void buildMenuItems(final MenuStructureEvent event) throws FrameworkException {
-//		SimpleSolutionsMenuItem simpleSolutionsMenuItem = sessionHolder.getSimpleSolutionsMenuItem();
-//		Menu parentMenu = simpleSolutionsMenuItem.getMenu();
-//		menuItemsLayout.removeAllComponents();
-//		AuthorizedViewListHelper authorizedViewListHelper = new AuthorizedViewListHelper();
-//		List<SimpleSolutionsMenuItem> views = authorizedViewListHelper.createMenuItems(parentMenu);
-//		sessionHolder.setAuthorizedViews(views);
+	// @Subscribe
+	// public void buildMenuItems(final MenuStructureEvent event) throws
+	// FrameworkException {
+	// SimpleSolutionsMenuItem simpleSolutionsMenuItem =
+	// sessionHolder.getSimpleSolutionsMenuItem();
+	// Menu parentMenu = simpleSolutionsMenuItem.getMenu();
+	// menuItemsLayout.removeAllComponents();
+	// AuthorizedViewListHelper authorizedViewListHelper = new
+	// AuthorizedViewListHelper();
+	// List<SimpleSolutionsMenuItem> views =
+	// authorizedViewListHelper.createMenuItems(parentMenu);
+	// sessionHolder.setAuthorizedViews(views);
 
-//		if (views != null) {
-//			for (final SimpleSolutionsMenuItem view : views) {
-//				if (view.isDivider()) {
-//					Label label = new Label("", ContentMode.HTML);
-//					label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
-//					label.addStyleName(ValoTheme.LABEL_H4);
-//					menuItemsLayout.addComponent(label);
-//				} else {
-//					Component menuItemComponent = new ValoMenuItemButton(view);
-//
-//					menuItemsLayout.addComponent(menuItemComponent);
-//				}
-//			}
-//		}
-//	}
+	// if (views != null) {
+	// for (final SimpleSolutionsMenuItem view : views) {
+	// if (view.isDivider()) {
+	// Label label = new Label("", ContentMode.HTML);
+	// label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+	// label.addStyleName(ValoTheme.LABEL_H4);
+	// menuItemsLayout.addComponent(label);
+	// } else {
+	// Component menuItemComponent = new ValoMenuItemButton(view);
+	//
+	// menuItemsLayout.addComponent(menuItemComponent);
+	// }
+	// }
+	// }
+	// }
 
 	@Subscribe
 	public void updateTabSheetContent(final TabSheetViewEvent event) throws FrameworkException {
-		IMenuService menuService = ContextProvider.getBean(IMenuService.class);
 		Long menuId = event.getMenuId();
-		Menu menu = menuService.getById(Menu.class, menuId);
+		Menu menu = MenuServiceFacade.get(UI.getCurrent()).getById(Menu.class, menuId);
 		SimpleSolutionsMenuItem menuItem = new SimpleSolutionsMenuItem(menu);
 		menuItem.setSearchedEntity(event.getSearchedEntity());
 		updateTabSheetContent(menuItem);

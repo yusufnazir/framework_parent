@@ -15,9 +15,8 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserService;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class ResetPasswordLayout {
@@ -58,10 +57,9 @@ public class ResetPasswordLayout {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				IApplicationUserService applicationUserService = ContextProvider.getBean(IApplicationUserService.class);
 				try {
-					SecurityValidation securityValidation = applicationUserService.resetUserPassword(userId,
-							passwordFld.getValue(), confirmPasswordFld.getValue());
+					SecurityValidation securityValidation = ApplicationUserServiceFacade.get(UI.getCurrent())
+							.resetUserPassword(userId, passwordFld.getValue(), confirmPasswordFld.getValue());
 					if (!securityValidation.isSuccess()) {
 						new MessageWindowHandler(securityValidation.getMessageKey(), null);
 					} else {

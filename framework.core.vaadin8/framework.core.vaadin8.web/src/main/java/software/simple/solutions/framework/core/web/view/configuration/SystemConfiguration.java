@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,8 +53,8 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IFileService;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.FileServiceFacade;
 import software.simple.solutions.framework.core.upload.FileBuffer;
 import software.simple.solutions.framework.core.upload.UploadFieldReceiver;
 import software.simple.solutions.framework.core.util.ContextProvider;
@@ -203,17 +202,17 @@ public class SystemConfiguration extends CGridLayout {
 					logger.error(e.getMessage(), e);
 				}
 
-				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
-					List<Configuration> configs = configurationService.update(configurations);
+					List<Configuration> configs = ConfigurationServiceFacade.get(UI.getCurrent())
+							.update(configurations);
 					if (configs != null) {
 						List<String> configurationCodes = configs.stream()
 								.filter(p -> (p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO)
 										|| p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO_HEIGHT)
 										|| p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO_WIDTH)))
-								.map(p->p.getCode()).collect(Collectors.toList());
-						if (configurationCodes!=null && !configurationCodes.isEmpty()) {
-							if(configurationCodes.contains(ConfigurationProperty.APPLICATION_LOGO)){
+								.map(p -> p.getCode()).collect(Collectors.toList());
+						if (configurationCodes != null && !configurationCodes.isEmpty()) {
+							if (configurationCodes.contains(ConfigurationProperty.APPLICATION_LOGO)) {
 								deleteImgBtn.setVisible(true);
 							}
 							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
@@ -262,10 +261,10 @@ public class SystemConfiguration extends CGridLayout {
 
 						@Override
 						public void handlePositive() {
-							IFileService fileService = ContextProvider.getBean(IFileService.class);
 							try {
-								fileService.deleteFileByEntityAndType(applicationLogoConfiguration.getId().toString(),
-										Configuration.class.getName(), ConfigurationProperty.APPLICATION_LOGO);
+								FileServiceFacade.get(UI.getCurrent()).deleteFileByEntityAndType(
+										applicationLogoConfiguration.getId().toString(), Configuration.class.getName(),
+										ConfigurationProperty.APPLICATION_LOGO);
 								applicationLogoImage.setSource(new ThemeResource("../cxode/img/your-logo-here.png"));
 								SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
 								systemObserver.getApplicationLogoChangeObserver().onNext(true);
@@ -287,8 +286,8 @@ public class SystemConfiguration extends CGridLayout {
 	}
 
 	private void setValues() throws FrameworkException {
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		List<Configuration> configurations = configurationService.getApplicationConfiguration();
+		List<Configuration> configurations = ConfigurationServiceFacade.get(UI.getCurrent())
+				.getApplicationConfiguration();
 		configurations.forEach(configuration -> {
 			switch (configuration.getCode()) {
 			case ConfigurationProperty.APPLICATION_NAME:
@@ -311,9 +310,8 @@ public class SystemConfiguration extends CGridLayout {
 
 					@Override
 					public InputStream getStream() {
-						IFileService fileService = ContextProvider.getBean(IFileService.class);
 						try {
-							EntityFile entityFile = fileService.findFileByEntityAndType(
+							EntityFile entityFile = FileServiceFacade.get(UI.getCurrent()).findFileByEntityAndType(
 									configuration.getId().toString(), Configuration.class.getName(),
 									ConfigurationProperty.APPLICATION_LOGO);
 							if (entityFile != null && entityFile.getFileObject() != null) {

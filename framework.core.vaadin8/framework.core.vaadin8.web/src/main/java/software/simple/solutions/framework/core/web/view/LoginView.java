@@ -29,9 +29,8 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserService;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.view.password.RequestPasswordResetLayout;
 
@@ -96,10 +95,8 @@ public class LoginView extends VerticalLayout {
 			@Override
 			public void buttonClick(final ClickEvent event) {
 				try {
-					IApplicationUserService applicationUserService = ContextProvider
-							.getBean(IApplicationUserService.class);
-					SecurityValidation securityValidation = applicationUserService.validateLogin(username.getValue(),
-							password.getValue());
+					SecurityValidation securityValidation = ApplicationUserServiceFacade.get(UI.getCurrent())
+							.validateLogin(username.getValue(), password.getValue());
 					if (securityValidation.isSuccess()) {
 						String applicationUsername = postProcessLdapUsername(username.getValue());
 						SimpleSolutionsEventBus
@@ -141,8 +138,8 @@ public class LoginView extends VerticalLayout {
 		labels.addComponent(welcomeApplicationNameLbl);
 		labels.setExpandRatio(welcomeApplicationNameLbl, 1f);
 
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		Configuration smtpEnableConfig = configurationService.getByCode(ConfigurationProperty.SMTP_ENABLE);
+		Configuration smtpEnableConfig = ConfigurationServiceFacade.get(UI.getCurrent())
+				.getByCode(ConfigurationProperty.SMTP_ENABLE);
 		if (smtpEnableConfig != null && smtpEnableConfig.getBoolean()) {
 
 			CButton resetBtn = new CButton();
@@ -164,7 +161,8 @@ public class LoginView extends VerticalLayout {
 			});
 		}
 
-		Configuration applicationNameConfig = configurationService.getByCode(ConfigurationProperty.APPLICATION_NAME);
+		Configuration applicationNameConfig = ConfigurationServiceFacade.get(UI.getCurrent())
+				.getByCode(ConfigurationProperty.APPLICATION_NAME);
 		if (applicationNameConfig != null && applicationNameConfig.getValue() != null) {
 			welcomeApplicationNameLbl.setValue(applicationNameConfig.getValue());
 		}

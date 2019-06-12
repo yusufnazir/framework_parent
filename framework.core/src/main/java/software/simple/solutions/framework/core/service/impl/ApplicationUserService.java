@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -36,17 +35,17 @@ import software.simple.solutions.framework.core.service.IPersonInformationServic
 import software.simple.solutions.framework.core.util.ActiveDirectoryConnectionUtils;
 import software.simple.solutions.framework.core.util.Placeholders;
 import software.simple.solutions.framework.core.util.StringUtil;
-import software.simple.solutions.framework.core.util.ThreadAttributes;
-import software.simple.solutions.framework.core.util.ThreadContext;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
 import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
 @Service
+@Transactional
 @ServiceRepository(claz = IApplicationUserRepository.class)
 public class ApplicationUserService extends SuperService implements IApplicationUserService {
+
+	private static final long serialVersionUID = -808050184503350086L;
 
 	@Autowired
 	private IApplicationUserRepository applicationUserRepository;
@@ -62,7 +61,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 	@Autowired
 	private IConfigurationService configurationService;
-	
+
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R entityVO) throws FrameworkException {
 		ApplicationUserVO vo = (ApplicationUserVO) entityVO;
@@ -367,7 +366,8 @@ public class ApplicationUserService extends SuperService implements IApplication
 				.getByUserByResetKey(resetPasswordKey);
 		ApplicationUser applicationUser = applicationUserRequestResetPassword.getApplicationUser();
 
-//		ThreadContext.add(new ThreadAttributes(applicationUser.getId(), applicationUser.getUsername()));
+		// ThreadContext.add(new ThreadAttributes(applicationUser.getId(),
+		// applicationUser.getUsername()));
 
 		PasswordUtil passwordUtil = new PasswordUtil();
 		String encryptedPassword = passwordUtil.getEncryptedPassword(newPassword);

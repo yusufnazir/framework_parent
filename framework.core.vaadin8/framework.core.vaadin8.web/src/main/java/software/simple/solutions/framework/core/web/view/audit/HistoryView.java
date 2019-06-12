@@ -24,8 +24,7 @@ import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
 import software.simple.solutions.framework.core.pojo.RevisionPojo;
 import software.simple.solutions.framework.core.properties.AuditProperty;
-import software.simple.solutions.framework.core.service.IAuditService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.AuditServiceFacade;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
@@ -107,9 +106,9 @@ public class HistoryView extends Window {
 	}
 
 	private void populateHistoryGrid() {
-		IAuditService auditService = ContextProvider.getBean(IAuditService.class);
 		PagingSetting pagingSetting = new PagingSetting(0, 0);
-		PagingResult<Object[]> pagingResult = auditService.createAuditQuery(cl, id, pagingSetting);
+		PagingResult<Object[]> pagingResult = AuditServiceFacade.get(UI.getCurrent()).createAuditQuery(cl, id,
+				pagingSetting);
 		List<RevisionPojo> revisionPojos = new ArrayList<RevisionPojo>();
 		if (pagingResult != null) {
 			List<Object[]> result = pagingResult.getResult();

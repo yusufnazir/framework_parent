@@ -254,7 +254,7 @@ public class GenericRepository implements IGenericRepository {
 		try {
 			return (T) query.getSingleResult();
 		} catch (NoResultException e) {
-			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
+			logger.info("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
 			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}

@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.web;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -28,7 +30,7 @@ import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.service.ISuperService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 public abstract class FormBasicTemplate extends AbstractBaseView implements Build {
@@ -45,7 +47,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 	private Class<? extends ISuperService> serviceClass;
 	private Class<? extends ISuperService> facadeClass;
 	private Class<? extends FormView> formClass;
-	private ISuperService superService;
+	private SuperServiceFacade<?> superService;
 
 	private boolean isNew = false;
 	private Set<AbstractBaseView> selectedTab;
@@ -206,7 +208,16 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 
 	private void setUpService() {
 		if (serviceClass != null) {
-			superService = ContextProvider.getBean(serviceClass);
+			try {
+				Constructor<?>[] constructors = serviceClass.getConstructors();
+				Constructor<? extends ISuperService> constructor = serviceClass.getConstructor(UI.class,
+						serviceClass.getInterfaces()[0].getClass());
+				superService = (SuperServiceFacade<?>) constructor.newInstance(UI.getCurrent(),
+						serviceClass.getInterfaces()[0]);
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException
+					| IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

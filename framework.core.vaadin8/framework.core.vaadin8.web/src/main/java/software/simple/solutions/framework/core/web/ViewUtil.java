@@ -10,10 +10,8 @@ import software.simple.solutions.framework.core.components.ViewDetail;
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
-import software.simple.solutions.framework.core.service.ISubMenuService;
-import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.SubMenuServiceFacade;
 
 public class ViewUtil {
 
@@ -51,9 +49,7 @@ public class ViewUtil {
 			view.setSearchForward(menuItem.getSearchedEntity());
 			view.setPopUpMode(popUpMode);
 
-			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
-					.getBean(IRoleViewPrivilegeService.class);
-			List<String> privileges = roleViewPrivilegeService
+			List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
 					.getPrivilegesByViewIdAndRoleId(menuItem.getMenu().getView().getId(), roleId);
 			ViewDetail viewDetail = view.getViewDetail();
 			viewDetail.setPrivileges(privileges);
@@ -79,8 +75,7 @@ public class ViewUtil {
 	}
 
 	private static List<Menu> getSubMenus(Long parentMenuId) throws FrameworkException {
-		ISubMenuService subMenuService = ContextProvider.getBean(ISubMenuService.class);
-		List<Menu> subMenus = subMenuService.findTabMenus(parentMenuId);
+		List<Menu> subMenus = SubMenuServiceFacade.get(UI.getCurrent()).findTabMenus(parentMenuId);
 		return subMenus;
 	}
 

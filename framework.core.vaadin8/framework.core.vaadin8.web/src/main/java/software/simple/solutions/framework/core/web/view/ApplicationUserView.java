@@ -35,12 +35,11 @@ import software.simple.solutions.framework.core.properties.ConfigurationProperty
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserService;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IPersonInformationService;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.PersonInformationServiceFacade;
 import software.simple.solutions.framework.core.upload.ImageField;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -53,7 +52,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 	public ApplicationUserView() {
 		setEntityClass(ApplicationUser.class);
-		setServiceClass(IApplicationUserService.class);
+		setServiceClass(ApplicationUserServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}
@@ -170,8 +169,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			userMainLayout.addComponent(ldapLayout);
 			ldapLayout.setVisible(false);
 
-			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-			Configuration useLdapConfig = configurationService
+			Configuration useLdapConfig = ConfigurationServiceFacade.get(UI.getCurrent())
 					.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
 			if (useLdapConfig != null && useLdapConfig.getBoolean()) {
 				ldapLayout.setVisible(true);
@@ -297,10 +295,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 					if (person != null) {
 						personInfoLayout.setVisible(true);
 						setPersonInfo();
-						IPersonInformationService personInformationService = ContextProvider
-								.getBean(IPersonInformationService.class);
 						try {
-							String email = personInformationService.getEmail(person.getId());
+							String email = PersonInformationServiceFacade.get(UI.getCurrent()).getEmail(person.getId());
 							emailFld.setValue(email);
 						} catch (FrameworkException e) {
 							new MessageWindowHandler(e);
@@ -356,9 +352,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 				@Override
 				public void buttonClick(ClickEvent event) {
 					String email = emailFld.getValue();
-					IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 					try {
-						boolean smtpEnabled = configurationService.isSmtpEnabled();
+						boolean smtpEnabled = ConfigurationServiceFacade.get(UI.getCurrent()).isSmtpEnabled();
 						if (!smtpEnabled || StringUtils.isBlank(email)) {
 							new ResetPasswordLayout(applicationUser.getId());
 						} else {
@@ -390,9 +385,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		}
 
 		protected void resetPasswordAndSendMail() throws FrameworkException {
-			IApplicationUserService applicationUserService = ContextProvider.getBean(IApplicationUserService.class);
-			applicationUser = applicationUserService.resetUserPassword(applicationUser.getId(),
-					sessionHolder.getApplicationUser().getId());
+			applicationUser = ApplicationUserServiceFacade.get(UI.getCurrent())
+					.resetUserPassword(applicationUser.getId(), sessionHolder.getApplicationUser().getId());
 			setFormValues(applicationUser);
 			NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 		}

@@ -12,6 +12,7 @@ import software.simple.solutions.framework.core.entities.Language;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.LanguageProperty;
 import software.simple.solutions.framework.core.service.ILanguageService;
+import software.simple.solutions.framework.core.service.facade.LanguageServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.LanguageVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -22,7 +23,7 @@ public class LanguageView extends BasicTemplate<Language> {
 
 	public LanguageView() {
 		setEntityClass(Language.class);
-		setServiceClass(ILanguageService.class);
+		setServiceClass(LanguageServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

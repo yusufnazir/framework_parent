@@ -12,6 +12,7 @@ import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ViewProperty;
 import software.simple.solutions.framework.core.service.IViewService;
+import software.simple.solutions.framework.core.service.facade.ViewServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.ViewVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -22,7 +23,7 @@ public class ViewView extends BasicTemplate<View> {
 
 	public ViewView() {
 		setEntityClass(View.class);
-		setServiceClass(IViewService.class);
+		setServiceClass(ViewServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

@@ -13,6 +13,7 @@ import software.simple.solutions.framework.core.entities.UserRole;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.UserRoleProperty;
 import software.simple.solutions.framework.core.service.IUserRoleService;
+import software.simple.solutions.framework.core.service.facade.UserRoleServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.UserRoleVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -25,7 +26,7 @@ public class UserRoleView extends BasicTemplate<UserRole> {
 
 	public UserRoleView() {
 		setEntityClass(UserRole.class);
-		setServiceClass(IUserRoleService.class);
+		setServiceClass(UserRoleServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

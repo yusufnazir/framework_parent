@@ -23,8 +23,8 @@ public class ContextProvider implements ApplicationContextAware {
 		return (T) ctx.getBean(cl);
 	}
 
-	public static Object getBean(String name) {
-		return ctx.getBean(name);
+	public static <T> T getBean(String name) {
+		return (T) ctx.getBean(name);
 	}
 
 }

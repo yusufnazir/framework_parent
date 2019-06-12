@@ -10,6 +10,7 @@ import software.simple.solutions.framework.core.entities.PersonInformation;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PersonInformationProperty;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
+import software.simple.solutions.framework.core.service.facade.PersonInformationServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -21,7 +22,7 @@ public class PersonInformationView extends BasicTemplate<PersonInformation> {
 
 	public PersonInformationView() {
 		setEntityClass(PersonInformation.class);
-		setServiceClass(IPersonInformationService.class);
+		setServiceClass(PersonInformationServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

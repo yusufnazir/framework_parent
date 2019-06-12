@@ -22,10 +22,9 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.SecurityProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserRequestResetPasswordService;
-import software.simple.solutions.framework.core.service.IApplicationUserService;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserRequestResetPasswordServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
 import software.simple.solutions.framework.core.ui.ResetPasswordUI;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class ResetPasswordView extends VerticalLayout implements View {
@@ -50,11 +49,9 @@ public class ResetPasswordView extends VerticalLayout implements View {
 		resetPasswordKey = VaadinServletRequest.getCurrent().getParameter("key");
 		if (StringUtils.isNotBlank(resetPasswordKey)) {
 
-			IApplicationUserRequestResetPasswordService applicationUserRequestResetPasswordService = ContextProvider
-					.getBean(IApplicationUserRequestResetPasswordService.class);
 			try {
-				SecurityValidation securityValidation = applicationUserRequestResetPasswordService
-						.isResetPasswordValid(resetPasswordKey);
+				SecurityValidation securityValidation = ApplicationUserRequestResetPasswordServiceFacade
+						.get(UI.getCurrent()).isResetPasswordValid(resetPasswordKey);
 				if (!securityValidation.isSuccess()) {
 					UI.getCurrent().getNavigator().navigateTo(ResetPasswordUI.ERROR);
 				}
@@ -131,9 +128,8 @@ public class ResetPasswordView extends VerticalLayout implements View {
 	private void submitResetPassword() throws FrameworkException {
 		String newPassword = newPasswordFld.getValue();
 
-		IApplicationUserService applicationUserService = ContextProvider.getBean(IApplicationUserService.class);
-		SecurityValidation securityValidation = applicationUserService.resetUserPasswordByKey(resetPasswordKey,
-				newPassword);
+		SecurityValidation securityValidation = ApplicationUserServiceFacade.get(UI.getCurrent())
+				.resetUserPasswordByKey(resetPasswordKey, newPassword);
 		if (securityValidation.isSuccess()) {
 			UI.getCurrent().getNavigator().navigateTo(Navigation.RESET_PASSWORD_SUCCESS);
 		} else {

@@ -25,6 +25,7 @@ import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.service.IPersonService;
+import software.simple.solutions.framework.core.service.facade.PersonServiceFacade;
 import software.simple.solutions.framework.core.upload.ImageField;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -39,7 +40,7 @@ public class PersonView extends BasicTemplate<Person> {
 
 	public PersonView() {
 		setEntityClass(Person.class);
-		setServiceClass(IPersonService.class);
+		setServiceClass(PersonServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setGridRowHeight(75);

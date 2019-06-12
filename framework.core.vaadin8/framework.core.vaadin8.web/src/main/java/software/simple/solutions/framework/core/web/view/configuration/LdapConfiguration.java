@@ -7,17 +7,16 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
-import software.simple.solutions.framework.core.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
@@ -27,8 +26,7 @@ import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 
 @CxodeConfigurationComponent(order = 4, captionKey = ConfigurationProperty.LDAP_CONFIGURATION)
@@ -40,7 +38,7 @@ public class LdapConfiguration extends CGridLayout {
 
 	private CCheckBox useLdapFld;
 	private CTextField hostFld;
-//	private CDiscreetNumberField portFld;
+	// private CDiscreetNumberField portFld;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
@@ -53,7 +51,8 @@ public class LdapConfiguration extends CGridLayout {
 		int i = 0;
 		useLdapFld = addField(CCheckBox.class, ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP, 0, ++i);
 		hostFld = addField(CTextField.class, ConfigurationProperty.LDAP_CONFIGURATION_HOST, 0, ++i);
-//		portFld = addField(CDiscreetNumberField.class, ConfigurationProperty.LDAP_CONFIGURATION_PORT, 0, ++i);
+		// portFld = addField(CDiscreetNumberField.class,
+		// ConfigurationProperty.LDAP_CONFIGURATION_PORT, 0, ++i);
 
 		persistBtn = addField(CButton.class, 0, ++i);
 		persistBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -68,10 +67,10 @@ public class LdapConfiguration extends CGridLayout {
 				List<ConfigurationVO> configurations = new ArrayList<ConfigurationVO>();
 				configurations.add(getValue(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP, useLdapFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.LDAP_CONFIGURATION_HOST, hostFld.getValue()));
-//				configurations.add(getValue(ConfigurationProperty.LDAP_CONFIGURATION_PORT, portFld.getLongValue()));
-				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+				// configurations.add(getValue(ConfigurationProperty.LDAP_CONFIGURATION_PORT,
+				// portFld.getLongValue()));
 				try {
-					configurationService.update(configurations);
+					ConfigurationServiceFacade.get(UI.getCurrent()).update(configurations);
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -95,8 +94,7 @@ public class LdapConfiguration extends CGridLayout {
 			}
 		});
 		enableFields(false);
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		List<Configuration> configurations = configurationService.getLdapConfiguration();
+		List<Configuration> configurations = ConfigurationServiceFacade.get(UI.getCurrent()).getLdapConfiguration();
 		if (configurations != null && !configurations.isEmpty()) {
 			for (Configuration configuration : configurations) {
 				switch (configuration.getCode()) {
@@ -107,26 +105,26 @@ public class LdapConfiguration extends CGridLayout {
 				case ConfigurationProperty.LDAP_CONFIGURATION_HOST:
 					hostFld.setValue(configuration.getValue());
 					break;
-//				case ConfigurationProperty.LDAP_CONFIGURATION_PORT:
-//					portFld.setValue(configuration.getValue());
-//					break;
+				// case ConfigurationProperty.LDAP_CONFIGURATION_PORT:
+				// portFld.setValue(configuration.getValue());
+				// break;
 				default:
 					break;
 				}
 			}
 		}
-		
+
 		hostFld.setEnabled(false);
-//		portFld.setEnabled(false);
-		if(useLdapFld.getValue()){
+		// portFld.setEnabled(false);
+		if (useLdapFld.getValue()) {
 			hostFld.setEnabled(true);
-//			portFld.setEnabled(true);
+			// portFld.setEnabled(true);
 		}
 	}
-	
+
 	private void enableFields(boolean enabled) {
 		hostFld.setEnabled(enabled);
-//		portFld.setEnabled(enabled);
+		// portFld.setEnabled(enabled);
 	}
 
 	private ConfigurationVO getValue(String code, Object value) {

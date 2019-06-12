@@ -10,6 +10,7 @@ import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.service.IGenderService;
+import software.simple.solutions.framework.core.service.facade.GenderServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.GenderVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -20,7 +21,7 @@ public class GenderView extends BasicTemplate<Gender> {
 
 	public GenderView() {
 		setEntityClass(Gender.class);
-		setServiceClass(IGenderService.class);
+		setServiceClass(GenderServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

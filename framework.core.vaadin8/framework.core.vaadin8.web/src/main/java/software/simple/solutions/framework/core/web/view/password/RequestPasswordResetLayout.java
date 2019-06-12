@@ -16,9 +16,8 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserRequestResetPasswordService;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserRequestResetPasswordServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class RequestPasswordResetLayout {
@@ -52,9 +51,8 @@ public class RequestPasswordResetLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					IApplicationUserRequestResetPasswordService applicationUserRequestResetPasswordService = ContextProvider
-							.getBean(IApplicationUserRequestResetPasswordService.class);
-					applicationUserRequestResetPasswordService.requestPasswordReset(usernameFld.getValue());
+					ApplicationUserRequestResetPasswordServiceFacade.get(UI.getCurrent())
+							.requestPasswordReset(usernameFld.getValue());
 					window.close();
 					NotificationWindow.notificationNormalWindow(SystemProperty.RESET_PASSWORD_REQUEST_SENT);
 				} catch (FrameworkException e) {

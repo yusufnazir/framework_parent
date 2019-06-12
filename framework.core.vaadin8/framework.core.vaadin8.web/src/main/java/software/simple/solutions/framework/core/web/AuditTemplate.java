@@ -17,6 +17,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -37,9 +38,8 @@ import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IAuditService;
 import software.simple.solutions.framework.core.service.ISuperService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.AuditServiceFacade;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
@@ -61,7 +61,6 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 	private Class<? extends ISuperService> serviceClass;
 	private Class<? extends FilterView> filterClass;
 	private Class<?> entityClass;
-	private IAuditService auditService;
 
 	private boolean advancedSearch = true;
 	private boolean columnsCreated = false;
@@ -81,7 +80,6 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 		sortingMap = new HashMap<Object, Boolean>();
 		sortingHelper = new SortingHelper();
 		pagingSetting = new PagingSetting();
-		auditService = ContextProvider.getBean(IAuditService.class);
 	}
 
 	public void executePreBuild() throws FrameworkException {
@@ -93,7 +91,6 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 
 		setUpTemplateLayout();
 
-		setUpService();
 		setUpFilterView();
 
 		setUpActionBar();
@@ -216,7 +213,7 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 	private void handleViewSearch() throws FrameworkException {
 		pagingSetting.setMaxResult(pagingBar.getMaxResult());
 		pagingSetting.setStartPosition(pagingBar.getStartPosition());
-		pagingResult = auditService.createAuditQuery(entityClass, entityId, pagingSetting);
+		pagingResult = AuditServiceFacade.get(UI.getCurrent()).createAuditQuery(entityClass, entityId, pagingSetting);
 	}
 
 	private Long handleCount(boolean showCount) throws FrameworkException {
@@ -363,12 +360,6 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 
 	protected void setEntityClass(Class<?> entityClass) {
 		this.entityClass = entityClass;
-	}
-
-	private void setUpService() {
-		if (serviceClass != null) {
-			auditService = ContextProvider.getBean(serviceClass);
-		}
 	}
 
 	public Long getEntityId() {

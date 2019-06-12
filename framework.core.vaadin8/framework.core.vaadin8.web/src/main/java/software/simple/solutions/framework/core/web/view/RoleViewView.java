@@ -1,7 +1,5 @@
 package software.simple.solutions.framework.core.web.view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,8 +9,8 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ItemCaptionGenerator;
+import com.vaadin.ui.UI;
 
-import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.FilterView;
@@ -27,11 +25,11 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.RoleViewPrivilegeProperty;
 import software.simple.solutions.framework.core.properties.RoleViewProperty;
-import software.simple.solutions.framework.core.service.IPrivilegeService;
-import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
 import software.simple.solutions.framework.core.service.IRoleViewService;
+import software.simple.solutions.framework.core.service.facade.PrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleViewServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.RoleViewVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -44,7 +42,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 
 	public RoleViewView() {
 		setEntityClass(software.simple.solutions.framework.core.entities.RoleView.class);
-		setServiceClass(IRoleViewService.class);
+		setServiceClass(RoleViewServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}
@@ -153,8 +151,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		}
 
 		private void initializePrivileges(List<String> privilegeCodes) throws FrameworkException {
-			IPrivilegeService privilegeService = ContextProvider.getBean(IPrivilegeService.class);
-			List<Privilege> privileges = privilegeService.getPrivileges(privilegeCodes);
+			List<Privilege> privileges = PrivilegeServiceFacade.get(UI.getCurrent()).getPrivileges(privilegeCodes);
 			privilegesFld.setValues(privileges);
 			privilegesFld.setItemCaptionGenerator(new ItemCaptionGenerator<ComboItem>() {
 
@@ -188,10 +185,9 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 					Set<ComboItem> values = event.getValue();
 					List<Long> privilegeIds = values.parallelStream().map(ComboItem::getLongId)
 							.collect(Collectors.toList());
-					IRoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
-							.getBean(IRoleViewPrivilegeService.class);
 					try {
-						roleViewPrivilegeService.updateRoleViewPrivileges(roleView.getId(), privilegeIds);
+						RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).updateRoleViewPrivileges(roleView.getId(),
+								privilegeIds);
 					} catch (FrameworkException e) {
 						new MessageWindowHandler(e);
 					}
@@ -202,10 +198,9 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		}
 
 		private void setPrivilegeValues() {
-			IRoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
-					.getBean(IRoleViewPrivilegeService.class);
 			try {
-				List<Privilege> privileges = roleViewPrivilegeService.getPrivilegesByRoleView(roleView.getId());
+				List<Privilege> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByRoleView(roleView.getId());
 				if (privileges != null) {
 					Set<Long> privilegeIds = privileges.parallelStream().map(Privilege::getId)
 							.collect(Collectors.toSet());

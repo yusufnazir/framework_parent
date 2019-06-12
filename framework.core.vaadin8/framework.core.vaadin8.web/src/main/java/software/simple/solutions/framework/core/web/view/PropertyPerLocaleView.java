@@ -19,6 +19,7 @@ import software.simple.solutions.framework.core.entities.PropertyPerLocale;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PropertyPerLocaleProperty;
 import software.simple.solutions.framework.core.service.IPropertyPerLocaleService;
+import software.simple.solutions.framework.core.service.facade.PropertyPerLocaleServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.PropertyPerLocaleVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -29,7 +30,7 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 
 	public PropertyPerLocaleView() {
 		setEntityClass(PropertyPerLocale.class);
-		setServiceClass(IPropertyPerLocaleService.class);
+		setServiceClass(PropertyPerLocaleServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 

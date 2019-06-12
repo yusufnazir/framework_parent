@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.web;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -96,11 +97,10 @@ import software.simple.solutions.framework.core.properties.AuditProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IRoleViewPrivilegeService;
 import software.simple.solutions.framework.core.service.ISuperService;
-import software.simple.solutions.framework.core.service.impl.RoleViewPrivilegeService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortingHelper;
@@ -133,7 +133,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private Class<? extends FilterView> filterClass;
 	private Class<? extends FormView> formClass;
 	private Class<?> entityClass;
-	private ISuperService superService;
+	private SuperServiceFacade<?> superService;
 
 	private boolean advancedSearch = true;
 	private Set<Object> toDeleteEntities;
@@ -297,8 +297,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void setUpActionBar() throws FrameworkException {
 		actionBar = new ActionBar();
 
-		RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider.getBean(IRoleViewPrivilegeService.class);
-		List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
+		List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndRoleId(
 				getViewDetail().getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
 
 		// ActionState actionState =
@@ -625,10 +624,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass(),
 					getSessionHolder().getSelectedRole().getId());
 
-			RoleViewPrivilegeService roleViewPrivilegeService = ContextProvider
-					.getBean(IRoleViewPrivilegeService.class);
-			List<String> privileges = roleViewPrivilegeService.getPrivilegesByViewIdAndRoleId(
-					viewItem.getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+			List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+					.getPrivilegesByViewIdAndRoleId(viewItem.getMenu().getView().getId(),
+							getSessionHolder().getSelectedRole().getId());
 			ViewDetail viewDetail = view.getViewDetail();
 			viewDetail.setPrivileges(privileges);
 			viewDetail.setMenu(viewItem.getMenu());
@@ -683,7 +681,16 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private void setUpService() {
 		if (serviceClass != null) {
-			superService = ContextProvider.getBean(serviceClass);
+			try {
+				Constructor<?>[] constructors = serviceClass.getConstructors();
+				Constructor<? extends ISuperService> constructor = serviceClass.getConstructor(UI.class,
+						serviceClass.getInterfaces()[0].getClass());
+				superService = (SuperServiceFacade<?>) constructor.newInstance(UI.getCurrent(),
+						serviceClass.getInterfaces()[0]);
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException
+					| IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -972,9 +979,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 						formEditorColum.setHidden(true);
 					}
 
-					IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-					Configuration configuration = configurationService.getByCode(Configuration.class,
-							ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT);
+					Configuration configuration = ConfigurationServiceFacade.get(UI.getCurrent())
+							.getByCode(Configuration.class, ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT);
 					Long maxRecords = 10000L;
 					if (configuration != null && StringUtils.isNotBlank(configuration.getValue())) {
 						maxRecords = NumberUtil.getLong(configuration.getValue());
@@ -1070,15 +1076,17 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object formUpdate() throws FrameworkException {
 		if (formView != null && formMode) {
 			SuperVO formValues = (SuperVO) formView.getFormValues();
 			formValues.setUpdatedBy(getSessionHolder().getApplicationUser().getId());
 			formValues.setUpdatedDate(LocalDateTime.now());
+			formValues.setCurrentRoleId(getSessionHolder().getSelectedRole().getId());
+			formValues.setCurrentUserId(getSessionHolder().getApplicationUser().getId());
 			formValues.setNew(isNew);
 
 			try {
+				setUpService();
 				entity = superService.updateSingle(formValues);
 				handleReactiveUpdate(entity);
 				// updateExistingResultSet();

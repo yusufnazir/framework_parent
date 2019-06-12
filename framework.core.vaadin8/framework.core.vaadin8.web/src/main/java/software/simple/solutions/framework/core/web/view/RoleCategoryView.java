@@ -10,6 +10,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleCategoryProperty;
 import software.simple.solutions.framework.core.properties.RoleProperty;
 import software.simple.solutions.framework.core.service.IRoleCategoryService;
+import software.simple.solutions.framework.core.service.facade.RoleCategoryServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.RoleCategoryVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -20,7 +21,7 @@ public class RoleCategoryView extends BasicTemplate<RoleCategory> {
 
 	public RoleCategoryView() {
 		setEntityClass(RoleCategory.class);
-		setServiceClass(IRoleCategoryService.class);
+		setServiceClass(RoleCategoryServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

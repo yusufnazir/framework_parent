@@ -35,11 +35,10 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IApplicationUserConfigurationService;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IMailService;
+import software.simple.solutions.framework.core.service.facade.ApplicationUserConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.MailServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserConfigurationVO;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
@@ -99,9 +98,8 @@ public class SmtpServerConfiguration extends CGridLayout {
 				configurations.add(getValue(ConfigurationProperty.SMTP_USERNAME, usernameFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.SMTP_PASSWORD, passwordFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.SMTP_SYSTEM_EMAIL, systemEmailFld.getValue()));
-				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
-					configurationService.update(configurations);
+					ConfigurationServiceFacade.get(UI.getCurrent()).update(configurations);
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -125,9 +123,6 @@ public class SmtpServerConfiguration extends CGridLayout {
 				CGridLayout validateSmtpLayout = ComponentUtil.createGrid();
 				validateSmtpLayout.setMargin(true);
 
-				IApplicationUserConfigurationService applicationUserConfigurationService = ContextProvider
-						.getBean(IApplicationUserConfigurationService.class);
-
 				CTextField subjectFld = validateSmtpLayout.addField(CTextField.class,
 						ConfigurationProperty.SMTP_VALIDATE_SUBJECT, 0, 0);
 				CTextArea messageFld = validateSmtpLayout.addField(CTextArea.class,
@@ -136,7 +131,8 @@ public class SmtpServerConfiguration extends CGridLayout {
 						ConfigurationProperty.SMTP_VALIDATE_EMAIL, 0, 2);
 
 				try {
-					List<ApplicationUserConfiguration> smtpValidateConfigurations = applicationUserConfigurationService
+					List<ApplicationUserConfiguration> smtpValidateConfigurations = ApplicationUserConfigurationServiceFacade
+							.get(UI.getCurrent())
 							.getSMTPValidateConfiguration(sessionHolder.getApplicationUser().getId());
 					if (smtpValidateConfigurations != null && !smtpValidateConfigurations.isEmpty()) {
 						for (ApplicationUserConfiguration applicationUserConfiguration : smtpValidateConfigurations) {
@@ -218,21 +214,17 @@ public class SmtpServerConfiguration extends CGridLayout {
 					progressBar.setVisible(true);
 				}
 			});
-			IMailService mailService = ContextProvider.getBean(IMailService.class);
 			try {
-				IApplicationUserConfigurationService applicationUserConfigurationService = ContextProvider
-						.getBean(IApplicationUserConfigurationService.class);
-
 				List<ApplicationUserConfigurationVO> applicationUserConfigurations = new ArrayList<ApplicationUserConfigurationVO>();
 				applicationUserConfigurations.add(getValue(ConfigurationProperty.SMTP_VALIDATE_SUBJECT, subject));
 				applicationUserConfigurations.add(getValue(ConfigurationProperty.SMTP_VALIDATE_MESSAGE, message));
 				applicationUserConfigurations
 						.add(getValue(ConfigurationProperty.SMTP_VALIDATE_EMAIL, validateSmtpEmail));
-				applicationUserConfigurationService.update(applicationUserConfigurations);
+				ApplicationUserConfigurationServiceFacade.get(UI.getCurrent()).update(applicationUserConfigurations);
 
-				boolean sentTestMail = mailService.sendTestMail(hostFld.getValue(), portFld.getValue(),
-						usernameFld.getValue(), passwordFld.getValue(), systemEmailFld.getValue(), subject, message,
-						validateSmtpEmail);
+				boolean sentTestMail = MailServiceFacade.get(UI.getCurrent()).sendTestMail(hostFld.getValue(),
+						portFld.getValue(), usernameFld.getValue(), passwordFld.getValue(), systemEmailFld.getValue(),
+						subject, message, validateSmtpEmail);
 				if (sentTestMail) {
 					ui.access(new Runnable() {
 
@@ -286,8 +278,8 @@ public class SmtpServerConfiguration extends CGridLayout {
 			}
 		});
 		enableFields(false);
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		List<Configuration> configurations = configurationService.getMailServerConfiguration();
+		List<Configuration> configurations = ConfigurationServiceFacade.get(UI.getCurrent())
+				.getMailServerConfiguration();
 		if (configurations != null && !configurations.isEmpty()) {
 			for (Configuration configuration : configurations) {
 				switch (configuration.getCode()) {

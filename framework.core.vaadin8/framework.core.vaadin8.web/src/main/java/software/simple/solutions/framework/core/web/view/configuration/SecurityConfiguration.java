@@ -24,8 +24,7 @@ import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 
 @CxodeConfigurationComponent(order = 3, captionKey = ConfigurationProperty.PASSWORD_SECURITY_CONFIGURATION)
@@ -107,9 +106,8 @@ public class SecurityConfiguration extends CGridLayout {
 						daysBeforePasswordExpiresFld.getLongValue()));
 				configurations.add(getValue(ConfigurationProperty.PASSWORD_SECURITY_USED_HISTORY,
 						usedPasswordHistoryFld.getLongValue()));
-				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
-					configurationService.update(configurations);
+					ConfigurationServiceFacade.get(UI.getCurrent()).update(configurations);
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -123,8 +121,8 @@ public class SecurityConfiguration extends CGridLayout {
 	}
 
 	private void setValues() throws FrameworkException {
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		List<Configuration> configurations = configurationService.getPasswordSecurityConfiguration();
+		List<Configuration> configurations = ConfigurationServiceFacade.get(UI.getCurrent())
+				.getPasswordSecurityConfiguration();
 		if (configurations != null && !configurations.isEmpty()) {
 			for (Configuration configuration : configurations) {
 				switch (configuration.getCode()) {

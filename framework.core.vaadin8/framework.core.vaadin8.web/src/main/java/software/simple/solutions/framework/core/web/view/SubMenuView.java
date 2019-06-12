@@ -2,6 +2,8 @@ package software.simple.solutions.framework.core.web.view;
 
 import java.util.List;
 
+import com.vaadin.ui.UI;
+
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
@@ -14,11 +16,11 @@ import software.simple.solutions.framework.core.entities.SubMenu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.SubMenuProperty;
-import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.service.ISubMenuService;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
+import software.simple.solutions.framework.core.service.facade.SubMenuServiceFacade;
 import software.simple.solutions.framework.core.util.ArrayUtil;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.valueobjects.SubMenuVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
@@ -28,7 +30,7 @@ public class SubMenuView extends BasicTemplate<SubMenu> {
 
 	public SubMenuView() {
 		setEntityClass(SubMenu.class);
-		setServiceClass(ISubMenuService.class);
+		setServiceClass(SubMenuServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}
@@ -65,8 +67,7 @@ public class SubMenuView extends BasicTemplate<SubMenu> {
 		}
 
 		private void initMenuFlds() throws FrameworkException {
-			IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-			List<ComboItem> menusListing = menuService.getForListing(Menu.class, null);
+			List<ComboItem> menusListing = MenuServiceFacade.get(UI.getCurrent()).getForListing(Menu.class, null);
 
 			parentFld.setItems(menusListing, parentMenu == null ? null : parentMenu.getId());
 			if (parentMenu != null) {
@@ -140,14 +141,14 @@ public class SubMenuView extends BasicTemplate<SubMenu> {
 		}
 
 		private void createParentMenuListing(Long menuId) throws FrameworkException {
-			IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-			List<ComboItem> listing = menuService.getForListing(Menu.class, ArrayUtil.asList(menuId), true);
+			List<ComboItem> listing = MenuServiceFacade.get(UI.getCurrent()).getForListing(Menu.class,
+					ArrayUtil.asList(menuId), true);
 			parentFld.setItems(listing, menuId);
 		}
 
 		private void createChildViewListing(Long menuId) throws FrameworkException {
-			IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-			List<ComboItem> listing = menuService.getForListing(Menu.class, ArrayUtil.asList(menuId), true);
+			List<ComboItem> listing = MenuServiceFacade.get(UI.getCurrent()).getForListing(Menu.class,
+					ArrayUtil.asList(menuId), true);
 			childFld.setItems(listing, menuId);
 		}
 

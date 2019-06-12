@@ -16,6 +16,7 @@ import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.MenuProperty;
 import software.simple.solutions.framework.core.service.IMenuService;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.MenuVO;
@@ -29,7 +30,7 @@ public class MenuView extends BasicTemplate<Menu> {
 
 	public MenuView() {
 		setEntityClass(Menu.class);
-		setServiceClass(IMenuService.class);
+		setServiceClass(MenuServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

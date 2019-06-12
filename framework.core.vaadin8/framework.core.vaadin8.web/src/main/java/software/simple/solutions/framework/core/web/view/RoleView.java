@@ -14,6 +14,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleCategoryProperty;
 import software.simple.solutions.framework.core.properties.RoleProperty;
 import software.simple.solutions.framework.core.service.IRoleService;
+import software.simple.solutions.framework.core.service.facade.RoleServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.RoleVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -24,7 +25,7 @@ public class RoleView extends BasicTemplate<Role> {
 
 	public RoleView() {
 		setEntityClass(Role.class);
-		setServiceClass(IRoleService.class);
+		setServiceClass(RoleServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}

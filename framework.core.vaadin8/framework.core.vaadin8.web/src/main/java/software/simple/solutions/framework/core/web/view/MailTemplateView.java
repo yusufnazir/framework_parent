@@ -23,6 +23,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.LanguageProperty;
 import software.simple.solutions.framework.core.properties.MailTemplateProperty;
 import software.simple.solutions.framework.core.service.IMailTemplateService;
+import software.simple.solutions.framework.core.service.facade.MailTemplateServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.MailTemplateVO;
@@ -34,7 +35,7 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 
 	public MailTemplateView() {
 		setEntityClass(MailTemplate.class);
-		setServiceClass(IMailTemplateService.class);
+		setServiceClass(MailTemplateServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setSkipActiveColumn(true);

@@ -2,6 +2,7 @@ package software.simple.solutions.framework.core.web.view;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -11,8 +12,8 @@ import software.simple.solutions.framework.core.entities.PersonInformation;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PersonInformationProperty;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
+import software.simple.solutions.framework.core.service.facade.PersonInformationServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
 import software.simple.solutions.framework.core.web.FormBasicTemplate;
 
@@ -21,7 +22,7 @@ public class PersonInformationFormView extends FormBasicTemplate {
 	private static final long serialVersionUID = -9131590077272243240L;
 
 	public PersonInformationFormView() {
-		setServiceClass(IPersonInformationService.class);
+		setServiceClass(PersonInformationServiceFacade.class);
 		setFormClass(Form.class);
 	}
 
@@ -61,10 +62,8 @@ public class PersonInformationFormView extends FormBasicTemplate {
 		@SuppressWarnings("unchecked")
 		@Override
 		public PersonInformation setFormValues(Object entity) throws FrameworkException {
-			IPersonInformationService personInformationService = ContextProvider
-					.getBean(IPersonInformationService.class);
 			person = getParentEntity();
-			personInformation = personInformationService.getByPerson(person.getId());
+			personInformation = PersonInformationServiceFacade.get(UI.getCurrent()).getByPerson(person.getId());
 			if (personInformation != null) {
 				primaryEmailFld.setValue(personInformation.getPrimaryEmail());
 				secondaryEmailFld.setValue(personInformation.getSecondaryEmail());
