@@ -16,9 +16,11 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -95,7 +97,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private static final Logger logger = LogManager.getLogger(TopMenuLayoutView.class);
 
 	private TabSheet tabSheet;
-	private MenuBar menuBar;
+	private MenuBar menuBar_;
 	private MenuBar userInfoMenuBar;
 	private SessionHolder sessionHolder;
 	private ConcurrentMap<String, Object> referenceKeys;
@@ -163,7 +165,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 					@Override
 					public void menuSelected(MenuItem selectedItem) {
-						menuBar.setVisible(true);
+						menuBar_.setVisible(true);
 						tabSheet.removeAllComponents();
 					}
 				});
@@ -219,9 +221,9 @@ public class TopMenuLayoutView extends VerticalLayout {
 	}
 
 	private void createMenu(Role role) throws FrameworkException {
-		menuBar.setVisible(true);
+		menuBar_.setVisible(true);
 		sessionHolder.setSelectedRole(role);
-		menuBar.removeItems();
+		menuBar_.removeItems();
 		menus = MenuServiceFacade.get(UI.getCurrent()).findAuthorizedMenus(role.getId());
 		List<SimpleMenuItem> parents = new ArrayList<SimpleMenuItem>();
 		Collections.sort(menus, new MenuIndexComparator());
@@ -245,7 +247,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 			String menuName = menuItem.getMenu().getKey() == null ? menuItem.getMenu().getName()
 					: PropertyResolver.getPropertyValueByLocale(menuItem.getMenu().getKey(),
 							UI.getCurrent().getLocale());
-			MenuBar.MenuItem item = menuBar.addItem(menuName, command);
+			MenuBar.MenuItem item = menuBar_.addItem(menuName, command);
 			setMenuItems(menuItem, item);
 		}
 	}
@@ -481,8 +483,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 		Image logoImageHolder = createLogoImageHolder();
 		headerLayout.addComponent(logoImageHolder);
 
-		menuBar = createMenuStructure();
-		headerLayout.addComponent(menuBar);
+		menuBar_ = createMenuStructure();
+		headerLayout.addComponent(menuBar_);
 		// headerLayout.setExpandRatio(menuBar, 1);
 
 		// menuBarRole = createRoleMenuStructure();
@@ -572,10 +574,15 @@ public class TopMenuLayoutView extends VerticalLayout {
 	}
 
 	private MenuBar createMenuStructure() {
-		menuBar = new MenuBar();
-		menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
-		menuBar.addStyleName(ValoTheme.MENUBAR_SMALL);
-		return menuBar;
+		menuBar_ = new MenuBar();
+		Environment environment = ContextProvider.getBean(Environment.class);
+		String menubarStyle = environment.getProperty("application.style.main.menu.bar");
+		if (StringUtils.isNotBlank(menubarStyle)) {
+			menuBar_.setPrimaryStyleName(menubarStyle);
+		}
+		menuBar_.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+		menuBar_.addStyleName(ValoTheme.MENUBAR_SMALL);
+		return menuBar_;
 	}
 
 	// private MenuBar createRoleMenuStructure() {

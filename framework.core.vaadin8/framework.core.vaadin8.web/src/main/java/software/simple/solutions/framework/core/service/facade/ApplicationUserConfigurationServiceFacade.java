@@ -2,18 +2,11 @@ package software.simple.solutions.framework.core.service.facade;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.vaadin.ui.UI;
 
-import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.ApplicationUserConfiguration;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.repository.IConfigurationRepository;
 import software.simple.solutions.framework.core.service.IApplicationUserConfigurationService;
-import software.simple.solutions.framework.core.service.ISuperService;
 
 public class ApplicationUserConfigurationServiceFacade extends SuperServiceFacade<IApplicationUserConfigurationService>
 		implements IApplicationUserConfigurationService {

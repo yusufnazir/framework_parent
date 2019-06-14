@@ -1125,6 +1125,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	protected void initNewForm() {
 		try {
+			hideSecondComponent();
+			secondContentPanel.setContent(null);
 			setSelectedEntity(null);
 
 			setUpFormActions();
