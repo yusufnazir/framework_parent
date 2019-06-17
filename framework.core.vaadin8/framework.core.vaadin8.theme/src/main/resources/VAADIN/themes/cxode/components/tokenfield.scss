@@ -1,0 +1,10 @@
+@import "../../../../resources/VAADIN/addons/searchdropdown/searchdropdown.scss";
+
+@mixin tokenfield{
+
+	@include searchdropdown;
+	
+	.search-dropdown {
+		height: 33px !important;
+	}
+}

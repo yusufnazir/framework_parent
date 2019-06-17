@@ -164,6 +164,11 @@
 			<artifactId>switch</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fo0.advancedtokenfield</groupId>
+			<artifactId>AdvancedTokenField</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-security -->
 		<dependency>
 			<groupId>org.vaadin.spring.extensions</groupId>

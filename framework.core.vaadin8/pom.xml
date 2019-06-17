@@ -171,6 +171,12 @@
 				<version>3.0.0</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.fo0.advancedtokenfield</groupId>
+				<artifactId>AdvancedTokenField</artifactId>
+				<version>0.5.1</version>
+			</dependency>
+
 			<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-security -->
 			<dependency>
 				<groupId>org.vaadin.spring.extensions</groupId>

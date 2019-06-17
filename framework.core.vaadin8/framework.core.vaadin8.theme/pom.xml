@@ -68,6 +68,10 @@
 			<artifactId>wt-pdf-viewer</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.fo0.advancedtokenfield</groupId>
+			<artifactId>AdvancedTokenField</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>

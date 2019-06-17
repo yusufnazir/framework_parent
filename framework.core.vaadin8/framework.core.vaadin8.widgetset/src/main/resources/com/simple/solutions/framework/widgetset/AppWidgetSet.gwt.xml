@@ -28,4 +28,8 @@
     <inherits name="org.vaadin.aceeditor.AceEditorWidgetSet" />
 
     <inherits name="org.vaadin.teemu.switchui.SwitchComponentWidgetset" />
+
+    <inherits name="com.fo0.advancedtokenfield.AdvancedTokenField.WidgetSet" />
+
+    <inherits name="org.vaadin.alump.searchdropdown.WidgetSet" />
 </module>

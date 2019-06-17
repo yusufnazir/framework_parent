@@ -7,6 +7,7 @@
 @import "components/lookupfield.scss";
 @import "components/multiline-label.scss";
 @import "components/captionlabelfield.scss";
+@import "components/tokenfield.scss";
 
 @mixin cxode {
 	
@@ -18,4 +19,5 @@
 	@include multiline-label;
 	@include captionlabelfield;
 	@include pdfviewer;
+	@include tokenfield;
 }

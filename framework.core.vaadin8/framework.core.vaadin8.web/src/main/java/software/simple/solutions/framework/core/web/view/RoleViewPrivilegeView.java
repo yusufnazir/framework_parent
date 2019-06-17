@@ -10,8 +10,8 @@ import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.AbstractBaseView;
-import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.components.select.PrivilegeTwinColSelect;
 import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -25,7 +25,7 @@ public class RoleViewPrivilegeView extends AbstractBaseView {
 
 	private static final long serialVersionUID = 8224544427761613941L;
 
-	private CTwinColSelect privilegesFld = new CTwinColSelect();
+	private PrivilegeTwinColSelect privilegesFld = new PrivilegeTwinColSelect();
 
 	private software.simple.solutions.framework.core.entities.RoleView roleView;
 

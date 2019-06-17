@@ -12,10 +12,10 @@ import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.CGridLayout;
-import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.components.select.PrivilegeTwinColSelect;
 import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.entities.Role;
@@ -25,7 +25,6 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.RoleViewPrivilegeProperty;
 import software.simple.solutions.framework.core.properties.RoleViewProperty;
-import software.simple.solutions.framework.core.service.IRoleViewService;
 import software.simple.solutions.framework.core.service.facade.PrivilegeServiceFacade;
 import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
 import software.simple.solutions.framework.core.service.facade.RoleViewServiceFacade;
@@ -113,7 +112,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		private CGridLayout formGrid;
 		private ViewLookUpField viewLookUpFld;
 		private RoleLookUpField roleLookUpFld;
-		private CTwinColSelect privilegesFld;
+		private PrivilegeTwinColSelect privilegesFld;
 
 		private software.simple.solutions.framework.core.entities.RoleView roleView;
 
@@ -143,7 +142,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 			roleLookUpFld = formGrid.addField(RoleLookUpField.class, RoleViewProperty.ROLE, 0, 1);
 			roleLookUpFld.handleForParentEntity(getParentEntity());
 
-			privilegesFld = new CTwinColSelect();
+			privilegesFld = new PrivilegeTwinColSelect();
 			privilegesFld.setWidth("400px");
 			privilegesFld.setHeight("300px");
 			privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
