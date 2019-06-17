@@ -15,7 +15,8 @@ public class CustomRevisionListener implements RevisionListener {
 	public void newRevision(Object revisionEntity) {
 		UserRevEntity userRevEntity = (UserRevEntity) revisionEntity;
 
-		if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+		if (SecurityContextHolder.getContext().getAuthentication() == null
+				|| SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
 			userRevEntity.setUsername("BACKGROUND-PROCESSOR");
 			userRevEntity.setTimestamp(new Date().getTime());
 		} else {
