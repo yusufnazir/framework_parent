@@ -29,8 +29,9 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
+import software.simple.solutions.framework.core.service.IApplicationUserService;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.view.password.RequestPasswordResetLayout;
 
@@ -95,8 +96,13 @@ public class LoginView extends VerticalLayout {
 			@Override
 			public void buttonClick(final ClickEvent event) {
 				try {
-					SecurityValidation securityValidation = ApplicationUserServiceFacade.get(UI.getCurrent())
-							.validateLogin(username.getValue(), password.getValue());
+					IApplicationUserService applicationUserService = ContextProvider
+							.getBean(IApplicationUserService.class);
+					// SecurityValidation securityValidation =
+					// ApplicationUserServiceFacade.get(UI.getCurrent())
+					// .validateLogin(username.getValue(), password.getValue());
+					SecurityValidation securityValidation = applicationUserService.validateLogin(username.getValue(),
+							password.getValue());
 					if (securityValidation.isSuccess()) {
 						String applicationUsername = postProcessLdapUsername(username.getValue());
 						SimpleSolutionsEventBus
