@@ -12,11 +12,13 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.components.grid.ItemClickListener;
+import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.entities.UserRevEntity;
@@ -24,12 +26,14 @@ import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
 import software.simple.solutions.framework.core.pojo.RevisionPojo;
 import software.simple.solutions.framework.core.properties.AuditProperty;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.facade.AuditServiceFacade;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class HistoryView extends Window {
 
+	private static final long serialVersionUID = 3543219430134598576L;
 	private Class<?> cl;
 	private Long id;
 	private Grid<RevisionPojo> grid;
@@ -41,7 +45,7 @@ public class HistoryView extends Window {
 		ui = UI.getCurrent();
 		this.cl = cl;
 		this.id = id;
-		setCaption("HistoryView");
+		setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.AUDIT, UI.getCurrent().getLocale()));
 		setModal(true);
 		center();
 		setWidth("80%");
@@ -60,14 +64,23 @@ public class HistoryView extends Window {
 		horizontalLayout.setHeight("100%");
 		panel.setContent(horizontalLayout);
 
-		grid = createHistoryGrid();
-		horizontalLayout.addComponent(grid);
-		populateHistoryGrid();
+		if (id != null) {
+			grid = createHistoryGrid();
+			horizontalLayout.addComponent(grid);
+			populateHistoryGrid();
 
-		revisionViewLayout = new VerticalLayout();
-		revisionViewLayout.setWidth("100%");
-		horizontalLayout.addComponent(revisionViewLayout);
-		horizontalLayout.setExpandRatio(revisionViewLayout, 1);
+			revisionViewLayout = new VerticalLayout();
+			revisionViewLayout.setWidth("100%");
+			horizontalLayout.addComponent(revisionViewLayout);
+			horizontalLayout.setExpandRatio(revisionViewLayout, 1);
+		} else {
+			Label messageLbl = new Label();
+			messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(SystemProperty.TOTAL_RECORDS_FOUND,
+					UI.getCurrent().getLocale(), new Object[] { 0 }));
+			messageLbl.addStyleName(ValoTheme.LABEL_H1);
+			messageLbl.addStyleName(ValoTheme.LABEL_FAILURE);
+			horizontalLayout.addComponent(messageLbl);
+		}
 
 		return panel;
 	}
