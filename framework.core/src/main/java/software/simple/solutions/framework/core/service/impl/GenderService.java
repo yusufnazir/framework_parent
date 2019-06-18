@@ -14,8 +14,6 @@ import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IGenderRepository;
 import software.simple.solutions.framework.core.service.IGenderService;
-import software.simple.solutions.framework.core.util.ThreadAttributes;
-import software.simple.solutions.framework.core.util.ThreadContext;
 import software.simple.solutions.framework.core.valueobjects.GenderVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
@@ -30,7 +28,7 @@ public class GenderService extends SuperService implements IGenderService {
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
 		GenderVO vo = (GenderVO) valueObject;
-//		ThreadAttributes.add(vo.getUpdatedBy());
+		// ThreadAttributes.add(vo.getUpdatedBy());
 
 		if (StringUtils.isBlank(vo.getName())) {
 			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(GenderProperty.NAME));

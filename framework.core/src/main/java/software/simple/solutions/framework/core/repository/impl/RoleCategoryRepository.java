@@ -14,8 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.repository.IRoleCategoryRepository;
-import software.simple.solutions.framework.core.util.ThreadAttributes;
-import software.simple.solutions.framework.core.util.ThreadContext;
 
 @Repository
 public class RoleCategoryRepository extends GenericRepository implements IRoleCategoryRepository {
@@ -48,13 +46,14 @@ public class RoleCategoryRepository extends GenericRepository implements IRoleCa
 	@Override
 	public <T, R> List<R> getForListing(Class<T> cl, Boolean active) throws FrameworkException {
 		ConcurrentMap<String, Object> paramMap = createParamMap();
-		ThreadAttributes threadAttributes = ThreadContext.get();
-		Long roleCategoryId = threadAttributes.getRoleCategoryId();
+
+		// ThreadAttributes threadAttributes = ThreadContext.get();
+		// Long roleCategoryId = threadAttributes.getRoleCategoryId();
 		String query = "select new software.simple.solutions.framework.core.pojo.ComboItem(id,name) from RoleCategory where 1=1 ";
-		if (roleCategoryId.compareTo(1L) != 0) {
-			query += " and id!= :roleCategoryId";
-			paramMap.put("roleCategoryId", 1L);
-		}
+		// if (roleCategoryId.compareTo(1L) != 0) {
+		// query += " and id!= :roleCategoryId";
+		// paramMap.put("roleCategoryId", 1L);
+		// }
 
 		query += " order by id ";
 
