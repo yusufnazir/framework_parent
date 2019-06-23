@@ -18,6 +18,7 @@ public class SimpleSolutionsMenuItem {
 	private boolean divider = false;
 	private boolean returnToMain = false;
 	private Object searchedEntity;
+	private Object parentEntity;
 
 	public SimpleSolutionsMenuItem() {
 		super();
@@ -117,6 +118,14 @@ public class SimpleSolutionsMenuItem {
 
 	public void setSearchedEntity(Object searchedEntity) {
 		this.searchedEntity = searchedEntity;
+	}
+
+	public Object getParentEntity() {
+		return parentEntity;
+	}
+
+	public void setParentEntity(Object parentEntity) {
+		this.parentEntity = parentEntity;
 	}
 
 }

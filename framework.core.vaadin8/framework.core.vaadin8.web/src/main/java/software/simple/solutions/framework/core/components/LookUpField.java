@@ -128,6 +128,7 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 		if (viewClass != null) {
 
 			SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
+			simpleSolutionsMenuItem.setParentEntity(getParentEntity());
 			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId());
 			view.setPopUpWindow(window);
 			view.setPopUpEntity(entity);
@@ -179,6 +180,10 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 
 	public <T> T getParentEntity() {
 		return (T) parentEntity;
+	}
+
+	public void setParentEntity(Object parentEntity) {
+		this.parentEntity = parentEntity;
 	}
 
 	public void handleForParentEntity(Object parentEntity) {

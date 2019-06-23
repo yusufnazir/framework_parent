@@ -66,6 +66,9 @@ public class ViewUtil {
 			viewDetail.setSubMenus(subMenus);
 
 			view.setViewDetail(viewDetail);
+			if(menuItem.getParentEntity()!=null){
+				view.setParentEntity(menuItem.getParentEntity());
+			}
 			view.executeBuild();
 			if (view instanceof BasicTemplate) {
 				((BasicTemplate) view).executePostRenderActions();
