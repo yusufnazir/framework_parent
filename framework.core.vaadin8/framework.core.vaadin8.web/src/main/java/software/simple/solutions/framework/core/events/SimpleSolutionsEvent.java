@@ -37,7 +37,13 @@ public abstract class SimpleSolutionsEvent {
 				sessionHolder.setPassword(password);
 				IApplicationUserService applicationUserService = ContextProvider.getBean(IApplicationUserService.class);
 				ApplicationUser applicationUser = applicationUserService.getByUsername(userName);
-				applicationUserService.updatePasswordForLdapAccess(applicationUser.getId(), password);
+
+				/*
+				 * Update password, because security context needs a password to validate.
+				 */
+				if(applicationUser.getUseLdap()){
+					applicationUserService.updatePasswordForLdapAccess(applicationUser.getId(), password);
+				}
 				sessionHolder.setApplicationUser(applicationUser);
 				IUserRoleService userRoleService = ContextProvider.getBean(IUserRoleService.class);
 				List<Role> rolesByUser = userRoleService.findRolesByUser(applicationUser.getId());
