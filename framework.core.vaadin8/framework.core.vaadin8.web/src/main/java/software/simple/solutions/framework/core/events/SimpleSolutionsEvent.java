@@ -14,8 +14,8 @@ import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.service.IApplicationUserService;
 import software.simple.solutions.framework.core.service.IUserRoleService;
-import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 
 /*
@@ -33,12 +33,11 @@ public abstract class SimpleSolutionsEvent {
 			this.password = password;
 
 			SessionHolder sessionHolder = (SessionHolder) UI.getCurrent().getData();
-			// IApplicationUserService applicationUserService =
-			// ContextProvider.getBean(IApplicationUserService.class);
 			try {
 				sessionHolder.setPassword(password);
-				ApplicationUser applicationUser = ApplicationUserServiceFacade.get(UI.getCurrent())
-						.getByUsername(userName);
+				IApplicationUserService applicationUserService = ContextProvider.getBean(IApplicationUserService.class);
+				ApplicationUser applicationUser = applicationUserService.getByUsername(userName);
+				applicationUserService.updatePasswordForLdapAccess(applicationUser.getId(), password);
 				sessionHolder.setApplicationUser(applicationUser);
 				IUserRoleService userRoleService = ContextProvider.getBean(IUserRoleService.class);
 				List<Role> rolesByUser = userRoleService.findRolesByUser(applicationUser.getId());

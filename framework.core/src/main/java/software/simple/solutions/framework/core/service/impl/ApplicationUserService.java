@@ -492,4 +492,9 @@ public class ApplicationUserService extends SuperService implements IApplication
 		applicationUserRepository.removeOauthAccessToken(authenticationId);
 	}
 
+	@Override
+	public void updatePasswordForLdapAccess(Long userId, String password) throws FrameworkException {
+		changePassword(userId, password);
+	}
+
 }

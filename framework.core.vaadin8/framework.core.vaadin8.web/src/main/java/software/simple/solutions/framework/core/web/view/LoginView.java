@@ -98,9 +98,6 @@ public class LoginView extends VerticalLayout {
 				try {
 					IApplicationUserService applicationUserService = ContextProvider
 							.getBean(IApplicationUserService.class);
-					// SecurityValidation securityValidation =
-					// ApplicationUserServiceFacade.get(UI.getCurrent())
-					// .validateLogin(username.getValue(), password.getValue());
 					SecurityValidation securityValidation = applicationUserService.validateLogin(username.getValue(),
 							password.getValue());
 					if (securityValidation.isSuccess()) {

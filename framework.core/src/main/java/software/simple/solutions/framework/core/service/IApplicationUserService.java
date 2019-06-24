@@ -50,6 +50,8 @@ public interface IApplicationUserService extends ISuperService {
 
 	List<ApplicationUser> findAll() throws FrameworkException;
 
-	void removeOauthAccessToken(String authenticationId) throws FrameworkException; 
+	void removeOauthAccessToken(String authenticationId) throws FrameworkException;
+
+	void updatePasswordForLdapAccess(Long userId, String password) throws FrameworkException;
 
 }

@@ -8,7 +8,6 @@ import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.service.IApplicationUserService;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
 
 public class ApplicationUserServiceFacade extends SuperServiceFacade<IApplicationUserService>
@@ -90,6 +89,11 @@ public class ApplicationUserServiceFacade extends SuperServiceFacade<IApplicatio
 	@Override
 	public void removeOauthAccessToken(String authenticationId) throws FrameworkException {
 		service.removeOauthAccessToken(authenticationId);
+	}
+
+	@Override
+	public void updatePasswordForLdapAccess(Long userId, String password) throws FrameworkException {
+		service.updatePasswordForLdapAccess(userId, password);
 	}
 
 }
