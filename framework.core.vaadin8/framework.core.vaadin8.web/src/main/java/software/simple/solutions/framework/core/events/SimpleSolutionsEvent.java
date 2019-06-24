@@ -41,7 +41,7 @@ public abstract class SimpleSolutionsEvent {
 				/*
 				 * Update password, because security context needs a password to validate.
 				 */
-				if(applicationUser.getUseLdap()){
+				if(applicationUser.getUseLdap()!=null && applicationUser.getUseLdap()){
 					applicationUserService.updatePasswordForLdapAccess(applicationUser.getId(), password);
 				}
 				sessionHolder.setApplicationUser(applicationUser);
