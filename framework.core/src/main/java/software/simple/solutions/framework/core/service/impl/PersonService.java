@@ -24,6 +24,8 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = IPersonRepository.class)
 public class PersonService extends SuperService implements IPersonService {
 
+	private static final long serialVersionUID = 6213241143645131281L;
+
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
 		PersonVO vo = (PersonVO) valueObject;
@@ -36,18 +38,18 @@ public class PersonService extends SuperService implements IPersonService {
 			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(PersonProperty.LAST_NAME));
 		}
-		if (vo.getDateOfBirth() == null) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(PersonProperty.DATE_OF_BIRTH));
-		}
-		if (vo.getDateOfBirth().compareTo(LocalDate.now()) > 0) {
+//		if (vo.getDateOfBirth() == null) {
+//			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+//					new Arg().key(PersonProperty.DATE_OF_BIRTH));
+//		}
+		if (vo.getDateOfBirth()!=null && vo.getDateOfBirth().compareTo(LocalDate.now()) > 0) {
 			throw new FrameworkException(SystemMessageProperty.NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE,
 					new Arg().key(PersonProperty.DATE_OF_BIRTH));
 		}
-		if (vo.getGenderId() == null) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(PersonProperty.GENDER));
-		}
+//		if (vo.getGenderId() == null) {
+//			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+//					new Arg().key(PersonProperty.GENDER));
+//		}
 
 		Person person = null;
 		if (vo.isNew()) {
