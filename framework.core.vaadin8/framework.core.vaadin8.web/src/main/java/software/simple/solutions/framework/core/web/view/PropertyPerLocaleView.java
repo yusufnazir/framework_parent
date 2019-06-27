@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.web.view;
 
+import java.util.HashSet;
+
 import com.vaadin.data.ValueProvider;
 
 import io.reactivex.functions.Consumer;
@@ -18,7 +20,6 @@ import software.simple.solutions.framework.core.entities.Property;
 import software.simple.solutions.framework.core.entities.PropertyPerLocale;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PropertyPerLocaleProperty;
-import software.simple.solutions.framework.core.service.IPropertyPerLocaleService;
 import software.simple.solutions.framework.core.service.facade.PropertyPerLocaleServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.valueobjects.PropertyPerLocaleVO;
@@ -39,7 +40,13 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 			@Override
 			public void accept(Object t) throws Exception {
 				if (t != null) {
-					PropertyHolder.updateKeyValue((PropertyPerLocale) t);
+					if (t instanceof HashSet) {
+						for (Object item : (HashSet<?>) t) {
+							PropertyHolder.updateKeyValue((PropertyPerLocale) item);
+						}
+					} else {
+						PropertyHolder.updateKeyValue((PropertyPerLocale) t);
+					}
 				}
 			}
 		});
@@ -147,7 +154,8 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 		public PropertyPerLocale setFormValues(Object entity) throws FrameworkException {
 			propertyPerLocale = (PropertyPerLocale) entity;
 			activeFld.setValue(propertyPerLocale.getActive());
-			propertyFld.setValue(propertyPerLocale.getProperty().getKey());
+			propertyFld.setValue(
+					propertyPerLocale.getProperty() == null ? null : propertyPerLocale.getProperty().getKey());
 			valueFld.setValue(propertyPerLocale.getValue());
 			languageFld.setLongValue(propertyPerLocale.getLanguage().getId());
 
