@@ -396,8 +396,9 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			middleNameFld.setValue(person.getMiddleName());
 			lastNameFld.setValue(person.getLastName());
 			dateOfBirthFld.setValue(person.getDateOfBirth());
-			genderFld.setValue(PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
-					UI.getCurrent().getLocale()));
+			genderFld.setValue(person.getGender() == null ? null
+					: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
+							UI.getCurrent().getLocale()));
 			isPersonActiveFld.setValue(person.getActive());
 		}
 
