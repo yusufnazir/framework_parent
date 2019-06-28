@@ -53,6 +53,7 @@ public class Style {
 	public static final String SAFARI_IF_TAB_FIX = "safari-if-tab-fix";
 	public static final String LIGHT = "light";
 	public static final String LABEL_CAPTION_MODE = "label-caption-mode";
+	public static final String LABEL_CAPTION_MODE_RED = "label-caption-mode-red";
 	public static final String WIKI_POPUP = "wiki-popup";
 	public static final String NOZEBRA = "nozebra";
 	public static final String LOGIN_INFO_LABEL = "info-login-label";
