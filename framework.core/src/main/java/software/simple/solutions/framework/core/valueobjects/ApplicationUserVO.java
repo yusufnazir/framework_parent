@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.valueobjects;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
@@ -36,6 +37,13 @@ public class ApplicationUserVO extends SuperVO {
 	private String alias;
 	private Long personId;
 	private String email;
+
+	private String firstName;
+	private String lastName;
+	private LocalDate dateOfBirth;
+	private String mobileNumber;
+	private Long genderId;
+	private Boolean termsAccepted;
 
 	public String getUsername() {
 		return username;
@@ -155,6 +163,54 @@ public class ApplicationUserVO extends SuperVO {
 
 	public void setUseLdap(Boolean useLdap) {
 		this.useLdap = useLdap;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Long getGenderId() {
+		return genderId;
+	}
+
+	public void setGenderId(Long genderId) {
+		this.genderId = genderId;
+	}
+
+	public Boolean getTermsAccepted() {
+		return termsAccepted;
+	}
+
+	public void setTermsAccepted(Boolean termsAccepted) {
+		this.termsAccepted = termsAccepted;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 }

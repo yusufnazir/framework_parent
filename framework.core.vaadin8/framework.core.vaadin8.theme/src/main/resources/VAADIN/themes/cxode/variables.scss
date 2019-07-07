@@ -10,6 +10,8 @@ $v-border-radius: 4px;
 
 // Affects the color of some component elements, e.g Button, Panel title, etc
 $v-background-color: hsl(210, 0%, 98%);
+//$v-background-color: hsl(47, 42%, 46%);
+
 // Affects the color of content areas, e.g  Panel and Window content, TextField input etc
 $v-app-background-color: $v-background-color;
 
@@ -41,7 +43,7 @@ $v-unit-size: 26px;
 $v-unit-size--small: 20px;
 $v-unit-size--tiny: 18px;
 
-$v-layout-spacing-vertical: 3px;
-$v-layout-spacing-horizontal: 6px;
+//$v-layout-spacing-vertical: 3px;
+//$v-layout-spacing-horizontal: 6px;
 
 @import "../valo/valo";

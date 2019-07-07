@@ -35,6 +35,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.CButton;
+import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -75,6 +76,7 @@ public class SystemConfiguration extends CGridLayout {
 	private UploadFieldReceiver receiver;
 	private CDiscreetNumberField applicationLogoHeight;
 	private CDiscreetNumberField applicationLogoWidth;
+	private CCheckBox enableRegistrationFld;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
@@ -93,6 +95,8 @@ public class SystemConfiguration extends CGridLayout {
 		exportRowCountFld = addField(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, 0,
 				++i);
 		dateFormatFld = addField(CTextField.class, ConfigurationProperty.APPLICATION_DATE_FORMAT, 0, ++i);
+		enableRegistrationFld = addField(CCheckBox.class, ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION, 0,
+				++i);
 
 		HorizontalLayout horizontalLayout = createLogoImageHolder();
 		VerticalLayout logoImageLayout = addField(VerticalLayout.class, ConfigurationProperty.APPLICATION_LOGO, 0, ++i);
@@ -186,6 +190,8 @@ public class SystemConfiguration extends CGridLayout {
 				configurations.add(
 						getValue(ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, exportRowCountFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_DATE_FORMAT, dateFormatFld.getValue()));
+				configurations.add(getValue(ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION,
+						enableRegistrationFld.getValue()));
 				configurations
 						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_HEIGHT, applicationLogoHeight.getValue()));
 				configurations
@@ -301,6 +307,9 @@ public class SystemConfiguration extends CGridLayout {
 				break;
 			case ConfigurationProperty.APPLICATION_DATE_FORMAT:
 				dateFormatFld.setValue(configuration.getValue());
+				break;
+			case ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION:
+				enableRegistrationFld.setValue(configuration.getBoolean());
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO:
 				applicationLogoConfiguration = configuration;

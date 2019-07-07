@@ -16,7 +16,7 @@ public class RedirectToLoginView extends Div implements BeforeEnterObserver {
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		event.forwardTo(LoginView.class);
+		event.rerouteTo(LoginView.class);
 	}
 
 }

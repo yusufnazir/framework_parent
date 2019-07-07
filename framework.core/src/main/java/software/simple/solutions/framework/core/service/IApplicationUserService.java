@@ -5,6 +5,7 @@ import java.util.List;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
+import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
 
 public interface IApplicationUserService extends ISuperService {
@@ -53,5 +54,7 @@ public interface IApplicationUserService extends ISuperService {
 	void removeOauthAccessToken(String authenticationId) throws FrameworkException;
 
 	void updatePasswordForLdapAccess(Long userId, String password) throws FrameworkException;
+
+	SecurityValidation registerUser(ApplicationUserVO vo) throws FrameworkException;
 
 }

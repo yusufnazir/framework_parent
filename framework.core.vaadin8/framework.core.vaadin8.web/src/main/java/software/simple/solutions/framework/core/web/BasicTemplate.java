@@ -307,8 +307,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		ActionState actionState = new ActionState(privileges);
 		getViewDetail().setActionState(actionState);
 		actionBar.setActionState(actionState);
-		topBarLayout.addComponent(actionBar);
-		topBarLayout.setComponentAlignment(actionBar, Alignment.MIDDLE_LEFT);
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.addComponent(actionBar);
+		horizontalLayout.setComponentAlignment(actionBar, Alignment.MIDDLE_LEFT);
+
+		topBarLayout.addComponent(horizontalLayout);
+		topBarLayout.setComponentAlignment(horizontalLayout, Alignment.MIDDLE_LEFT);
 
 		errorPopupBtn = new PopupButton();
 		errorPopupBtn.setIcon(CxodeIcons.FAIL);
@@ -404,6 +408,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		Grid<T> contentGrid = new Grid<T>();
 		contentGrid.setSizeFull();
 		contentGrid.setSelectionMode(SelectionMode.NONE);
+		contentGrid.addStyleName("backgroundimage");
 
 		if (isPopUpMode()) {
 			Column<T, CButton> lookUpColum = contentGrid.addComponentColumn(new ValueProvider<T, CButton>() {

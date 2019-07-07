@@ -2,25 +2,21 @@ package software.simple.solutions.framework.core.ui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.CxodeTheme;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
-import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.MenuSelectedEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.UserLoginRequestedEvent;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEventBus;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -52,8 +48,8 @@ public class FrameworkUI extends UI {
 
 	private SessionHolder sessionHolder;
 
-//	@Autowired
-//	private SpringViewProvider viewProvider;
+	// @Autowired
+	// private SpringViewProvider viewProvider;
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
@@ -80,7 +76,8 @@ public class FrameworkUI extends UI {
 			if (configuration != null) {
 				Page.getCurrent().setTitle(configuration.getValue());
 			}
-
+			
+			addStyleName("backgroundimage");
 			updateContent();
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
@@ -96,7 +93,7 @@ public class FrameworkUI extends UI {
 		if (applicationUser != null) {
 
 			Boolean resetPassword = applicationUser.getResetPassword();
-			if (applicationUser.getUseLdap()!=null && !applicationUser.getUseLdap() && resetPassword) {
+			if (applicationUser.getUseLdap() != null && !applicationUser.getUseLdap() && resetPassword) {
 				setContent(new ChangePasswordView());
 				addStyleName("loginview");
 			} else {
@@ -106,21 +103,23 @@ public class FrameworkUI extends UI {
 				removeStyleName("loginview");
 				// getNavigator().navigateTo(getNavigator().getState());
 
-//				Navigator navigator = new Navigator(this, new ViewDisplay() {
-//
-//					private static final long serialVersionUID = 6700359619962516252L;
-//
-//					@Override
-//					public void showView(View view) {
-//						SimpleSolutionsEventBus.post(new MenuSelectedEvent(view));
-//					}
-//				});
-//				navigator.addProvider(viewProvider);
+				// Navigator navigator = new Navigator(this, new ViewDisplay() {
+				//
+				// private static final long serialVersionUID =
+				// 6700359619962516252L;
+				//
+				// @Override
+				// public void showView(View view) {
+				// SimpleSolutionsEventBus.post(new MenuSelectedEvent(view));
+				// }
+				// });
+				// navigator.addProvider(viewProvider);
 			}
 		} else {
 			getNavigator().setErrorView(ErrorView.class);
-			setContent(new LoginView());
-			addStyleName("loginview");
+			LoginView loginView = new LoginView();
+			this.setContent(loginView);
+//			addStyleName("loginview");
 		}
 	}
 

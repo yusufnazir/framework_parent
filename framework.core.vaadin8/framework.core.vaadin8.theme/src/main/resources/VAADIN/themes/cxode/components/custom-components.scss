@@ -1,0 +1,16 @@
+@import "lookupfield.scss";
+@import "multiline-label.scss";
+@import "captionlabelfield.scss";
+@import "tokenfield.scss";
+@import "register-button.scss";
+@import "register-link.scss";
+
+@mixin customcomponents{
+
+	@include lookupfield;
+	@include multiline-label;
+	@include captionlabelfield;
+	@include tokenfield;
+	@include registerbutton;
+	@include registerlink;
+}

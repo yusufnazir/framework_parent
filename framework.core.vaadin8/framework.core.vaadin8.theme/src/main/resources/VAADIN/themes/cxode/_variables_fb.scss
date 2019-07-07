@@ -1,0 +1,29 @@
+$v-app-loading-text: "Loading theme...";
+
+$v-background-color: #404040;
+$v-focus-color: #ffa500;
+$v-font-size: 11px;
+$v-font-weight: 600;
+$v-unit-size: round(2.2 * $v-font-size) !default;
+$v-bevel: false;
+$v-shadow: false;
+$v-gradient: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-border-radius: 0;
+$v-border: 2px solid v-tone;
+$v-overlay-shadow: 0 0 0 2px (v-tint 10);
+$v-focus-style: $v-focus-color;
+$v-font-family: "Lato", sans-serif;
+$v-font-weight--header: 600;
+
+$v-font-size--tiny: 10px;
+$v-layout-spacing-vertical: 4px;
+
+//MARGIN
+$v-layout-margin-top: 10px !default;
+$v-layout-margin-bottom: 10px !default;
+$v-layout-margin-left: 10px !default;
+$v-layout-margin-right: 10px !default;
+
+@import "../valo/valo";

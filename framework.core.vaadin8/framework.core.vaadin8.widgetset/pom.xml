@@ -127,6 +127,11 @@
 			<artifactId>AdvancedTokenField</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.blackbluegl</groupId>
+			<artifactId>calendar-component</artifactId>
+		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>org.vaadin.hene.splitbutton</groupId> -->
 		<!-- <artifactId>splitbutton</artifactId> -->

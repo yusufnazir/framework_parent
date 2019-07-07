@@ -95,7 +95,8 @@ public class ConfigurationService extends SuperService implements IConfiguration
 	public List<Configuration> getApplicationConfiguration() throws FrameworkException {
 		return configurationRepository.getConfigurations(Arrays.asList(ConfigurationProperty.APPLICATION_NAME,
 				ConfigurationProperty.APPLICATION_URL, ConfigurationProperty.APPLICATION_LOGO,
-				ConfigurationProperty.APPLICATION_LOGO_HEIGHT, ConfigurationProperty.APPLICATION_LOGO_WIDTH));
+				ConfigurationProperty.APPLICATION_LOGO_HEIGHT, ConfigurationProperty.APPLICATION_LOGO_WIDTH,
+				ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION));
 	}
 
 	@Override

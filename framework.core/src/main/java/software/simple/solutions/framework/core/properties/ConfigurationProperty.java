@@ -10,6 +10,7 @@ public class ConfigurationProperty {
 	public static final String APPLICATION_LOGO = "configuration.system.application.logo";
 	public static final String APPLICATION_LOGO_HEIGHT = "configuration.system.application.logo.height";
 	public static final String APPLICATION_LOGO_WIDTH = "configuration.system.application.logo.width";
+	public static final String APPLICATION_ENABLE_REGISTRATION = "configuration.system.application.enable.registration";
 
 	public static final String SMTP_ENABLE = "configuration.smtp.enable";
 	public static final String SMTP_HOST = "configuration.smtp.host";

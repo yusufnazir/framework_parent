@@ -83,6 +83,9 @@ public class Style {
 	public static final String ERROR_BACKGROUND_REDDISH = "error-background-reddish";
 	
 	public static final String MENU_BAR_BROAD = "broadmenu";
+	public static final String APPLICATION_NAME_HEADER = "application-name-header";
+	public static final String REGISTER_LINK_BUTTON = "register-link-button";
+	public static final String REGISTER_LINK = "register-link";
 	
 
 }

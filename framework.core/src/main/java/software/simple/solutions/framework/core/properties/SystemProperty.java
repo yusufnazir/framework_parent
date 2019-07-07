@@ -9,6 +9,7 @@ public class SystemProperty {
 	public static final String SYSTEM_ENTITY_NAME = "system.entity.name";
 	public static final String SYSTEM_BUTTON_SUBMIT = "system.button.submit";
 	public static final String SYSTEM_BUTTON_DELETE = "system.button.delete";
+	public static final String SYSTEM_BUTTON_EDIT = "system.button.edit";
 	public static final String SYSTEM_RESET_PASSWORD = "system.reset.password";
 	public static final String SYSTEM_MANAGE_PASSWORD = "system.manage.password";
 	public static final String UPDATE_SUCCESSFULL = "system.action.update.successful";
@@ -27,10 +28,12 @@ public class SystemProperty {
 	public static final String UNSAVED_CHANGES_HEADER = "system.notification.unsaved.changes";
 	public static final String UNSAVED_CHANGES_CONFIRMATION_REQUEST = "system.notification.unsaved.changes.request";
 
+	public static final String LOGIN_HEADER = "system.login.header";
 	public static final String LOGIN_USERNAME = "system.login.username";
 	public static final String LOGIN_PASSWORD = "system.login.password";
 	public static final String LOGIN_BUTTON_LOGIN = "system.button.login";
 	public static final String LOGIN_WELCOME = "system.login.welcome";
+	public static final String LOGIN_REGISTER_HERE = "system.login.register.here";
 
 	public static final String SYSTEM_DESCRIPTION_FILTER = "system.description.filter";
 	public static final String SYSTEM_DESCRIPTION_SEARCH = "system.description.search";

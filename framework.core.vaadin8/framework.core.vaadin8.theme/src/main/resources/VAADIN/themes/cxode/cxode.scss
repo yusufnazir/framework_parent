@@ -1,13 +1,11 @@
 @import "variables";
+//@import "_variables_fb";
 @import "pdfviewer.scss";
 @import "../valo/valo";
 @import "views/mainview.scss";
 @import "views/usermenu.scss";
 @import "views/loginview.scss";
-@import "components/lookupfield.scss";
-@import "components/multiline-label.scss";
-@import "components/captionlabelfield.scss";
-@import "components/tokenfield.scss";
+@import "components/custom-components.scss";
 
 @mixin cxode {
 	
@@ -15,9 +13,11 @@
 	@include mainview;
 	@include usermenu;
 	@include loginview;
-	@include lookupfield;
-	@include multiline-label;
-	@include captionlabelfield;
+	@include customcomponents;
 	@include pdfviewer;
-	@include tokenfield;
+	
+	.backgroundimage {
+		background: url("img/patterns/dust_scratches.png") !important;
+	}
+	
 }

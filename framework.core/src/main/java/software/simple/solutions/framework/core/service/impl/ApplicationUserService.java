@@ -17,6 +17,7 @@ import software.simple.solutions.framework.core.constants.MailTemplates;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.ApplicationUserRequestResetPassword;
 import software.simple.solutions.framework.core.entities.Configuration;
+import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -24,6 +25,7 @@ import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
+import software.simple.solutions.framework.core.properties.RegistrationProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IApplicationUserRepository;
 import software.simple.solutions.framework.core.security.PasswordUtil;
@@ -133,6 +135,14 @@ public class ApplicationUserService extends SuperService implements IApplication
 		personInformationVO.setUpdatedBy(vo.getUpdatedBy());
 		// personInformationVO.setUpdatedDate(vo.getUpdatedDate());
 		personInformationService.updateApplicationUserEmail(personInformationVO);
+	}
+
+	private void updateMobileNumber(ApplicationUserVO vo) throws FrameworkException {
+		PersonInformationVO personInformationVO = new PersonInformationVO();
+		personInformationVO.setPersonId(vo.getPersonId());
+		personInformationVO.setPrimaryContactNumber(vo.getMobileNumber());
+		personInformationVO.setUpdatedBy(vo.getUpdatedBy());
+		personInformationService.updateApplicationUserMobileNumber(personInformationVO);
 	}
 
 	private SecurityValidation validatePasswords(String password, String confirmPassword) throws FrameworkException {
@@ -495,6 +505,89 @@ public class ApplicationUserService extends SuperService implements IApplication
 	@Override
 	public void updatePasswordForLdapAccess(Long userId, String password) throws FrameworkException {
 		changePassword(userId, password);
+	}
+
+	@Override
+	public SecurityValidation registerUser(ApplicationUserVO vo) throws FrameworkException {
+		if (StringUtils.isBlank(vo.getFirstName())) {
+			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(RegistrationProperty.REGISTER_FIRST_NAME));
+		}
+		if (StringUtils.isBlank(vo.getLastName())) {
+			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(RegistrationProperty.REGISTER_LAST_NAME));
+		}
+		if (vo.getDateOfBirth() == null) {
+			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(RegistrationProperty.REGISTER_DATE_OF_BIRTH));
+		}
+		if (vo.getMobileNumber() == null) {
+			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(RegistrationProperty.REGISTER_MOBILE_NUMBER));
+		}
+		if (StringUtils.isBlank(vo.getEmail())) {
+			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(RegistrationProperty.REGISTER_EMAIL));
+		}
+
+		SecurityValidation securityValidation = validatePasswords(vo.getPassword(), vo.getPasswordConfirm());
+		if (!securityValidation.isSuccess()) {
+			return securityValidation;
+		}
+
+		if (vo.getTermsAccepted() == null || !vo.getTermsAccepted()) {
+			return SecurityValidation.build(RegistrationProperty.TERMS_AND_CONDITIONS_REQUIRED);
+		}
+
+		ApplicationUser applicationUser = getByUsername(vo.getEmail());
+		if (applicationUser != null) {
+			return SecurityValidation.build(RegistrationProperty.REGISTER_USER_ALREADY_EXISTS,
+					new Arg().norm(vo.getEmail()));
+		}
+
+		applicationUser = new ApplicationUser();
+		applicationUser.setUsername(vo.getEmail());
+		applicationUser.setActive(false);
+		applicationUser.setUseLdap(false);
+		applicationUser.setResetPassword(false);
+
+		PasswordUtil passwordUtil = new PasswordUtil();
+		String encryptedPassword = passwordUtil.getEncryptedPassword(vo.getPassword());
+		applicationUser.setPassword(encryptedPassword);
+		applicationUser.setPasswordChangeDate(LocalDateTime.now());
+
+		Person person = new Person();
+		person.setActive(true);
+		person.setCode(vo.getEmail());
+		person.setDateOfBirth(vo.getDateOfBirth());
+		person.setFirstName(vo.getFirstName());
+		person.setLastName(vo.getLastName());
+		person.setGender(get(Gender.class, vo.getGenderId()));
+		saveOrUpdate(person, true);
+
+		applicationUser.setPerson(person);
+		saveOrUpdate(applicationUser, true);
+
+		updateUserEmail(vo);
+		updateMobileNumber(vo);
+
+		sendRegistrationMailToNewUser(applicationUser, vo);
+
+		return new SecurityValidation(true);
+	}
+
+	private void sendRegistrationMailToNewUser(ApplicationUser applicationUser, ApplicationUserVO vo)
+			throws FrameworkException {
+		Configuration configuration = configurationService.getByCode(ConfigurationProperty.SMTP_ENABLE);
+		if (configuration != null && configuration.getBoolean()) {
+			String email = personInformationService.getEmail(applicationUser.getPerson().getId());
+			if (StringUtils.isNotBlank(email)) {
+				Placeholders placeholders = Placeholders.build().addApplicationUser(applicationUser)
+						.addRecipient(applicationUser.getPerson()).addPassword(vo.getPassword());
+				mailService.createImmediateMailMessage(MailTemplates.SEND_REGISTRATION_MAIL_NEW_USER, email,
+						vo.getUpdatedBy(), placeholders.getMap());
+			}
+		}
 	}
 
 }

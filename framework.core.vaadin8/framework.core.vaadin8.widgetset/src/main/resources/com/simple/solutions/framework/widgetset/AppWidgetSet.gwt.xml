@@ -32,4 +32,6 @@
     <inherits name="com.fo0.advancedtokenfield.AdvancedTokenField.WidgetSet" />
 
     <inherits name="org.vaadin.alump.searchdropdown.WidgetSet" />
+
+    <inherits name="org.vaadin.addon.calendar.WidgetSet" />
 </module>

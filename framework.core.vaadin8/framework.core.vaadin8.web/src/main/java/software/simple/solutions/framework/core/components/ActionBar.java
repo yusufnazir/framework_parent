@@ -1,7 +1,14 @@
 package software.simple.solutions.framework.core.components;
 
+import org.vaadin.teemu.switchui.Switch;
+
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.constants.ActionState;
@@ -10,7 +17,7 @@ import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
-public class ActionBar extends MenuBar implements SearchEvent {
+public class ActionBar extends HorizontalLayout implements SearchEvent {
 
 	private static final long serialVersionUID = -204573107078009299L;
 
@@ -50,6 +57,12 @@ public class ActionBar extends MenuBar implements SearchEvent {
 	private ActionErase actionErase;
 	private ActionSearch actionSearch;
 
+	private MenuBar menuBar;
+
+	private Label editLbl;
+
+	private Switch editSwitch;
+
 	public ActionBar() {
 		buildMainLayout();
 		init();
@@ -60,12 +73,12 @@ public class ActionBar extends MenuBar implements SearchEvent {
 			actionState = new ActionState(null);
 		}
 		this.actionState = actionState;
-		if (actionState != null) {
-			deleteBtn.setEnabled(actionState.getDeleteEnabled());
-			newBtn.setEnabled(actionState.getInsertEnabled());
-			printBtn.setEnabled(actionState.getPrintEnabled());
-			saveBtn.setEnabled(actionState.getUpdateEnabled() | actionState.getInsertEnabled());
-		}
+		deleteBtn.setEnabled(actionState.getDeleteEnabled());
+		newBtn.setEnabled(actionState.getInsertEnabled());
+		printBtn.setEnabled(actionState.getPrintEnabled());
+		saveBtn.setEnabled(actionState.getUpdateEnabled() || actionState.getInsertEnabled());
+		editLbl.setVisible(actionState.getUpdateEnabled());
+		editSwitch.setVisible(actionState.getUpdateEnabled());
 	}
 
 	public void authorizeCopy() {
@@ -80,6 +93,8 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		saveBtn.setEnabled(saveEnabled);
 		if (saveEnabled && !saveHidden) {
 			saveBtn.setVisible(true);
+			editLbl.setVisible(true);
+			editSwitch.setVisible(true);
 		}
 	}
 
@@ -191,6 +206,8 @@ public class ActionBar extends MenuBar implements SearchEvent {
 	public void setSaveDisabled() {
 		saveBtn.setEnabled(false);
 		saveBtn.setVisible(false);
+		editLbl.setVisible(false);
+		editSwitch.setVisible(false);
 	}
 
 	public void setCancelDisabled() {
@@ -267,6 +284,8 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		deleteBtn.setEnabled(false);
 		restoreBtn.setEnabled(false);
 		saveBtn.setEnabled(false);
+		editLbl.setVisible(false);
+		editSwitch.setVisible(false);
 
 		backBtn.setEnabled(true);
 		exportExcelBtn.setEnabled(true);
@@ -276,70 +295,72 @@ public class ActionBar extends MenuBar implements SearchEvent {
 
 	private void buildMainLayout() {
 
-		addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+		menuBar = new MenuBar();
+		addComponent(menuBar);
+		menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
-		toggleAdvancedSearchBtn = addItem("");
+		toggleAdvancedSearchBtn = menuBar.addItem("");
 		toggleAdvancedSearchBtn
 				.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_FILTER));
 		// toggleAdvancedSearchBtn.setIcon(FontAwesome.FILTER);
 		toggleAdvancedSearchBtn.setIcon(CxodeIcons.FILTER);
 		toggleAdvancedSearchBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		searchBtn = addItem("");
+		searchBtn = menuBar.addItem("");
 		searchBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SEARCH));
 		// searchBtn.setIcon(VaadinIcons.SEARCH);
 		searchBtn.setIcon(CxodeIcons.SEARCH);
 		searchBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		eraseBtn = addItem("");
+		eraseBtn = menuBar.addItem("");
 		eraseBtn.setDescription(
 				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CLEAR_FILTER));
 		// eraseBtn.setIcon(VaadinIcons.ERASER);
 		eraseBtn.setIcon(CxodeIcons.CLEAR);
 		eraseBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		backBtn = addItem("");
+		backBtn = menuBar.addItem("");
 		backBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_BACK));
 		// backBtn.setIcon(VaadinIcons.ARROW_CIRCLE_LEFT);
 		backBtn.setIcon(CxodeIcons.BACK);
 		backBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		newBtn = addItem("");
+		newBtn = menuBar.addItem("");
 		newBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_ADD));
 		// newBtn.setIcon(VaadinIcons.PLUS);
 		newBtn.setIcon(CxodeIcons.ADD);
 		newBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		deleteBtn = addItem("");
+		deleteBtn = menuBar.addItem("");
 		deleteBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_DELETE));
 		// deleteBtn.setIcon(VaadinIcons.TRASH);
 		deleteBtn.setIcon(CxodeIcons.DELETE);
 		deleteBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		restoreBtn = addItem("");
+		restoreBtn = menuBar.addItem("");
 		restoreBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_RESTORE));
 		restoreBtn.setIcon(CxodeIcons.RESTORE);
 		restoreBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		saveBtn = addItem("");
+		saveBtn = menuBar.addItem("");
 		saveBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SAVE));
 		// saveBtn.setIcon(FontAwesome.SAVE);
 		saveBtn.setIcon(CxodeIcons.SAVE);
 		saveBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		printBtn = addItem("");
+		printBtn = menuBar.addItem("");
 		// printBtn.setIcon(VaadinIcons.PRINT);
 		printBtn.setIcon(CxodeIcons.REPORT);
 		printBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		exportExcelBtn = addItem("");
+		exportExcelBtn = menuBar.addItem("");
 		exportExcelBtn.setDescription(
 				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EXPORT_EXCEL));
 		// exportExcelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
 		exportExcelBtn.setIcon(CxodeIcons.EXCEL);
 		exportExcelBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		infoMenuBtn = addItem("");
+		infoMenuBtn = menuBar.addItem("");
 		infoMenuBtn.setDescription(
 				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_MORE_ACTIONS));
 		infoMenuBtn.setIcon(CxodeIcons.MORE);
@@ -350,11 +371,22 @@ public class ActionBar extends MenuBar implements SearchEvent {
 		auditBtn.setIcon(CxodeIcons.AUDIT);
 		auditBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		helpBtn = addItem("");
+		helpBtn = menuBar.addItem("");
 		helpBtn.setIcon(VaadinIcons.QUESTION_CIRCLE);
 		helpBtn.setStyleName(Style.ACTION_BAR_MORE);
 
-		creatingItemLbl = addItem("Creating a new item...");
+		creatingItemLbl = menuBar.addItem("Creating a new item...");
+
+		editLbl = new Label(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_BUTTON_EDIT));
+		editLbl.addStyleName(ValoTheme.LABEL_BOLD);
+		editLbl.addStyleName(ValoTheme.LABEL_COLORED);
+		editLbl.addStyleName(ValoTheme.LABEL_SMALL);
+		addComponent(editLbl);
+		setComponentAlignment(editLbl, Alignment.MIDDLE_LEFT);
+		editSwitch = new Switch();
+		editSwitch.addStyleName("holodeck");
+		addComponent(editSwitch);
+		setComponentAlignment(editSwitch, Alignment.BOTTOM_LEFT);
 	}
 
 	public MenuItem getSaveBtn() {
@@ -412,6 +444,8 @@ public class ActionBar extends MenuBar implements SearchEvent {
 
 	public void hideSave() {
 		saveBtn.setVisible(false);
+		editLbl.setVisible(false);
+		editSwitch.setVisible(false);
 		saveHidden = true;
 	}
 
