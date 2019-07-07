@@ -47,9 +47,9 @@ public class DataProperty extends CustomDataTaskChange {
 		connection = (JdbcConnection) database.getConnection();
 
 		try {
-			String query = "select id_ from properties_ where key_=?";
+			String query = "select id_ from properties_ where id_=?";
 			PreparedStatement prepareStatement = connection.prepareStatement(query);
-			setData(prepareStatement, 1, key);
+			setData(prepareStatement, 1, id);
 			ResultSet resultSet = prepareStatement.executeQuery();
 
 			boolean exists = false;
