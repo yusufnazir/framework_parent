@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -16,6 +17,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
+import software.simple.solutions.framework.core.components.CLabel;
 import software.simple.solutions.framework.core.components.CPasswordField;
 import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -25,6 +27,7 @@ import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
+import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Person;
@@ -55,6 +58,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		setServiceClass(ApplicationUserServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
+		setReadonlyFormClass(ReadonlyForm.class);
 	}
 
 	@Override
@@ -419,6 +423,198 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			return vo;
 		}
 
+	}
+
+	public class ReadonlyForm extends FormView {
+
+		private static final long serialVersionUID = 6109727427163734676L;
+
+		private CGridLayout formGrid;
+		private CGridLayout userInfoLayout;
+		private HorizontalLayout personInfoLayout;
+		private CLabel personLookUpFld;
+		private CLabel usernameFld;
+		private CCheckBox activeFld;
+		private CCheckBox forceChangePasswordFld;
+		private CLabel emailFld;
+
+		private CGridLayout passwordLayout;
+
+		private Image imageFld;
+		private CLabel lastNameFld;
+		private CLabel firstNameFld;
+		private CLabel middleNameFld;
+		private CLabel dateOfBirthFld;
+		private CLabel genderFld;
+		private CCheckBox isPersonActiveFld;
+
+		private CGridLayout ldapLayout;
+		private CCheckBox useLdapFld;
+
+		private ApplicationUser applicationUser;
+		private Person person;
+
+		@Override
+		public void executeBuild() throws FrameworkException {
+
+			HorizontalLayout userMainLayout = new HorizontalLayout();
+			addComponent(userMainLayout);
+
+			personInfoLayout = createPersonLayout();
+			personInfoLayout.addStyleName(ValoTheme.LAYOUT_CARD);
+			personInfoLayout.setCaption(
+					PropertyResolver.getPropertyValueByLocale(PersonProperty.PERSON_INFO, UI.getCurrent().getLocale()));
+			personInfoLayout.setMargin(true);
+			userMainLayout.addComponent(personInfoLayout);
+
+			userInfoLayout = createUserInfoLayout();
+			userInfoLayout.addStyleName(ValoTheme.LAYOUT_CARD);
+			userInfoLayout.setCaption(PropertyResolver.getPropertyValueByLocale(
+					ApplicationUserProperty.APPLICATION_USER_INFO, UI.getCurrent().getLocale()));
+			userMainLayout.addComponent(userInfoLayout);
+
+			passwordLayout = createPasswordLayout();
+			passwordLayout.addStyleName(ValoTheme.LAYOUT_CARD);
+			passwordLayout.setCaption(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.PASSWORD_LAYOUT,
+					UI.getCurrent().getLocale()));
+			userMainLayout.addComponent(passwordLayout);
+
+			ldapLayout = createLdapLayout();
+			ldapLayout.addStyleName(ValoTheme.LAYOUT_CARD);
+			ldapLayout.setCaption(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.LDAP_LAYOUT,
+					UI.getCurrent().getLocale()));
+			userMainLayout.addComponent(ldapLayout);
+			ldapLayout.setVisible(false);
+
+			Configuration useLdapConfig = ConfigurationServiceFacade.get(UI.getCurrent())
+					.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
+			if (useLdapConfig != null && useLdapConfig.getBoolean()) {
+				ldapLayout.setVisible(true);
+			}
+		}
+
+		private CGridLayout createUserInfoLayout() {
+			// common part: create layout
+			userInfoLayout = ComponentUtil.createGrid();
+			userInfoLayout.setWidth("-1px");
+			userInfoLayout.setHeight("-1px");
+			userInfoLayout.setMargin(true);
+			userInfoLayout.setSpacing(true);
+
+			personLookUpFld = userInfoLayout.addField(CLabel.class, PersonProperty.PERSON, 0, 0);
+			userInfoLayout.setComponentAlignment(personLookUpFld, Alignment.BOTTOM_LEFT);
+
+			// usernameFld
+			usernameFld = userInfoLayout.addField(CLabel.class, ApplicationUserProperty.USERNAME, 0, 1);
+			usernameFld.setWidth("250px");
+
+			// emailFld
+			emailFld = userInfoLayout.addField(CLabel.class, ApplicationUserProperty.EMAIL, 0, 2);
+			emailFld.setWidth("250px");
+
+			// isActiveChkBox
+			activeFld = userInfoLayout.addField(CCheckBox.class, ApplicationUserProperty.ACTIVE, 1, 0);
+			activeFld.setReadOnly(true);
+			activeFld.addStyleName(ValoTheme.CHECKBOX_LARGE);
+			userInfoLayout.setComponentAlignment(activeFld, Alignment.MIDDLE_CENTER);
+
+			return userInfoLayout;
+		}
+
+		private CGridLayout createPasswordLayout() {
+			passwordLayout = ComponentUtil.createGrid();
+			passwordLayout.setMargin(true);
+			passwordLayout.setSpacing(true);
+
+			forceChangePasswordFld = passwordLayout.addField(CCheckBox.class,
+					ApplicationUserProperty.FORCE_CHANGE_PASSWORD, 0, 0);
+			forceChangePasswordFld.setReadOnly(true);
+			forceChangePasswordFld.addStyleName(ValoTheme.CHECKBOX_LARGE);
+			passwordLayout.setComponentAlignment(forceChangePasswordFld, Alignment.BOTTOM_LEFT);
+
+			return passwordLayout;
+		}
+
+		private CGridLayout createLdapLayout() {
+			ldapLayout = ComponentUtil.createGrid();
+			ldapLayout.setMargin(true);
+			ldapLayout.setSpacing(true);
+
+			useLdapFld = ldapLayout.addField(CCheckBox.class, ApplicationUserProperty.USE_LDAP, 0, 0);
+			useLdapFld.setReadOnly(true);
+			useLdapFld.addStyleName(ValoTheme.CHECKBOX_LARGE);
+			ldapLayout.setComponentAlignment(useLdapFld, Alignment.BOTTOM_LEFT);
+
+			return ldapLayout;
+		}
+
+		private HorizontalLayout createPersonLayout() {
+			personInfoLayout = new HorizontalLayout();
+
+			imageFld = new Image();
+			personInfoLayout.addComponent(imageFld);
+
+			formGrid = ComponentUtil.createGrid();
+			personInfoLayout.addComponent(formGrid);
+
+			firstNameFld = formGrid.addField(CLabel.class, PersonProperty.FIRST_NAME, 0, 0);
+
+			middleNameFld = formGrid.addField(CLabel.class, PersonProperty.MIDDLE_NAME, 0, 1);
+
+			lastNameFld = formGrid.addField(CLabel.class, PersonProperty.LAST_NAME, 0, 2);
+
+			dateOfBirthFld = formGrid.addField(CLabel.class, PersonProperty.DATE_OF_BIRTH, 1, 0);
+
+			genderFld = formGrid.addField(CLabel.class, GenderProperty.GENDER, 1, 1);
+
+			isPersonActiveFld = formGrid.addField(CCheckBox.class, PersonProperty.ACTIVE, 1, 2);
+			isPersonActiveFld.setReadOnly(true);
+			formGrid.setComponentAlignment(isPersonActiveFld, Alignment.BOTTOM_LEFT);
+
+			return personInfoLayout;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public ApplicationUser setFormValues(Object entity) throws FrameworkException {
+			applicationUser = (ApplicationUser) entity;
+			person = applicationUser.getPerson();
+
+			usernameFld.setValue(applicationUser.getUsername());
+			activeFld.setValue(applicationUser.getActive());
+			forceChangePasswordFld.setValue(applicationUser.getResetPassword());
+			personLookUpFld.setValue(person == null ? null : person.getCaption());
+			useLdapFld.setValue(applicationUser.getUseLdap());
+			ThemeResource resource = new ThemeResource("img/profile-pic-300px.jpg");
+			imageFld.setSource(resource);
+			imageFld.setHeight("120px");
+			
+			if(person!=null){
+				String email = PersonInformationServiceFacade.get(UI.getCurrent()).getEmail(person.getId());
+				emailFld.setValue(email);
+			}
+
+			setPersonInfo();
+
+			return applicationUser;
+		}
+
+		private void setPersonInfo() {
+			personInfoLayout.setVisible(false);
+			if (person != null) {
+				personInfoLayout.setVisible(true);
+				firstNameFld.setValue(person.getFirstName());
+				middleNameFld.setValue(person.getMiddleName());
+				lastNameFld.setValue(person.getLastName());
+
+				dateOfBirthFld.setValue(person.getDateOfBirth() == null ? null
+						: person.getDateOfBirth().format(Constants.DATE_FORMATTER));
+				genderFld.setValue(person.getGender() == null ? null
+						: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
+								UI.getCurrent().getLocale()));
+				isPersonActiveFld.setValue(person.getActive());
+			}
+		}
 	}
 
 }

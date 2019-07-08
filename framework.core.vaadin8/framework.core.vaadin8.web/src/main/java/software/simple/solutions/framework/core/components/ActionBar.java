@@ -1,11 +1,7 @@
 package software.simple.solutions.framework.core.components;
 
-import org.vaadin.teemu.switchui.Switch;
-
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -22,6 +18,8 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 	private static final long serialVersionUID = -204573107078009299L;
 
 	private MenuItem saveBtn;
+	private MenuItem cancelBtn;
+	private MenuItem editBtn;
 	private MenuItem backBtn;
 	private MenuItem deleteBtn;
 	private MenuItem restoreBtn;
@@ -58,10 +56,8 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 	private ActionSearch actionSearch;
 
 	private MenuBar menuBar;
-
-	private Label editLbl;
-
-	private Switch editSwitch;
+	// private Label editLbl;
+	// private Switch editSwitch;
 
 	public ActionBar() {
 		buildMainLayout();
@@ -77,8 +73,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		newBtn.setEnabled(actionState.getInsertEnabled());
 		printBtn.setEnabled(actionState.getPrintEnabled());
 		saveBtn.setEnabled(actionState.getUpdateEnabled() || actionState.getInsertEnabled());
-		editLbl.setVisible(actionState.getUpdateEnabled());
-		editSwitch.setVisible(actionState.getUpdateEnabled());
+		editBtn.setVisible(actionState.getUpdateEnabled());
 	}
 
 	public void authorizeCopy() {
@@ -93,8 +88,27 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		saveBtn.setEnabled(saveEnabled);
 		if (saveEnabled && !saveHidden) {
 			saveBtn.setVisible(true);
-			editLbl.setVisible(true);
-			editSwitch.setVisible(true);
+			cancelBtn.setVisible(true);
+			editBtn.setVisible(false);
+		}
+	}
+
+	public void authorizeSaveNew() {
+		Boolean saveEnabled = (actionState.getUpdateEnabled() | actionState.getInsertEnabled());
+		saveBtn.setEnabled(saveEnabled);
+		if (saveEnabled && !saveHidden) {
+			saveBtn.setVisible(true);
+			cancelBtn.setVisible(false);
+			editBtn.setVisible(false);
+		}
+	}
+
+	public void authorizeEdit() {
+		Boolean saveEnabled = (actionState.getUpdateEnabled());
+		if (saveEnabled && !saveHidden) {
+			saveBtn.setVisible(false);
+			cancelBtn.setVisible(false);
+			editBtn.setVisible(true);
 		}
 	}
 
@@ -206,13 +220,8 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 	public void setSaveDisabled() {
 		saveBtn.setEnabled(false);
 		saveBtn.setVisible(false);
-		editLbl.setVisible(false);
-		editSwitch.setVisible(false);
-	}
-
-	public void setCancelDisabled() {
-		backBtn.setEnabled(false);
-		backBtn.setVisible(false);
+		cancelBtn.setVisible(false);
+		editBtn.setVisible(false);
 	}
 
 	public void setPrintDisabled() {
@@ -254,6 +263,11 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		backBtn.setEnabled(false);
 		backBtn.setVisible(false);
 	}
+	
+	public void setCancelDisabled() {
+		cancelBtn.setEnabled(false);
+		cancelBtn.setVisible(false);
+	}
 
 	public void setInfoDisabled() {
 		infoMenuBtn.setEnabled(false);
@@ -284,8 +298,8 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		deleteBtn.setEnabled(false);
 		restoreBtn.setEnabled(false);
 		saveBtn.setEnabled(false);
-		editLbl.setVisible(false);
-		editSwitch.setVisible(false);
+		cancelBtn.setVisible(false);
+		editBtn.setVisible(false);
 
 		backBtn.setEnabled(true);
 		exportExcelBtn.setEnabled(true);
@@ -348,6 +362,19 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		saveBtn.setIcon(CxodeIcons.SAVE);
 		saveBtn.setStyleName(Style.ACTION_BAR_MORE);
 
+		cancelBtn = menuBar.addItem("");
+		cancelBtn.setDescription(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CANCEL_EDIT));
+		// saveBtn.setIcon(FontAwesome.SAVE);
+		cancelBtn.setIcon(CxodeIcons.CANCEL);
+		cancelBtn.setStyleName(Style.ACTION_BAR_MORE);
+
+		editBtn = menuBar.addItem("");
+		editBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT));
+		// saveBtn.setIcon(FontAwesome.SAVE);
+		editBtn.setIcon(CxodeIcons.EDIT);
+		editBtn.setStyleName(Style.ACTION_BAR_MORE);
+
 		printBtn = menuBar.addItem("");
 		// printBtn.setIcon(VaadinIcons.PRINT);
 		printBtn.setIcon(CxodeIcons.REPORT);
@@ -377,16 +404,6 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 
 		creatingItemLbl = menuBar.addItem("Creating a new item...");
 
-		editLbl = new Label(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_BUTTON_EDIT));
-		editLbl.addStyleName(ValoTheme.LABEL_BOLD);
-		editLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		editLbl.addStyleName(ValoTheme.LABEL_SMALL);
-		addComponent(editLbl);
-		setComponentAlignment(editLbl, Alignment.MIDDLE_LEFT);
-		editSwitch = new Switch();
-		editSwitch.addStyleName("holodeck");
-		addComponent(editSwitch);
-		setComponentAlignment(editSwitch, Alignment.BOTTOM_LEFT);
 	}
 
 	public MenuItem getSaveBtn() {
@@ -444,8 +461,8 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 
 	public void hideSave() {
 		saveBtn.setVisible(false);
-		editLbl.setVisible(false);
-		editSwitch.setVisible(false);
+		cancelBtn.setVisible(false);
+		editBtn.setVisible(false);
 		saveHidden = true;
 	}
 
@@ -579,6 +596,14 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 
 	public void setActionAudit(Command command) {
 		this.auditBtn.setCommand(command);
+	}
+
+	public void setActionCancel(Command command) {
+		this.cancelBtn.setCommand(command);
+	}
+
+	public void setActionEdit(Command command) {
+		this.editBtn.setCommand(command);
 	}
 
 }

@@ -3,6 +3,7 @@ package software.simple.solutions.framework.core.constants;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class Constants {
 
@@ -15,6 +16,8 @@ public class Constants {
 
 	public static final DecimalFormat TIME_FORMAT = new DecimalFormat("00");
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(SIMPLE_DATE_FORMAT.toPattern());
+	
 	public static final SimpleDateFormat SIMPLE_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	public static final DecimalFormat LONG_FORMAT = new DecimalFormat("#");
 	public static final DecimalFormat DF = new DecimalFormat("#####0.00");

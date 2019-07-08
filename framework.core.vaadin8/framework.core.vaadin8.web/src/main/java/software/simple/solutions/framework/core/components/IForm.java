@@ -11,4 +11,5 @@ public interface IForm extends Serializable, Validateable {
 	public <T> T setFormValues(Object entity) throws FrameworkException;
 
 	public void handleNewForm() throws FrameworkException;
+
 }

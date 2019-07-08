@@ -122,6 +122,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private FilterView filterView;
 	private Panel filterPanel;
 	private FormView formView;
+	private FormView readonlyFormView;
 	private Panel formPanel;
 	private VerticalLayout formLayout;
 	private HorizontalSplitPanel viewContentPanel;
@@ -132,6 +133,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private Class<? extends ISuperService> serviceClass;
 	private Class<? extends FilterView> filterClass;
 	private Class<? extends FormView> formClass;
+	private Class<? extends FormView> readonlyFormClass;
 	private Class<?> entityClass;
 	private SuperServiceFacade<?> superService;
 
@@ -467,7 +469,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			@Override
 			public CButton apply(T source) {
 				CButton formBtn = new CButton();
-				formBtn.setIcon(CxodeIcons.EDIT);
+				formBtn.setIcon(CxodeIcons.VIEW);
 				formBtn.setDescription(
 						PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT));
 				formBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
@@ -573,6 +575,33 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formLayout.addComponentAsFirst(formPanel);
 	}
 
+	private void createReadonlyFormView() throws FrameworkException {
+		if (readonlyFormClass == null) {
+			return;
+		}
+
+		try {
+			readonlyFormView = readonlyFormClass.getConstructor(new Class[] { this.getClass() })
+					.newInstance(new Object[] { this });
+		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
+				| IllegalAccessException | InvocationTargetException e) {
+			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+		}
+
+		readonlyFormView.setParentEntity(getParentEntity());
+		readonlyFormView.setSelectedEntity(getSelectedEntity());
+		readonlyFormView.setViewDetail(getViewDetail());
+		readonlyFormView.executeBuild();
+		formPanel = new Panel();
+		formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+		formPanel.setWidth("100%");
+		formPanel.setHeight("-1px");
+		// formView.setWidth("-1px");
+		formPanel.setContent(readonlyFormView);
+		formLayout.removeAllComponents();
+		formLayout.addComponentAsFirst(formPanel);
+	}
+
 	private void createSubTabs() throws FrameworkException {
 		subTabSheet = new TabSheet();
 		subTabSheet.setVisible(false);
@@ -663,6 +692,15 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private void setUpFormData(Object entity) throws FrameworkException {
 		this.entity = formView.setFormValues(entity);
+	}
+
+	private void setUpReadonlyFormData(Object entity) throws FrameworkException {
+		if (readonlyFormView != null) {
+			readonlyFormView.setFormValues(entity);
+		} else {
+			createFormView();
+			setUpFormData(entity);
+		}
 	}
 
 	private void setFormVisibility() {
@@ -849,6 +887,36 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			}
 		});
 
+		actionBar.setActionEdit(new Command() {
+
+			private static final long serialVersionUID = -4274380478004375818L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				try {
+					switchToForm(getSelectedEntity(), true);
+				} catch (FrameworkException e) {
+					logger.error(e.getMessage(), e);
+					updateErrorContent(e);
+				}
+			}
+		});
+
+		actionBar.setActionCancel(new Command() {
+
+			private static final long serialVersionUID = -4274380478004375818L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				try {
+					switchToForm(getSelectedEntity(), false);
+				} catch (FrameworkException e) {
+					logger.error(e.getMessage(), e);
+					updateErrorContent(e);
+				}
+			}
+		});
+
 		actionBar.setActionSave(new Command() {
 
 			private static final long serialVersionUID = 928103148257312770L;
@@ -948,7 +1016,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 								entity = superService.restore(entityClass, ((IMappedSuperClass) entity).getId());
 								updateTabs();
 								setSelectedEntity(entity);
-								switchToForm(entity);
+								switchToForm(entity, false);
 								NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 							} catch (InvalidDataAccessApiUsageException e) {
 								throw new FrameworkException(SystemMessageProperty.FAILED_TO_PERSIST, e);
@@ -1097,7 +1165,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				// updateExistingResultSet();
 				updateTabs();
 				setSelectedEntity(entity);
-				switchToForm(entity);
+				switchToForm(entity, true);
 				return entity;
 			} catch (InvalidDataAccessApiUsageException | NullPointerException e) {
 				throw new FrameworkException(SystemMessageProperty.FAILED_TO_PERSIST, e);
@@ -1209,19 +1277,19 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 		private static final long serialVersionUID = -3618276831491958217L;
 
-		private Object entity;
+		private Object selectedEntity;
 
-		public FormSetup(Object entity) {
-			this.entity = entity;
+		public FormSetup(Object selectedEntity) {
+			this.selectedEntity = selectedEntity;
 		}
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			setSelectedEntity(entity);
+			setSelectedEntity(selectedEntity);
 			try {
-				Object selectedEntity = superService.get(entityClass, ((MappedSuperClass) entity).getId());
-				setSelectedEntity(selectedEntity);
-				switchToForm(selectedEntity);
+				Object entity = superService.get(entityClass, ((MappedSuperClass) selectedEntity).getId());
+				setSelectedEntity(entity);
+				switchToForm(entity, false);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				updateErrorContent(e);
@@ -1230,9 +1298,17 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 	}
 
-	public void switchToForm(Object entity) throws FrameworkException {
-		createFormView();
-		setUpFormData(entity);
+	public void switchToForm(Object entity, boolean editable) throws FrameworkException {
+		if (readonlyFormClass == null) {
+			editable = true;
+		}
+		if (editable) {
+			createFormView();
+			setUpFormData(entity);
+		} else {
+			createReadonlyFormView();
+			setUpReadonlyFormData(entity);
+		}
 		setFormVisibility();
 		isNew = false;
 		formMode = true;
@@ -1240,6 +1316,14 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		clearToDeleteIds();
 		addToDelete(entity);
 		setUpFormActions();
+		if (editable) {
+			actionBar.authorizeSave();
+			if (readonlyFormClass == null) {
+				actionBar.setCancelDisabled();
+			}
+		} else {
+			actionBar.authorizeEdit();
+		}
 
 		createSubTabs();
 	}
@@ -1258,14 +1342,15 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private void setUpFormActions() {
 		actionBar.setSearchDisabled();
-		actionBar.authorizeSave();
 		actionBar.authorizeBack();
 		if (getSelectedEntity() == null) {
 			actionBar.authorizeCreatingItem();
+			actionBar.authorizeSaveNew();
 		}
 		if (getSelectedEntity() != null) {
 			actionBar.hideCreatingItem();
 			actionBar.authorizeDelete();
+			actionBar.authorizeEdit();
 		}
 
 		Role role = getSessionHolder().getSelectedRole();
@@ -1354,6 +1439,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		this.formClass = formClass;
 	}
 
+	public void setReadonlyFormClass(Class<? extends FormView> formClass) {
+		this.readonlyFormClass = formClass;
+	}
+
 	public static BasicTemplate<?> instantiate(Class<? extends BasicTemplate<?>> basicTemplateClass)
 			throws FrameworkException {
 		try {
@@ -1368,7 +1457,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	public void executePostRenderActions() throws FrameworkException {
 		if (getForwardToSearchEntity() != null) {
-			switchToForm(getForwardToSearchEntity());
+			switchToForm(getForwardToSearchEntity(), false);
 		} else {
 			executeSearch();
 		}

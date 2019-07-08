@@ -44,6 +44,7 @@ public class SystemProperty {
 	public static final String SYSTEM_DESCRIPTION_EXPORT_EXCEL = "system.description.export.excel";
 	public static final String SYSTEM_DESCRIPTION_CLEAR_FILTER = "system.description.clear.filter";
 	public static final String SYSTEM_DESCRIPTION_EDIT = "system.description.edit";
+	public static final String SYSTEM_DESCRIPTION_CANCEL_EDIT = "system.description.cancel.edit";
 	public static final String SYSTEM_DESCRIPTION_MORE_ACTIONS = "system.description.more.actions";
 	public static final String SYSTEM_DESCRIPTION_SELECT_LOOKUP = "system.description.select.lookup";
 	public static final String SYSTEM_DESCRIPTION_CLEAR_LOOKUP = "system.description.clear.lookup";

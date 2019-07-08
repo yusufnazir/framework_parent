@@ -17,6 +17,7 @@ public class CxodeIcons extends ThemeResource {
 	public static final CxodeIcons CLEAR = getIcon("clear");
 	public static final CxodeIcons DELETE = getIcon("delete");
 	public static final CxodeIcons EDIT = getIcon("edit");
+	public static final CxodeIcons VIEW = getIcon("view");
 	public static final CxodeIcons EXCEL = getIcon("excel");
 	public static final CxodeIcons FAIL = getIcon("fail");
 	public static final CxodeIcons FILTER = getIcon("filter");
