@@ -14,6 +14,7 @@ import com.github.appreciated.app.layout.builder.elements.NavigatorNavigationEle
 import com.github.appreciated.app.layout.builder.entities.DefaultBadgeHolder;
 import com.github.appreciated.app.layout.builder.entities.DefaultNotificationHolder;
 import com.github.appreciated.app.layout.component.button.AppBarNotificationButton;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
@@ -92,7 +93,6 @@ public class AppLayoutView extends VerticalLayout {
 		navigatorAppLayoutBuilder.withNavigationElementClickListener((element, event) -> {
 			if (element instanceof NavigatorNavigationElement) {
 				NavigatorNavigationElement nElement = (NavigatorNavigationElement) element;
-				System.out.println("Element clicked " + nElement.getViewName());
 			}
 		});
 
@@ -126,6 +126,8 @@ public class AppLayoutView extends VerticalLayout {
 		AppLayoutComponent drawer = navigatorAppLayoutBuilder.build();
 		drawer.addStyleName("left");
 		addComponent(drawer);
+		Navigator navigator = UI.getCurrent().getNavigator();
+		navigator.navigateTo("Home");
 	}
 
 }
