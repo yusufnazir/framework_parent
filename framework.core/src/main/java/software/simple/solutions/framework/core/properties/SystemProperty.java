@@ -10,6 +10,7 @@ public class SystemProperty {
 	public static final String SYSTEM_BUTTON_SUBMIT = "system.button.submit";
 	public static final String SYSTEM_BUTTON_DELETE = "system.button.delete";
 	public static final String SYSTEM_BUTTON_EDIT = "system.button.edit";
+	public static final String SYSTEM_BUTTON_CLEAR = "system.button.clear";
 	public static final String SYSTEM_RESET_PASSWORD = "system.reset.password";
 	public static final String SYSTEM_MANAGE_PASSWORD = "system.manage.password";
 	public static final String UPDATE_SUCCESSFULL = "system.action.update.successful";
@@ -51,5 +52,7 @@ public class SystemProperty {
 	public static final String SYSTEM_DESCRIPTION_RESTORE = "system.description.restore";
 	public static final String RESET_PASSWORD_REQUEST_SENT = "system.password.request.sent";
 	public static final String INVALID_NUMBER_FORMAT = "system.validate.invalidate.number.format";
-
+	
+	public static final String PROFILE_LOGGED_IN_AS = "system.profile.logged.in.as";
+	
 }

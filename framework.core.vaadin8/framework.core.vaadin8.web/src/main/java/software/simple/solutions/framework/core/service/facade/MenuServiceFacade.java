@@ -7,7 +7,6 @@ import com.vaadin.ui.UI;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.IMenuService;
-import software.simple.solutions.framework.core.service.ISuperService;
 
 public class MenuServiceFacade extends SuperServiceFacade<IMenuService> implements IMenuService {
 
@@ -44,6 +43,10 @@ public class MenuServiceFacade extends SuperServiceFacade<IMenuService> implemen
 	@Override
 	public Menu getLookUpByViewClass(Long roleId, String name) throws FrameworkException {
 		return service.getLookUpByViewClass(roleId, name);
+	}
+
+	public List<Menu> findAuthorizedMenusByType(Long roleId, List<Long> types) throws FrameworkException {
+		return service.findAuthorizedMenusByType(roleId, types);
 	}
 
 }

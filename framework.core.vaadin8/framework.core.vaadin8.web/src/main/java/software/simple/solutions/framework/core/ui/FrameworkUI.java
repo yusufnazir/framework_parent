@@ -7,10 +7,9 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
@@ -23,7 +22,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.util.ContextProvider;
-import software.simple.solutions.framework.core.web.TopMenuLayoutView;
+import software.simple.solutions.framework.core.web.AppLayoutView;
 import software.simple.solutions.framework.core.web.view.ChangePasswordView;
 import software.simple.solutions.framework.core.web.view.ErrorView;
 import software.simple.solutions.framework.core.web.view.LoginView;
@@ -66,6 +65,8 @@ public class FrameworkUI extends UI {
 			}
 		});
 
+		Responsive.makeResponsive(this);
+
 		SimpleSolutionsEventBus.register(this);
 		// Responsive.makeResponsive(this);
 		// addStyleName(ValoTheme.UI_WITH_MENU);
@@ -76,7 +77,7 @@ public class FrameworkUI extends UI {
 			if (configuration != null) {
 				Page.getCurrent().setTitle(configuration.getValue());
 			}
-			
+
 			addStyleName("backgroundimage");
 			updateContent();
 		} catch (FrameworkException e) {
@@ -99,7 +100,10 @@ public class FrameworkUI extends UI {
 			} else {
 				// Authenticated user
 
-				setContent(new TopMenuLayoutView());
+				// setContent(new TopMenuLayoutView());
+				AppLayoutView valoMenuLayout = new AppLayoutView();
+				valoMenuLayout.setSizeFull();
+				setContent(valoMenuLayout);
 				removeStyleName("loginview");
 				// getNavigator().navigateTo(getNavigator().getState());
 
@@ -119,7 +123,7 @@ public class FrameworkUI extends UI {
 			getNavigator().setErrorView(ErrorView.class);
 			LoginView loginView = new LoginView();
 			this.setContent(loginView);
-//			addStyleName("loginview");
+			// addStyleName("loginview");
 		}
 	}
 

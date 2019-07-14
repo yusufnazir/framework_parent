@@ -139,4 +139,22 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		return menus.get(0);
 	}
 
+	@Override
+	public List<Menu> findAuthorizedMenusByType(Long roleId, List<Long> types) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select m from Menu m left join RoleView rv on rv.view.id=m.view.id "
+				+ "left join RoleViewPrivilege rvp on rvp.roleView.id=rv.id " + "where m.type in (:types) "
+				+ "and rvp.privilege is not null " + "and rv.role.id=:roleId";
+		paramMap.put("roleId", roleId);
+		paramMap.put("types", types);
+		List<Menu> menus = createListQuery(query, paramMap);
+
+		Map<Long, Menu> menuMap = new HashMap<Long, Menu>();
+		for (Menu menu : menus) {
+			menuMap.put(menu.getId(), menu);
+		}
+		menuMap.putAll(findUpToParent(menuMap));
+		return new ArrayList<Menu>(menuMap.values());
+	}
+
 }

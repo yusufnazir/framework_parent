@@ -17,4 +17,6 @@ public interface IMenuService extends ISuperService {
 
 	Menu getLookUpByViewClass(Long roleId, String name) throws FrameworkException;
 
+	List<Menu> findAuthorizedMenusByType(Long roleId, List<Long> types) throws FrameworkException;
+
 }

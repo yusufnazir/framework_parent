@@ -169,6 +169,21 @@
 			<artifactId>AdvancedTokenField</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.teemusa</groupId>
+			<artifactId>sidemenu</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.appreciated</groupId>
+			<artifactId>app-layout-addon</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin.addon</groupId>
+			<artifactId>pagination</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-security -->
 		<dependency>
 			<groupId>org.vaadin.spring.extensions</groupId>

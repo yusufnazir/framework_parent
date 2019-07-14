@@ -72,4 +72,9 @@ public class MenuService extends SuperService implements IMenuService {
 		return menuRepository.getLookUpByViewClass(roleId, name);
 	}
 
+	@Override
+	public List<Menu> findAuthorizedMenusByType(Long roleId, List<Long> types) throws FrameworkException {
+		return menuRepository.findAuthorizedMenusByType(roleId, types);
+	}
+
 }

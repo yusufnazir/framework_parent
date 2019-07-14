@@ -91,6 +91,12 @@
 				<version>${spring.boot.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.github.appreciated</groupId>
+				<artifactId>app-layout-addon</artifactId>
+				<version>1.0.2</version>
+			</dependency>
+
 			<!-- Numberfield addon -->
 			<dependency>
 				<groupId>org.vaadin.ui</groupId>
@@ -181,6 +187,18 @@
 				<groupId>org.vaadin.blackbluegl</groupId>
 				<artifactId>calendar-component</artifactId>
 				<version>2.0-BETA4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.vaadin.teemusa</groupId>
+				<artifactId>sidemenu</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.vaadin.addon</groupId>
+				<artifactId>pagination</artifactId>
+				<version>8.0.6</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.vaadin.spring.extensions/vaadin-spring-ext-security -->
