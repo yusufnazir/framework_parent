@@ -14,8 +14,6 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 public class GenderSelect extends CComboBox {
 
 	private static final long serialVersionUID = 8665850289294199446L;
-	public static final Boolean ACTIVE = true;
-	public static final Boolean IN_ACTIVE = false;
 
 	public GenderSelect() {
 		IGenderService genderService = ContextProvider.getBean(IGenderService.class);

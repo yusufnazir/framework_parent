@@ -14,6 +14,7 @@ import com.vaadin.ui.UI;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.CxodeTheme;
+import software.simple.solutions.framework.core.constants.LayoutType;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.events.SimpleSolutionsEvent.UserLoginRequestedEvent;
@@ -23,6 +24,7 @@ import software.simple.solutions.framework.core.properties.ConfigurationProperty
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.web.AppLayoutView;
+import software.simple.solutions.framework.core.web.TopMenuLayoutView;
 import software.simple.solutions.framework.core.web.view.ChangePasswordView;
 import software.simple.solutions.framework.core.web.view.ErrorView;
 import software.simple.solutions.framework.core.web.view.LoginView;
@@ -99,25 +101,24 @@ public class FrameworkUI extends UI {
 				addStyleName("loginview");
 			} else {
 				// Authenticated user
+				Long layoutType = LayoutType.TOP_MENU;
+				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+				Configuration configuration = configurationService.getByCode(ConfigurationProperty.APPLICATION_LAYOUT);
+				if (configuration != null) {
+					layoutType = configuration.getLong();
+				}
+				if (layoutType == null) {
+					layoutType = LayoutType.TOP_MENU;
+				}
 
-				// setContent(new TopMenuLayoutView());
-				AppLayoutView valoMenuLayout = new AppLayoutView();
-				valoMenuLayout.setSizeFull();
-				setContent(valoMenuLayout);
-				removeStyleName("loginview");
-				// getNavigator().navigateTo(getNavigator().getState());
-
-				// Navigator navigator = new Navigator(this, new ViewDisplay() {
-				//
-				// private static final long serialVersionUID =
-				// 6700359619962516252L;
-				//
-				// @Override
-				// public void showView(View view) {
-				// SimpleSolutionsEventBus.post(new MenuSelectedEvent(view));
-				// }
-				// });
-				// navigator.addProvider(viewProvider);
+				if (layoutType.compareTo(LayoutType.TOP_MENU) == 0) {
+					setContent(new TopMenuLayoutView());
+				} else if (layoutType.compareTo(LayoutType.APP_LAYOUT) == 0) {
+					AppLayoutView valoMenuLayout = new AppLayoutView();
+					valoMenuLayout.setSizeFull();
+					setContent(valoMenuLayout);
+					removeStyleName("loginview");
+				}
 			}
 		} else {
 			getNavigator().setErrorView(ErrorView.class);

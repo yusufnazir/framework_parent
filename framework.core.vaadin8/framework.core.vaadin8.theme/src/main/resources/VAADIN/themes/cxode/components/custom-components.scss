@@ -4,6 +4,7 @@
 @import "tokenfield.scss";
 @import "register-button.scss";
 @import "register-link.scss";
+@import "applayout-profile-component.scss";
 
 @mixin customcomponents{
 
@@ -13,4 +14,5 @@
 	@include tokenfield;
 	@include registerbutton;
 	@include registerlink;
+	@include applayout-profile-component;
 }

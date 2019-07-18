@@ -157,4 +157,12 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		return new ArrayList<Menu>(menuMap.values());
 	}
 
+	@Override
+	public List<Menu> getPossibleHomeViews() throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select m from Menu m where m.type in (:types) ";
+		paramMap.put("types", MenuType.HOME_MENU_OPTIONS);
+		return createListQuery(query, paramMap);
+	}
+
 }

@@ -77,4 +77,9 @@ public class MenuService extends SuperService implements IMenuService {
 		return menuRepository.findAuthorizedMenusByType(roleId, types);
 	}
 
+	@Override
+	public List<Menu> getPossibleHomeViews() throws FrameworkException {
+		return menuRepository.getPossibleHomeViews();
+	}
+
 }

@@ -105,7 +105,7 @@ public class RoleView extends BasicTemplate<Role> {
 
 			roleCategoryFld = formGrid.addField(RoleCategorySelect.class, RoleCategoryProperty.ROLE_CATEGORY, 0, 2);
 
-			descriptionFld = formGrid.addField(CTextArea.class, RoleProperty.DESCRIPTION, 1, 0, 1, 1);
+			descriptionFld = formGrid.addField(CTextArea.class, RoleProperty.DESCRIPTION, 1, 0, 1, 2);
 			descriptionFld.setRows(2);
 
 			activeFld = formGrid.addField(CCheckBox.class, RoleProperty.ACTIVE, 2, 0);

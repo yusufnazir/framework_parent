@@ -6,6 +6,6 @@ public class MenuType {
 	public static final Long CHILD = 2L;
 	public static final Long TAB = 3L;
 	public static final Long LOOKUP = 4L;
-	public static final Long WEB_SIDE_MENU = 5L;
+	public static final Long HOME_MENU_OPTIONS = 5L;
 
 }

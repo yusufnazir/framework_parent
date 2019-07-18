@@ -19,4 +19,6 @@ public interface IMenuService extends ISuperService {
 
 	List<Menu> findAuthorizedMenusByType(Long roleId, List<Long> types) throws FrameworkException;
 
+	List<Menu> getPossibleHomeViews() throws FrameworkException;
+
 }

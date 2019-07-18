@@ -49,4 +49,8 @@ public class MenuServiceFacade extends SuperServiceFacade<IMenuService> implemen
 		return service.findAuthorizedMenusByType(roleId, types);
 	}
 
+	public List<Menu> getPossibleHomeViews() throws FrameworkException {
+		return service.getPossibleHomeViews();
+	}
+
 }

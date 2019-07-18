@@ -55,4 +55,7 @@ public class SystemProperty {
 	
 	public static final String PROFILE_LOGGED_IN_AS = "system.profile.logged.in.as";
 	
+	public static final String SYSTEM_LAYOUT_TYPE_TOP_MENU = "system.layout.type.top.menu";
+	public static final String SYSTEM_LAYOUT_TYPE_APP_LAYOUT = "system.layout.type.app.layout";
+	
 }

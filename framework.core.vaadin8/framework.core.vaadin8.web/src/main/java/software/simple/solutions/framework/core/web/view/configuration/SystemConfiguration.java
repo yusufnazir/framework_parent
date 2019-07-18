@@ -36,6 +36,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
+import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -44,21 +45,26 @@ import software.simple.solutions.framework.core.components.ConfirmWindow.Confirm
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.SessionHolder;
+import software.simple.solutions.framework.core.components.select.LayoutSelect;
 import software.simple.solutions.framework.core.config.SystemObserver;
 import software.simple.solutions.framework.core.constants.MimeType;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
+import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.service.facade.FileServiceFacade;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.upload.FileBuffer;
 import software.simple.solutions.framework.core.upload.UploadFieldReceiver;
 import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 
 @CxodeConfigurationComponent(order = 1, captionKey = ConfigurationProperty.APPLICATION_CONFIGURATION)
@@ -77,6 +83,8 @@ public class SystemConfiguration extends CGridLayout {
 	private CDiscreetNumberField applicationLogoHeight;
 	private CDiscreetNumberField applicationLogoWidth;
 	private CCheckBox enableRegistrationFld;
+	private CComboBox homeViewFld;
+	private LayoutSelect layoutFld;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
@@ -95,6 +103,9 @@ public class SystemConfiguration extends CGridLayout {
 		exportRowCountFld = addField(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, 0,
 				++i);
 		dateFormatFld = addField(CTextField.class, ConfigurationProperty.APPLICATION_DATE_FORMAT, 0, ++i);
+		homeViewFld = addField(CComboBox.class, ConfigurationProperty.APPLICATION_HOME_VIEW, 0, ++i);
+		setUpHomeViewFld();
+		layoutFld = addField(LayoutSelect.class, ConfigurationProperty.APPLICATION_LAYOUT, 0, ++i);
 		enableRegistrationFld = addField(CCheckBox.class, ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION, 0,
 				++i);
 
@@ -196,6 +207,8 @@ public class SystemConfiguration extends CGridLayout {
 						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_HEIGHT, applicationLogoHeight.getValue()));
 				configurations
 						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_WIDTH, applicationLogoWidth.getValue()));
+				configurations.add(getValue(ConfigurationProperty.APPLICATION_HOME_VIEW, homeViewFld.getStringValue()));
+				configurations.add(getValue(ConfigurationProperty.APPLICATION_LAYOUT, layoutFld.getStringValue()));
 				try {
 					if (receiver.getLastFileSize() > 0) {
 						InputStream inputStream = receiver.getContentAsStream();
@@ -234,6 +247,20 @@ public class SystemConfiguration extends CGridLayout {
 		});
 
 		setValues();
+	}
+
+	private void setUpHomeViewFld() throws FrameworkException {
+		MenuServiceFacade menuServiceFacade = MenuServiceFacade.get(UI.getCurrent());
+		List<Menu> menus = menuServiceFacade.getPossibleHomeViews();
+		if (menus != null) {
+			List<ComboItem> items = new ArrayList<ComboItem>();
+			for (Menu menu : menus) {
+				ComboItem comboItem = new ComboItem(menu.getId());
+				comboItem.setName(PropertyResolver.getPropertyValueByLocale(menu.getKey()));
+				items.add(comboItem);
+			}
+			homeViewFld.setItems(items);
+		}
 	}
 
 	private HorizontalLayout createLogoImageHolder() {
@@ -307,6 +334,12 @@ public class SystemConfiguration extends CGridLayout {
 				break;
 			case ConfigurationProperty.APPLICATION_DATE_FORMAT:
 				dateFormatFld.setValue(configuration.getValue());
+				break;
+			case ConfigurationProperty.APPLICATION_HOME_VIEW:
+				homeViewFld.setValue(configuration.getLong());
+				break;
+			case ConfigurationProperty.APPLICATION_LAYOUT:
+				layoutFld.setValue(configuration.getLong());
 				break;
 			case ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION:
 				enableRegistrationFld.setValue(configuration.getBoolean());

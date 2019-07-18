@@ -144,7 +144,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	protected SortingHelper sortingHelper;
 	private List<GridItem> gridHeaderItems;
 	private Set<String> hiddenColumnIds;
-	private int gridRowHeight = 30;
+	private int gridRowHeight = 40;
 
 	private boolean isNew = false;
 	private boolean formMode = false;
