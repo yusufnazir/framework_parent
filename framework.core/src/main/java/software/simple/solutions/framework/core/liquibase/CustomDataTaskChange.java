@@ -24,6 +24,12 @@ public abstract class CustomDataTaskChange implements CustomTaskChange {
 				} else {
 					prepareStatement.setLong(parameterIndex, (long) x);
 				}
+			} else if (x instanceof Boolean) {
+				if ((boolean) x) {
+					prepareStatement.setNull(parameterIndex, Types.BOOLEAN);
+				} else {
+					prepareStatement.setBoolean(parameterIndex, (boolean) x);
+				}
 			} else {
 				prepareStatement.setObject(parameterIndex, x);
 			}

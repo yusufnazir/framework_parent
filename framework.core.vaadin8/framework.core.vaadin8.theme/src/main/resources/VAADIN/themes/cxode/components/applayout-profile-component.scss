@@ -106,14 +106,19 @@
   }
 
   .user-menu__edit-profile {
+  	padding-left: 0px;
     font-weight: 500;
     line-height: 1.6;
-    color: #36393d;
     font-size: 0.875rem;
     display: block;
     border: 0;
-    color: #00b4f0;
+    text-align: left;
   }
+  
+  .user-menu__edit-profile span {
+  	color: #00b4f0;
+  }
+  
   @media all and (max-width: 1440px) {
     .user-menu__edit-profile {
       font-size: 0.8125rem;
@@ -201,24 +206,19 @@
     color: #00b4f0;
   }
 
-  .user-menu__link.logout {
-    padding: 1rem 1.5rem 0.5rem;
-    margin-bottom: 0.5rem;
-    color: #829191;
+  .user-menu__link-logout {
+  	padding-left: 0px;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	font-size: 16px;
     transition: all ease-in-out 0.1s;
     font-weight: 500;
   }
-
-  .user-menu__link.logout iron-icon {
-    width: 14px;
-    height: 14px;
-    margin-right: 6px;
-    color: #5F6970;
+  
+   .user-menu__link-logout span {
+    color: #c8164b;
   }
-
-  .user-menu__link.logout span {
-    color: #829191;
-  }
+  
 
   .user-menu__link-icon {
     width: 1.4em;

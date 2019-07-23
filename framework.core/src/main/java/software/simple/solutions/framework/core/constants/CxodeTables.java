@@ -242,6 +242,19 @@ public class CxodeTables {
 		}
 	}
 
+	public final class PERSON_RELATIONS {
+
+		public static final String NAME = "PERSON_RELATIONS_";
+
+		public final class COLUMNS {
+			public static final String PERSON_ID = "PERSON_ID_";
+			public static final String RELATION_TYPE_ID = "RELATION_TYPE_ID_";
+			public static final String RELATION_ID = "RELATION_ID_";
+			public static final String START_DATE = "START_DATE_";
+			public static final String END_DATE = "END_DATE_";
+		}
+	}
+
 	public final class PROPERTY {
 
 		public static final String NAME = "PROPERTIES_";
@@ -266,6 +279,19 @@ public class CxodeTables {
 			public static final String PROPERTY_ID = "PROPERTY_ID_";
 			public static final String VALUE = "VALUE_";
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
+		}
+	}
+
+	public final class RELATION_TYPE_ {
+
+		public static final String NAME = "RELATION_TYPES_";
+
+		public final class COLUMNS {
+			public static final String ID = "ID_";
+			public static final String CODE = "CODE_";
+			public static final String NAME = "NAME_";
+			public static final String REQUIRES_RELATED_TO_ = "REQUIRES_RELATED_TO_";
+			public static final String KEY_ = "KEY_";
 		}
 	}
 

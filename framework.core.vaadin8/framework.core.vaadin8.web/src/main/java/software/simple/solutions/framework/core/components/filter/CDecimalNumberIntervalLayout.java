@@ -87,13 +87,13 @@ public class CDecimalNumberIntervalLayout extends CustomComponent implements Int
 		this.mainLayout.addComponent(this.operatorSelect);
 		mainLayout.setComponentAlignment(operatorSelect, Alignment.MIDDLE_LEFT);
 
-		this.fromNumberFld = new CDecimalField(sessionHolder);
+		this.fromNumberFld = new CDecimalField();
 		this.fromNumberFld.setWidth("100px");
 		this.fromNumberFld.setHeight("-1px");
 		this.mainLayout.addComponent(this.fromNumberFld);
 		mainLayout.setComponentAlignment(fromNumberFld, Alignment.MIDDLE_LEFT);
 
-		this.toNumberFld = new CDecimalField(sessionHolder);
+		this.toNumberFld = new CDecimalField();
 		this.toNumberFld.setWidth("100px");
 		this.toNumberFld.setHeight("-1px");
 		this.mainLayout.addComponent(this.toNumberFld);

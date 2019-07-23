@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.vaadin.ui.NumberField;
 
+import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.constants.Style;
@@ -11,16 +12,15 @@ import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
-public class CDecimalField extends NumberField implements IField {
+public class CDecimalField extends NumberField implements IField, Captionable {
 
 	private static final long serialVersionUID = 6865980231260216834L;
 
 	private boolean isThisRequired = false;
 	private boolean wasReadOnly = false;
-	private SessionHolder sessionHolder;
+	private CaptionLabel captionLabel;
 
-	public CDecimalField(SessionHolder sessionHolder) {
-		this.sessionHolder = sessionHolder;
+	public CDecimalField() {
 		setDecimalAllowed(true);
 		addStyleName(Style.TINY);
 		addStyleName(Style.RIGHT_ALIGN);
@@ -29,7 +29,7 @@ public class CDecimalField extends NumberField implements IField {
 		setDecimalPrecision(10);
 
 		setErrorText(PropertyResolver.getPropertyValueByLocale(SystemProperty.INVALID_NUMBER_FORMAT,
-				sessionHolder.getLocale()));
+				UI.getCurrent().getLocale()));
 	}
 
 	public void setRequired() {
@@ -103,7 +103,15 @@ public class CDecimalField extends NumberField implements IField {
 
 	@Override
 	public void setCaptionByKey(String key) {
-		super.setCaption(PropertyResolver.getPropertyValueByLocale(key, sessionHolder.getLocale()));
+		super.setCaption(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (captionLabel != null) {
+			captionLabel.setVisible(visible);
+		}
 	}
 
 	@Override
@@ -111,5 +119,15 @@ public class CDecimalField extends NumberField implements IField {
 		if (!isReadOnly()) {
 			super.clear();
 		}
+	}
+
+	@Override
+	public CaptionLabel getLabel() {
+		return captionLabel;
+	}
+
+	@Override
+	public void setLabel(CaptionLabel label) {
+		this.captionLabel = label;
 	}
 }

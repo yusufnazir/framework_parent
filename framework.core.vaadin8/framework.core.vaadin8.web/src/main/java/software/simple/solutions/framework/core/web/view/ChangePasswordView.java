@@ -43,7 +43,7 @@ public class ChangePasswordView extends VerticalLayout {
 	public ChangePasswordView() throws FrameworkException {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		setSizeFull();
-		setMargin(false);
+		setMargin(true);
 		setSpacing(false);
 
 		Component loginForm = buildLoginForm();
@@ -54,7 +54,7 @@ public class ChangePasswordView extends VerticalLayout {
 	private Component buildLoginForm() throws FrameworkException {
 		final VerticalLayout changePasswordPanel = new VerticalLayout();
 		changePasswordPanel.setSizeUndefined();
-		changePasswordPanel.setMargin(false);
+		changePasswordPanel.setMargin(true);
 		Responsive.makeResponsive(changePasswordPanel);
 		changePasswordPanel.addStyleName(Style.LOGIN_PANEL);
 
@@ -67,6 +67,7 @@ public class ChangePasswordView extends VerticalLayout {
 	private Component buildFields() {
 		VerticalLayout fields = new VerticalLayout();
 		fields.addStyleName(Style.FIELDS);
+		fields.addStyleName(ValoTheme.LAYOUT_CARD);
 
 		final CPasswordField oldPasswordFld = new CPasswordField();
 		oldPasswordFld.setCaptionByKey(ApplicationUserProperty.CURRENT_PASSWORD);

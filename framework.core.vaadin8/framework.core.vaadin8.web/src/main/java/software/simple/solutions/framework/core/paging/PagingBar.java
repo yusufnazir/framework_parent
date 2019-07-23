@@ -92,6 +92,10 @@ public class PagingBar extends HorizontalLayout {
 		registerListeners();
 	}
 
+	public void setItemsPerPage(Integer itemsPerPage) {
+		itemsPerPageSelect.setValue(itemsPerPage);
+	}
+
 	private void registerListeners() {
 		itemsPerPageSelect.addValueChangeListener(new ValueChangeListener<ComboItem>() {
 

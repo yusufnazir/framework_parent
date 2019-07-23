@@ -41,6 +41,8 @@ public class MenuView extends BasicTemplate<Menu> {
 		addContainerProperty(Menu::getName, MenuProperty.NAME);
 		addContainerProperty(new ValueProvider<Menu, String>() {
 
+			private static final long serialVersionUID = 1545795120968614647L;
+
 			@Override
 			public String apply(Menu source) {
 				return source.getView() == null ? null : source.getView().getCaption();
@@ -48,12 +50,16 @@ public class MenuView extends BasicTemplate<Menu> {
 		}, MenuProperty.VIEW);
 		addContainerProperty(new ValueProvider<Menu, String>() {
 
+			private static final long serialVersionUID = -638179271001395425L;
+
 			@Override
 			public String apply(Menu source) {
 				return source.getParentMenu() == null ? null : source.getParentMenu().getCaption();
 			}
 		}, MenuProperty.PARENT_MENU);
 		addContainerProperty(new ValueProvider<Menu, String>() {
+
+			private static final long serialVersionUID = 8588191037441066866L;
 
 			@Override
 			public String apply(Menu source) {

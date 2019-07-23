@@ -10,9 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.github.appreciated.app.layout.AppLayout;
 import com.github.appreciated.app.layout.behaviour.AppLayoutComponent;
@@ -36,6 +39,9 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MarginInfo;
@@ -49,6 +55,8 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.CloseHandler;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -56,6 +64,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.ConfirmWindow;
 import software.simple.solutions.framework.core.components.ConfirmWindow.ConfirmationHandler;
+import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.constants.Style;
@@ -63,6 +72,7 @@ import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IConfigurationService;
@@ -73,6 +83,7 @@ import software.simple.solutions.framework.core.service.facade.RoleViewPrivilege
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.web.view.ChangePasswordView;
 import software.simple.solutions.framework.core.web.view.PersonView;
 
 public class AppLayoutView extends VerticalLayout {
@@ -88,6 +99,9 @@ public class AppLayoutView extends VerticalLayout {
 	private UI ui;
 	private TabSheet tabSheet;
 	private Menu homeMenu;
+	private boolean profilePopUpOpen = false;
+
+	private CssLayout profilePopUpLayout;
 
 	public AppLayoutView() {
 		setMargin(false);
@@ -104,6 +118,22 @@ public class AppLayoutView extends VerticalLayout {
 
 	private void setUpTabSheet() {
 		tabSheet.setVisible(false);
+		tabSheet.addSelectedTabChangeListener(new SelectedTabChangeListener() {
+
+			@Override
+			public void selectedTabChange(SelectedTabChangeEvent event) {
+				if (tabSheet.getComponentCount() > 0) {
+					tabSheet.setVisible(true);
+				} else {
+					tabSheet.setVisible(false);
+				}
+				if (tabSheet.getComponentCount() == 1) {
+					tabSheet.setTabsVisible(false);
+				} else {
+					tabSheet.setTabsVisible(true);
+				}
+			}
+		});
 		tabSheet.setCloseHandler(new CloseHandler() {
 
 			private static final long serialVersionUID = -156199322439548182L;
@@ -113,16 +143,6 @@ public class AppLayoutView extends VerticalLayout {
 						"system.tab.closed", UI.getCurrent().getLocale(), new Object[] { tabContent.getCaption() }));
 				notification.show(Page.getCurrent());
 				tabsheet.removeComponent(tabContent);
-				if (tabsheet.getComponentCount() > 0) {
-					tabsheet.setVisible(true);
-				} else {
-					tabsheet.setVisible(false);
-				}
-				if (tabsheet.getComponentCount() == 1) {
-					tabsheet.setTabsVisible(false);
-				} else {
-					tabsheet.setTabsVisible(true);
-				}
 			}
 
 			@Override
@@ -148,6 +168,8 @@ public class AppLayoutView extends VerticalLayout {
 					} else {
 						closeTab(tabsheet, tabContent);
 					}
+				} else {
+					closeTab(tabsheet, tabContent);
 				}
 			}
 		});
@@ -239,13 +261,6 @@ public class AppLayoutView extends VerticalLayout {
 					tabSheet.getTab(abstractBaseView).setClosable(true);
 					tabSheet.setSelectedTab(abstractBaseView);
 					tabSheet.setVisible(true);
-
-					if (tabSheet.getComponentCount() == 1) {
-						tabSheet.setTabsVisible(false);
-					} else {
-						tabSheet.setTabsVisible(true);
-					}
-					// UI.getCurrent().getNavigator().getDisplay().showView(abstractBaseView);
 
 				} catch (SecurityException | IllegalArgumentException | FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -360,12 +375,6 @@ public class AppLayoutView extends VerticalLayout {
 			tabSheet.getTab(abstractBaseView).setClosable(false);
 			tabSheet.setSelectedTab(abstractBaseView);
 			tabSheet.setVisible(true);
-
-			if (tabSheet.getComponentCount() == 1) {
-				tabSheet.setTabsVisible(false);
-			} else {
-				tabSheet.setTabsVisible(true);
-			}
 		}
 	}
 
@@ -466,6 +475,15 @@ public class AppLayoutView extends VerticalLayout {
 			}
 		}).start();
 	}
+	
+	private void toggleProfilePopUpLayout(){
+		if (profilePopUpOpen) {
+			profilePopUpLayout.removeStyleName("open");
+		} else {
+			profilePopUpLayout.addStyleName("open");
+		}
+		profilePopUpOpen = !profilePopUpOpen;
+	}
 
 	private CssLayout createProfileLayout() {
 		CssLayout menuLayout = new CssLayout();
@@ -477,56 +495,92 @@ public class AppLayoutView extends VerticalLayout {
 		menuLayout.addComponent(profileImageLayout);
 
 		Image profileImage = new Image();
-		// profileImage.setWidth("100%");
 		profileImage.setSource(new ThemeResource("../cxode/img/profile-pic-300px.jpg"));
 		profileImage.addStyleName("appbar-profile-image");
 		profileImageLayout.addComponent(profileImage);
 
-		CssLayout popUpLayout = new CssLayout();
-		popUpLayout.addStyleName("user-menu__pop-out");
-		menuLayout.addComponent(popUpLayout);
+		profilePopUpLayout = new CssLayout();
+		profilePopUpLayout.addStyleName("user-menu__pop-out");
+		menuLayout.addComponent(profilePopUpLayout);
 
 		profileImage.addClickListener(new ClickListener() {
-
-			private boolean open = false;
 
 			private static final long serialVersionUID = 1803844919818554795L;
 
 			@Override
 			public void click(ClickEvent event) {
 				if (event.getButton().compareTo(MouseButton.LEFT) == 0) {
-					if (open) {
-						popUpLayout.removeStyleName("open");
-					} else {
-						popUpLayout.addStyleName("open");
-					}
-					open = !open;
+					toggleProfilePopUpLayout();
 				}
 			}
 		});
 
 		CssLayout userLayout = new CssLayout();
 		userLayout.addStyleName("user-menu__user");
-		popUpLayout.addComponent(userLayout);
+		profilePopUpLayout.addComponent(userLayout);
 
 		Label userNameLayout = new Label();
 		userNameLayout.addStyleName("user-menu__name");
 		userNameLayout.setValue("Username");
 		userLayout.addComponent(userNameLayout);
 
-		Label userEditProfileLayout = new Label();
-		userEditProfileLayout.addStyleName("user-menu__edit-profile");
-		userEditProfileLayout.setValue("Edit profile");
-		userLayout.addComponent(userEditProfileLayout);
+		Button editUserProfileBtn = new Button();
+		editUserProfileBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+		editUserProfileBtn.addStyleName("user-menu__edit-profile");
+		editUserProfileBtn.setCaption(
+				PropertyResolver.getPropertyValueByLocale("core.menu.edit.profile", UI.getCurrent().getLocale()));
+		userLayout.addComponent(editUserProfileBtn);
+		editUserProfileBtn.addClickListener(new Button.ClickListener() {
 
-		Button image = new Button();
-		image.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-		image.addStyleName(ValoTheme.BUTTON_LINK);
-		image.setIcon(FontAwesome.UNLOCK);
-		image.setCaption(PropertyResolver.getPropertyValueByLocale("core.menu.logout", UI.getCurrent().getLocale()));
-		userLayout.addComponent(image);
+			private static final long serialVersionUID = -2502952536044439873L;
+
+			@Override
+			public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+				createChangePasswordItem();
+			}
+		});
+
+		Button logoutBtn = new Button();
+		logoutBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+		logoutBtn.addStyleName(ValoTheme.BUTTON_LINK);
+		logoutBtn.addStyleName("user-menu__link-logout");
+		logoutBtn.setIcon(FontAwesome.UNLOCK);
+		logoutBtn
+				.setCaption(PropertyResolver.getPropertyValueByLocale("core.menu.logout", UI.getCurrent().getLocale()));
+		userLayout.addComponent(logoutBtn);
+		logoutBtn.addClickListener(new Button.ClickListener() {
+
+			private static final long serialVersionUID = -2502952536044439873L;
+
+			@Override
+			public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+				VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+				HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+				String requestUrl = httpServletRequest.getServletContext().getContextPath();
+				SecurityContextHolder.clearContext();
+				getUI().getSession().close();
+				getUI().getPage().setLocation(requestUrl + "/app");
+			}
+		});
 
 		return menuLayout;
+	}
+
+	private void createChangePasswordItem() {
+		try {
+			ChangePasswordView changePasswordView = new ChangePasswordView();
+			changePasswordView.setMandatory(false);
+			tabSheet.addComponent(changePasswordView);
+			tabSheet.getTab(changePasswordView)
+					.setCaption(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD));
+			tabSheet.getTab(changePasswordView).setClosable(true);
+			tabSheet.setSelectedTab(changePasswordView);
+			if (!tabSheet.isVisible()) {
+				tabSheet.setVisible(true);
+			}
+		} catch (FrameworkException e) {
+			new MessageWindowHandler(e);
+		}
 	}
 
 }

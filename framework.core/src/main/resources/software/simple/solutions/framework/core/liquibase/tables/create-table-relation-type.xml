@@ -1,0 +1,46 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1563728820741">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="relation_types_" />
+			</not>
+		</preConditions>
+		<createTable tableName="relation_types_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="KEY_" type="VARCHAR(1000)" />
+			<column name="REQUIRES_RELATED_TO_" type="BIT(1)" />
+
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1563728828336">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="relation_types_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="relation_types_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="CODE_" type="VARCHAR(255)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="KEY_" type="VARCHAR(1000)" />
+			<column name="REQUIRES_RELATED_TO_" type="BIT(1)" />
+
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

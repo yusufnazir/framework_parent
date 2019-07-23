@@ -135,9 +135,8 @@ public class PersonView extends BasicTemplate<Person> {
 		private CCheckBox activeFld;
 		private HorizontalLayout personInfoLayout;
 
-		private Person person;
-
 		private List<ComboItem> genderListing;
+		private Person person;
 
 		@Override
 		public void executeBuild() {
@@ -193,10 +192,10 @@ public class PersonView extends BasicTemplate<Person> {
 
 			genderFld.setValue(person.getGender() == null ? null : person.getGender().getId());
 
-			firstNameFld.setRequired();
-			lastNameFld.setRequired();
-			dateOfBirthFld.setRequired();
-			genderFld.setRequired();
+			firstNameFld.setRequiredIndicatorVisible(true);
+			lastNameFld.setRequiredIndicatorVisible(true);
+			dateOfBirthFld.setRequiredIndicatorVisible(true);
+			genderFld.setRequiredIndicatorVisible(true);
 			return person;
 		}
 
@@ -217,6 +216,10 @@ public class PersonView extends BasicTemplate<Person> {
 		@Override
 		public void handleNewForm() throws FrameworkException {
 			activeFld.setValue(true);
+			firstNameFld.setRequiredIndicatorVisible(true);
+			lastNameFld.setRequiredIndicatorVisible(true);
+			dateOfBirthFld.setRequiredIndicatorVisible(true);
+			genderFld.setRequiredIndicatorVisible(true);
 		}
 
 	}

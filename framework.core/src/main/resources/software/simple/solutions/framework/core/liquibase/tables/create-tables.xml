@@ -99,4 +99,10 @@
 	<include file="create-table-oauth-code.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-relation-type.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-person-relation.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>
