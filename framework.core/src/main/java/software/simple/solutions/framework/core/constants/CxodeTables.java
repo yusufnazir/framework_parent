@@ -174,6 +174,18 @@ public class CxodeTables {
 		}
 	}
 
+	public final class MENU_SETTING {
+
+		public static final String NAME = "MENU_SETTINGS_";
+
+		public final class COLUMNS {
+			public static final String TYPE = "TYPE_";
+			public static final String VALUE_ = "VALUE_";
+			public static final String MENU_ID = "MENU_ID_";
+			public static final String ACTIVE = "ACTIVE_";
+		}
+	}
+
 	public final class MESSAGE {
 
 		public static final String NAME = "MESSAGES_";

@@ -16,6 +16,7 @@ import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
+import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 
 public abstract class FormView extends VerticalLayout implements IView, IForm, IDetail,
 		// Referenceable,
@@ -129,7 +130,9 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	}
 
 	public void addToReferenceKey(String key, Object value) {
-		referenceKeys.put(key, value);
+		if(value!=null){
+			referenceKeys.put(key, value);
+		}
 	}
 
 	public <T> T getReferenceKey(String key) {
@@ -142,6 +145,10 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 
 	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
 		this.referenceKeys = referenceKeys;
+	}
+	
+	public boolean isSubMenuValid(SimpleSolutionsMenuItem viewItem) {
+		return true;
 	}
 
 }

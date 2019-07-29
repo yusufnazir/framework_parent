@@ -48,6 +48,7 @@ import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
+import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
 import software.simple.solutions.framework.core.web.view.password.ResetPasswordLayout;
 
@@ -341,7 +342,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 				}
 			});
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		public ApplicationUser setFormValues(Object entity) throws FrameworkException {
@@ -396,7 +397,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 			return applicationUser;
 		}
-
+		
 		protected void resetPasswordAndSendMail() throws FrameworkException {
 			applicationUser = ApplicationUserServiceFacade.get(UI.getCurrent())
 					.resetUserPassword(applicationUser.getId(), sessionHolder.getApplicationUser().getId());
@@ -589,7 +590,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			applicationUser = (ApplicationUser) entity;
 			person = applicationUser.getPerson();
 			addToReferenceKey(ReferenceKey.APPLICATION_USER, applicationUser);
-			addToReferenceKey(ReferenceKey.PERSON, person);
+				addToReferenceKey(ReferenceKey.PERSON, person);
 
 			usernameFld.setValue(applicationUser.getUsername());
 			activeFld.setValue(applicationUser.getActive());
