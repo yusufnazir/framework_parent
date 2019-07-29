@@ -8,9 +8,9 @@ public interface IPersonInformationService extends ISuperService {
 
 	PersonInformation getByPerson(Long personId) throws FrameworkException;
 
-	public PersonInformation updateApplicationUserEmail(PersonInformationVO vo) throws FrameworkException;
+	public PersonInformation updatePersonEmail(PersonInformationVO vo) throws FrameworkException;
 
-	PersonInformation updateApplicationUserMobileNumber(PersonInformationVO vo) throws FrameworkException;
+	PersonInformation updatePersonMobileNumber(PersonInformationVO vo) throws FrameworkException;
 
 	String getEmail(Long personId) throws FrameworkException;
 

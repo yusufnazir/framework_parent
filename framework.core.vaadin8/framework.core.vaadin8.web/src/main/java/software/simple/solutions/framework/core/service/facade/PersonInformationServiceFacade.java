@@ -27,13 +27,13 @@ public class PersonInformationServiceFacade extends SuperServiceFacade<IPersonIn
 	}
 
 	@Override
-	public PersonInformation updateApplicationUserEmail(PersonInformationVO vo) throws FrameworkException {
-		return service.updateApplicationUserEmail(vo);
+	public PersonInformation updatePersonEmail(PersonInformationVO vo) throws FrameworkException {
+		return service.updatePersonEmail(vo);
 	}
 
 	@Override
-	public PersonInformation updateApplicationUserMobileNumber(PersonInformationVO vo) throws FrameworkException {
-		return service.updateApplicationUserMobileNumber(vo);
+	public PersonInformation updatePersonMobileNumber(PersonInformationVO vo) throws FrameworkException {
+		return service.updatePersonMobileNumber(vo);
 	}
 
 	@Override

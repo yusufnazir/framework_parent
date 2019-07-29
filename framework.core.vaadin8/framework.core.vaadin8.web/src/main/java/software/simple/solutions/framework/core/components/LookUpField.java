@@ -129,7 +129,8 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 
 			SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
 			simpleSolutionsMenuItem.setParentEntity(getParentEntity());
-			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId());
+			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId(),
+					sessionHolder.getApplicationUser().getId());
 			view.setPopUpWindow(window);
 			view.setPopUpEntity(entity);
 			layout.addComponent(view);

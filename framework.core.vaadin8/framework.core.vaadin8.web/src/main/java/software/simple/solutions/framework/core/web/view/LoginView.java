@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ContentMode;
@@ -47,7 +49,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.view.password.RequestPasswordResetLayout;
 
-public class LoginView extends VerticalLayout {
+public class LoginView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 1969692676006992700L;
 	private static final Logger logger = LogManager.getLogger(LoginView.class);
@@ -55,6 +57,12 @@ public class LoginView extends VerticalLayout {
 	private Component loginFieldsLayout;
 	private Component registrationFieldsLayout;
 	private Component registrationSuccessfullLayout;
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		String parameters = event.getParameters();
+		System.out.println(parameters);
+	}
 
 	public LoginView() throws FrameworkException {
 		addStyleName("loginview");

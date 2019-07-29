@@ -11,9 +11,9 @@ public class PersonVO extends SuperVO {
 	private static final long serialVersionUID = -5922441227256038766L;
 
 	private Long id;
-	
+
 	private Boolean active;
-	
+
 	@FilterFieldProperty(fieldProperty = PersonProperty.FIRST_NAME)
 	private StringInterval firstNameInterval;
 	@FilterFieldProperty(fieldProperty = PersonProperty.MIDDLE_NAME)
@@ -28,6 +28,8 @@ public class PersonVO extends SuperVO {
 	private String placeOfBirth;
 	private Long genderId;
 	private Long personInformationId;
+	private String mobileNumber;
+	private String email;
 
 	public PersonVO() {
 		super();
@@ -112,7 +114,7 @@ public class PersonVO extends SuperVO {
 	public void setPersonInformationId(Long personInformationId) {
 		this.personInformationId = personInformationId;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -129,6 +131,22 @@ public class PersonVO extends SuperVO {
 	@Override
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

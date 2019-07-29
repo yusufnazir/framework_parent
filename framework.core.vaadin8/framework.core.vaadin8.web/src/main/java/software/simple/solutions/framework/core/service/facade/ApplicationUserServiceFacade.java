@@ -102,4 +102,10 @@ public class ApplicationUserServiceFacade extends SuperServiceFacade<IApplicatio
 		return service.registerUser(vo);
 	}
 
+	@Override
+	public void sendRegistrationMailToNewUser(ApplicationUser applicationUser, ApplicationUserVO vo)
+			throws FrameworkException {
+		service.sendRegistrationMailToNewUser(applicationUser, vo);
+	}
+
 }

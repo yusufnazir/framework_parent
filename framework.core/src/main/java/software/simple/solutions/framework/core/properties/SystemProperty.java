@@ -28,6 +28,8 @@ public class SystemProperty {
 	public static final String INCOMPLETE_CONFIGURATION = "sytem.configuration.incomplete.configuration";
 	public static final String UNSAVED_CHANGES_HEADER = "system.notification.unsaved.changes";
 	public static final String UNSAVED_CHANGES_CONFIRMATION_REQUEST = "system.notification.unsaved.changes.request";
+	public static final String SYSTEM_MENU_NOT_AUTHORIZED = "system.menu.not.authorized";
+	public static final String SYSTEM_MENU_NOT_AUTHORIZED_MESSAGE = "system.menu.not.authorized.message";
 
 	public static final String LOGIN_HEADER = "system.login.header";
 	public static final String LOGIN_USERNAME = "system.login.username";

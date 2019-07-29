@@ -75,6 +75,11 @@ public class RoleViewPrivilegeService extends SuperService implements IRoleViewP
 	public List<String> getPrivilegesByViewIdAndRoleId(Long viewId, Long roleId) throws FrameworkException {
 		return roleViewPrivilegeRepository.getPrivilegesByViewIdAndRoleId(viewId, roleId);
 	}
+	
+	@Override
+	public List<String> getPrivilegesByViewIdAndUserId(Long viewId, Long applicationUserId) throws FrameworkException {
+		return roleViewPrivilegeRepository.getPrivilegesByViewIdAndUserId(viewId, applicationUserId);
+	}
 
 	@Override
 	public void updateRoleViewPrivileges(Long roleViewId, List<Long> privilegeIds) throws FrameworkException {

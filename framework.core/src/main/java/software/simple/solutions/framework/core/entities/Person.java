@@ -33,6 +33,7 @@ public class Person extends MappedSuperClass {
 
 	private static final long serialVersionUID = 6967413018329190354L;
 
+	@FilterFieldProperty(fieldProperty = PersonProperty.ID)
 	@Id
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)

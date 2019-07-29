@@ -42,4 +42,9 @@ public class RoleViewPrivilegeServiceFacade extends SuperServiceFacade<IRoleView
 		return service.getPrivilegesByViewIdAndRoleId(viewId, roleId);
 	}
 
+	@Override
+	public List<String> getPrivilegesByViewIdAndUserId(Long viewId, Long applicationUserId) throws FrameworkException {
+		return service.getPrivilegesByViewIdAndUserId(viewId, applicationUserId);
+	}
+
 }

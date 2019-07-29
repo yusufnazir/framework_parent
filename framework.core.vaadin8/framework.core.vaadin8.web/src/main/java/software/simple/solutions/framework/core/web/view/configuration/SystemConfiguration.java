@@ -78,6 +78,7 @@ public class SystemConfiguration extends CGridLayout {
 	private CTextField applicationURLFld;
 	private CDiscreetNumberField exportRowCountFld;
 	private CTextField dateFormatFld;
+	private CCheckBox consolidateRoleFld;
 	private Upload upload;
 	private UploadFieldReceiver receiver;
 	private CDiscreetNumberField applicationLogoHeight;
@@ -103,6 +104,7 @@ public class SystemConfiguration extends CGridLayout {
 		exportRowCountFld = addField(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, 0,
 				++i);
 		dateFormatFld = addField(CTextField.class, ConfigurationProperty.APPLICATION_DATE_FORMAT, 0, ++i);
+		consolidateRoleFld = addField(CCheckBox.class, ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE, 0, ++i);
 		homeViewFld = addField(CComboBox.class, ConfigurationProperty.APPLICATION_HOME_VIEW, 0, ++i);
 		setUpHomeViewFld();
 		layoutFld = addField(LayoutSelect.class, ConfigurationProperty.APPLICATION_LAYOUT, 0, ++i);
@@ -201,6 +203,8 @@ public class SystemConfiguration extends CGridLayout {
 				configurations.add(
 						getValue(ConfigurationProperty.APPLICATION_EXPORT_ROW_COUNT, exportRowCountFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_DATE_FORMAT, dateFormatFld.getValue()));
+				configurations.add(
+						getValue(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE, consolidateRoleFld.getValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION,
 						enableRegistrationFld.getValue()));
 				configurations
@@ -221,10 +225,12 @@ public class SystemConfiguration extends CGridLayout {
 					logger.error(e.getMessage(), e);
 				}
 
+				
 				try {
 					List<Configuration> configs = ConfigurationServiceFacade.get(UI.getCurrent())
 							.update(configurations);
 					if (configs != null) {
+						// application logo
 						List<String> configurationCodes = configs.stream()
 								.filter(p -> (p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO)
 										|| p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_LOGO_HEIGHT)
@@ -237,12 +243,22 @@ public class SystemConfiguration extends CGridLayout {
 							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
 							systemObserver.getApplicationLogoChangeObserver().onNext(true);
 						}
+						
+						// role consolidation
+						configurationCodes = configs.stream().filter(
+								p -> p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE))
+								.map(p -> p.getCode()).collect(Collectors.toList());
+						if (configurationCodes != null && !configurationCodes.isEmpty()) {
+							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+							systemObserver.getApplicationConsolidateRoleChangeObserver().onNext(true);
+						}
 					}
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
 					new MessageWindowHandler(e);
 				}
+
 			}
 		});
 
@@ -334,6 +350,9 @@ public class SystemConfiguration extends CGridLayout {
 				break;
 			case ConfigurationProperty.APPLICATION_DATE_FORMAT:
 				dateFormatFld.setValue(configuration.getValue());
+				break;
+			case ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE:
+				consolidateRoleFld.setValue(configuration.getBoolean());
 				break;
 			case ConfigurationProperty.APPLICATION_HOME_VIEW:
 				homeViewFld.setValue(configuration.getLong());

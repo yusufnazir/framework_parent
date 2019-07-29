@@ -3,6 +3,7 @@ package software.simple.solutions.framework.core.properties;
 public class PersonProperty {
 
 	public static final String PERSON = "entity.person";
+	public static final String ID = "entity.person.id";
 	public static final String FIRST_NAME = "entity.person.first.name";
 	public static final String MIDDLE_NAME = "entity.person.middle.name";
 	public static final String LAST_NAME = "entity.person.last.name";

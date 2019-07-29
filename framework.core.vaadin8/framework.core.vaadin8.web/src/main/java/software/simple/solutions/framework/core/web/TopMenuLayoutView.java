@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -76,6 +80,8 @@ import software.simple.solutions.framework.core.pojo.SimpleMenuItem;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
+import software.simple.solutions.framework.core.service.IConfigurationService;
+import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.service.facade.FileServiceFacade;
 import software.simple.solutions.framework.core.service.facade.LanguageServiceFacade;
@@ -85,6 +91,7 @@ import software.simple.solutions.framework.core.service.facade.RoleViewPrivilege
 import software.simple.solutions.framework.core.service.facade.ViewServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.MenuIndexComparator;
+import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SimpleMenuIndexComparator;
 import software.simple.solutions.framework.core.valueobjects.LanguageVO;
@@ -101,20 +108,66 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private MenuBar userInfoMenuBar;
 	private SessionHolder sessionHolder;
 	private ConcurrentMap<String, Object> referenceKeys;
-
 	private List<Menu> menus;
-
 	private MenuItem userMenuItem;
-
 	private HorizontalLayout headerLayout;
-	private UI ui;
-
 	private Image applicationLogoImage;
+	private Navigator navigator;
+	private UI ui;
 
 	public TopMenuLayoutView() throws FrameworkException {
 		super();
 		ui = UI.getCurrent();
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
+
+		navigator = new Navigator(ui, new ViewDisplay() {
+
+			private static final long serialVersionUID = -799205460550821576L;
+
+			@Override
+			public void showView(com.vaadin.navigator.View view) {
+				String state = navigator.getState();
+				// tabSheet.addTab(view.getViewComponent());
+				System.out.println("state: " + state);
+			}
+		});
+		navigator.addView("", new com.vaadin.navigator.View() {
+
+			private static final long serialVersionUID = 8127200007422905310L;
+		});
+		navigator.addViewChangeListener(new ViewChangeListener() {
+
+			private static final long serialVersionUID = -3678171551078201020L;
+
+			@Override
+			public boolean beforeViewChange(ViewChangeEvent event) {
+				Long menuId = NumberUtil.getLong(event.getViewName());
+				if (menuId != null) {
+					IMenuService menuService = ContextProvider.getBean(IMenuService.class);
+					try {
+						boolean userHasAccess = menuService.doesUserHaveAccess(
+								sessionHolder.getApplicationUser().getId(), sessionHolder.getSelectedRole().getId(),
+								menuId);
+						if (userHasAccess) {
+							Map<String, String> parameterMap = event.getParameterMap();
+							String uuid = parameterMap.get("uuid");
+							boolean uuidExists = sessionHolder.uuidExists(uuid);
+							if (uuidExists) {
+								Component generatedMenu = sessionHolder.getGeneratedMenu(uuid);
+								tabSheet.setSelectedTab(generatedMenu);
+							} else {
+								handleNavigation(menuId, uuid);
+							}
+							return true;
+						}
+					} catch (FrameworkException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+				return true;
+			}
+		});
+
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		sessionHolder.setReferenceKeys(referenceKeys);
 		SimpleSolutionsEventBus.register(this);
@@ -133,11 +186,42 @@ public class TopMenuLayoutView extends VerticalLayout {
 				updateApplicationLogo();
 			}
 		});
+
+		String state = navigator.getState();
+		if (StringUtils.isNotBlank(state)) {
+			try {
+				navigator.navigateTo(state);
+			} catch (IllegalArgumentException e) {
+				Notification notification = new Notification(
+						PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED,
+								UI.getCurrent().getLocale()),
+						Type.TRAY_NOTIFICATION);
+				notification.setDescription(PropertyResolver.getPropertyValueByLocale(
+						SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED_MESSAGE, UI.getCurrent().getLocale()));
+				notification.show(UI.getCurrent().getPage());
+				VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+				HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+				String requestUrl = httpServletRequest.getServletContext().getContextPath();
+				Page.getCurrent().replaceState(requestUrl + "/app");
+			}
+		}
+
 	}
 
 	private void setUpMenus() throws FrameworkException {
 
-		createRoleMenuItems();
+		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+		Configuration consolidateRoleConfiguration = configurationService
+				.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
+		boolean consolidateRoles = false;
+		if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
+			consolidateRoles = true;
+		}
+		if (consolidateRoles) {
+			createMenu(null);
+		} else {
+			createRoleMenuItems();
+		}
 
 		/*
 		 * Add Languages options
@@ -222,9 +306,14 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 	private void createMenu(Role role) throws FrameworkException {
 		menuBar_.setVisible(true);
-		sessionHolder.setSelectedRole(role);
 		menuBar_.removeItems();
-		menus = MenuServiceFacade.get(UI.getCurrent()).findAuthorizedMenus(role.getId());
+		if (role != null) {
+			sessionHolder.setSelectedRole(role);
+			menus = MenuServiceFacade.get(UI.getCurrent()).findAuthorizedMenus(role.getId());
+		} else {
+			menus = MenuServiceFacade.get(UI.getCurrent())
+					.findAuthorizedMenusByUser(sessionHolder.getApplicationUser().getId());
+		}
 		List<SimpleMenuItem> parents = new ArrayList<SimpleMenuItem>();
 		Collections.sort(menus, new MenuIndexComparator());
 
@@ -255,12 +344,25 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private void setMenuItems(SimpleMenuItem menuItem, MenuBar.MenuItem item) {
 		if (menuItem.getMenus() != null && menuItem.getMenus().size() > 0) {
 			for (SimpleMenuItem child : menuItem.getMenus()) {
+
 				Command command = getCommand(
 						child.getMenu().getView() == null ? null : child.getMenu().getView().getId(), child.getMenu());
 
 				String menuName = child.getMenu().getKey() == null ? child.getMenu().getName()
 						: PropertyResolver.getPropertyValueByLocale(child.getMenu().getKey(),
 								UI.getCurrent().getLocale());
+
+				if (child.getMenu().getView() != null) {
+					try {
+						String viewClassName = child.getMenu().getView().getViewClassName();
+						Class<? extends com.vaadin.navigator.View> forName = (Class<? extends com.vaadin.navigator.View>) Class
+								.forName(viewClassName);
+						navigator.addView(child.getMenu().getId().toString(), forName);
+					} catch (ClassNotFoundException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
 				MenuItem parent = item.addItem(menuName, command);
 				setMenuItems(child, parent);
 			}
@@ -292,7 +394,9 @@ public class TopMenuLayoutView extends VerticalLayout {
 			private static final long serialVersionUID = 4714225361223264974L;
 
 			public void menuSelected(MenuItem selectedItem) {
-				handleMenuSelected(viewId, menu);
+				// handleMenuSelected(viewId, menu);
+				String uuid = UUID.randomUUID().toString();
+				navigator.navigateTo(menu.getId().toString() + "/uuid=" + uuid);
 			}
 		};
 	}
@@ -304,14 +408,65 @@ public class TopMenuLayoutView extends VerticalLayout {
 		tab.setIcon(FontAwesome.ADJUST);
 	}
 
-	public Tab handleMenuSelected(Long viewId, Menu menu) {
+	// public Tab handleNavigateTo(Long viewId, Menu menu) {
+	// try {
+	// if (!tabSheet.isVisible()) {
+	// tabSheet.setVisible(true);
+	// }
+	// View view = ViewServiceFacade.get(UI.getCurrent()).getById(View.class,
+	// viewId);
+	// AbstractBaseView abstractBaseView = (AbstractBaseView)
+	// ViewUtil.initView(view.getViewClassName(),
+	// sessionHolder.getSelectedRole().getId());
+	// if (abstractBaseView == null) {
+	// Notification notification = new
+	// Notification(PropertyResolver.getPropertyValueByLocale(
+	// "core.menu.no.view.found", UI.getCurrent().getLocale()),
+	// Type.ERROR_MESSAGE);
+	// notification.setDescription(PropertyResolver.getPropertyValueByLocale("core.menu.no.view.found.message",
+	// UI.getCurrent().getLocale()));
+	// notification.show(UI.getCurrent().getPage());
+	// return null;
+	// }
+	// List<String> privileges =
+	// RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+	// .getPrivilegesByViewIdAndRoleId(viewId,
+	// sessionHolder.getSelectedRole().getId());
+	// abstractBaseView.getViewDetail().setPrivileges(privileges);
+	//
+	// abstractBaseView.getViewDetail().setMenu(menu);
+	// abstractBaseView.getViewDetail().setView(view);
+	// abstractBaseView.executeBuild();
+	// abstractBaseView.executeSearch();
+	// tabSheet.addComponent(abstractBaseView);
+	// tabSheet.getTab(abstractBaseView).setCaption(PropertyResolver.getPropertyValueByLocale(
+	// abstractBaseView.getViewDetail().getMenu().getKey(),
+	// UI.getCurrent().getLocale()));
+	// tabSheet.getTab(abstractBaseView).setClosable(true);
+	// tabSheet.setSelectedTab(abstractBaseView);
+	//
+	// Tab tab = tabSheet.getTab(abstractBaseView);
+	// return tab;
+	// } catch (FrameworkException e) {
+	// new MessageWindowHandler(e);
+	// }
+	// return null;
+	// }
+
+	public Tab handleNavigation(Long menuId, String uuid) {
+		if (menuId == null) {
+			return null;
+		}
 		try {
 			if (!tabSheet.isVisible()) {
 				tabSheet.setVisible(true);
 			}
+			IMenuService menuService = ContextProvider.getBean(IMenuService.class);
+			Menu menu = menuService.get(Menu.class, menuId);
+			Long viewId = menu.getView().getId();
+
 			View view = ViewServiceFacade.get(UI.getCurrent()).getById(View.class, viewId);
-			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName(),
-					sessionHolder.getSelectedRole().getId());
+			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName());
 			if (abstractBaseView == null) {
 				Notification notification = new Notification(PropertyResolver.getPropertyValueByLocale(
 						"core.menu.no.view.found", UI.getCurrent().getLocale()), Type.ERROR_MESSAGE);
@@ -320,9 +475,78 @@ public class TopMenuLayoutView extends VerticalLayout {
 				notification.show(UI.getCurrent().getPage());
 				return null;
 			}
-			List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
-					.getPrivilegesByViewIdAndRoleId(viewId, sessionHolder.getSelectedRole().getId());
-			abstractBaseView.getViewDetail().setPrivileges(privileges);
+
+			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+			Configuration consolidateRoleConfiguration = configurationService
+					.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
+			boolean consolidateRoles = false;
+			if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
+				consolidateRoles = true;
+			}
+
+			if (consolidateRoles) {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndUserId(viewId, sessionHolder.getApplicationUser().getId());
+				abstractBaseView.getViewDetail().setPrivileges(privileges);
+			} else {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndRoleId(viewId, sessionHolder.getSelectedRole().getId());
+				abstractBaseView.getViewDetail().setPrivileges(privileges);
+			}
+
+			abstractBaseView.getViewDetail().setMenu(menu);
+			abstractBaseView.getViewDetail().setView(view);
+			abstractBaseView.setUuid(uuid);
+			abstractBaseView.executeBuild();
+			abstractBaseView.executeSearch();
+			tabSheet.addComponent(abstractBaseView);
+			Tab tab = tabSheet.getTab(abstractBaseView);
+			tab.setCaption(PropertyResolver.getPropertyValueByLocale(
+					abstractBaseView.getViewDetail().getMenu().getKey(), UI.getCurrent().getLocale()));
+			tabSheet.getTab(abstractBaseView).setClosable(true);
+			tabSheet.setSelectedTab(abstractBaseView);
+
+			sessionHolder.addGeneratedMenu(uuid, abstractBaseView);
+			return tab;
+		} catch (FrameworkException e) {
+			new MessageWindowHandler(e);
+		}
+		return null;
+	}
+
+	public Tab handleMenuSelected(Long viewId, Menu menu) {
+		try {
+			if (!tabSheet.isVisible()) {
+				tabSheet.setVisible(true);
+			}
+			View view = ViewServiceFacade.get(UI.getCurrent()).getById(View.class, viewId);
+			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(view.getViewClassName());
+			if (abstractBaseView == null) {
+				Notification notification = new Notification(PropertyResolver.getPropertyValueByLocale(
+						"core.menu.no.view.found", UI.getCurrent().getLocale()), Type.ERROR_MESSAGE);
+				notification.setDescription(PropertyResolver.getPropertyValueByLocale("core.menu.no.view.found.message",
+						UI.getCurrent().getLocale()));
+				notification.show(UI.getCurrent().getPage());
+				return null;
+			}
+
+			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+			Configuration consolidateRoleConfiguration = configurationService
+					.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
+			boolean consolidateRoles = false;
+			if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
+				consolidateRoles = true;
+			}
+
+			if (consolidateRoles) {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndUserId(viewId, sessionHolder.getApplicationUser().getId());
+				abstractBaseView.getViewDetail().setPrivileges(privileges);
+			} else {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndRoleId(viewId, sessionHolder.getSelectedRole().getId());
+				abstractBaseView.getViewDetail().setPrivileges(privileges);
+			}
 
 			abstractBaseView.getViewDetail().setMenu(menu);
 			abstractBaseView.getViewDetail().setView(view);
@@ -625,6 +849,10 @@ public class TopMenuLayoutView extends VerticalLayout {
 						"system.tab.closed", UI.getCurrent().getLocale(), new Object[] { tabContent.getCaption() }));
 				notification.show(Page.getCurrent());
 				tabsheet.removeComponent(tabContent);
+				if (tabContent instanceof AbstractBaseView) {
+					AbstractBaseView abstractBaseView = (AbstractBaseView) tabContent;
+					sessionHolder.removeGeneratedMenu(abstractBaseView.getUuid());
+				}
 				if (tabsheet.getComponentCount() > 0) {
 					tabsheet.setVisible(true);
 				} else {

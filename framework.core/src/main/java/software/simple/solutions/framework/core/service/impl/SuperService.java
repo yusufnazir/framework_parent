@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -25,6 +27,8 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @Service(value = "superService")
 public abstract class SuperService implements ISuperService {
 
+	private static final long serialVersionUID = 5613775047707969778L;
+
 	protected static final Logger serviceLogger = LogManager.getLogger(SuperService.class);
 
 	public static final String FIND_BY_SEARCH = "findBySearch";
@@ -39,6 +43,9 @@ public abstract class SuperService implements ISuperService {
 	public static final String IS_CODE_UNIQUE = "isCodeUnique";
 
 	private IGenericRepository genericRepository;
+
+	@Autowired
+	protected ApplicationEventPublisher applicationEventPublisher;
 
 	public Property createKeyifNotExists(String key) throws FrameworkException {
 		Property property = null;

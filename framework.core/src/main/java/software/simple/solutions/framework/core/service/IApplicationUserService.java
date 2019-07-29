@@ -57,4 +57,6 @@ public interface IApplicationUserService extends ISuperService {
 
 	SecurityValidation registerUser(ApplicationUserVO vo) throws FrameworkException;
 
+	void sendRegistrationMailToNewUser(ApplicationUser applicationUser, ApplicationUserVO vo) throws FrameworkException;
+
 }

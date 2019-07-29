@@ -75,7 +75,8 @@ public class MainView extends HorizontalLayout {
 	@Subscribe
 	public void updateMainTabSheetContent(final MenuSelectedEvent event) throws FrameworkException {
 		SimpleSolutionsMenuItem viewItem = sessionHolder.getSimpleSolutionsMenuItem();
-		AbstractBaseView view = ViewUtil.initView(viewItem, sessionHolder.getSelectedRole().getId());
+		AbstractBaseView view = ViewUtil.initView(viewItem, sessionHolder.getSelectedRole().getId(),
+				sessionHolder.getApplicationUser().getId());
 		sessionHolder.setSimpleSolutionsMenuItem(null);
 		if (view == null) {
 			// TODO: handle null view event.

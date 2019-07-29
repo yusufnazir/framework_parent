@@ -21,6 +21,8 @@ public interface IRoleViewPrivilegeService extends ISuperService {
 
 	List<String> getPrivilegesByViewIdAndRoleId(Long viewId, Long roleId) throws FrameworkException;
 
+	List<String> getPrivilegesByViewIdAndUserId(Long viewId, Long applicationUserId) throws FrameworkException;
+
 	// List<String> getRoleViewPrivilege(String className, Long roleId) throws
 	// FrameworkException;
 

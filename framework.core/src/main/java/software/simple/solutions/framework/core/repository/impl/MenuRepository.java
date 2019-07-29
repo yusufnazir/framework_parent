@@ -82,6 +82,24 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		return new ArrayList<Menu>(menuMap.values());
 	}
 
+	@Override
+	public List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select m from Menu m left join RoleView rv on rv.view.id=m.view.id "
+				+ "left join RoleViewPrivilege rvp on rvp.roleView.id=rv.id "
+				+ "left join UserRole ur on ur.role=rv.role.id " + "where m.type in (1,2) "
+				+ "and rvp.privilege is not null " + "and ur.applicationUser.id=:applicationUserId";
+		paramMap.put("applicationUserId", applicationUserId);
+		List<Menu> menus = createListQuery(query, paramMap);
+
+		Map<Long, Menu> menuMap = new HashMap<Long, Menu>();
+		for (Menu menu : menus) {
+			menuMap.put(menu.getId(), menu);
+		}
+		menuMap.putAll(findUpToParent(menuMap));
+		return new ArrayList<Menu>(menuMap.values());
+	}
+
 	private Map<Long, Menu> findUpToParent(Map<Long, Menu> menus) throws FrameworkException {
 		Map<Long, Menu> parents = new HashMap<Long, Menu>();
 		List<Long> ids = new ArrayList<Long>();
@@ -163,6 +181,18 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		String query = "select m from Menu m where m.type in (:types) ";
 		paramMap.put("types", MenuType.HOME_MENU_OPTIONS);
 		return createListQuery(query, paramMap);
+	}
+
+	@Override
+	public Boolean doesUserHaveAccess(Long applicationUserId, Long roleId, Long menuId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select m from Menu m left join RoleView rv on rv.view.id=m.view.id "
+				+ "left join RoleViewPrivilege rvp on rvp.roleView.id=rv.id " + "where rvp.privilege is not null "
+				+ "and rv.role.id=:roleId and m.id=:menuId";
+		paramMap.put("roleId", roleId);
+		paramMap.put("menuId", menuId);
+		Menu menu = getByQuery(query, paramMap);
+		return menu != null;
 	}
 
 }

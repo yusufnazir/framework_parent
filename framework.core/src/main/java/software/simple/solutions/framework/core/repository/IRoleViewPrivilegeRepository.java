@@ -18,4 +18,6 @@ public interface IRoleViewPrivilegeRepository extends IGenericRepository {
 
 	List<String> getPrivilegesByViewIdAndRoleId(Long viewId, Long roleId) throws FrameworkException;
 
+	List<String> getPrivilegesByViewIdAndUserId(Long viewId, Long applicationUserId) throws FrameworkException;
+
 }

@@ -7,6 +7,7 @@ public class ConfigurationProperty {
 	public static final String APPLICATION_URL = "configuration.system.application.url";
 	public static final String APPLICATION_EXPORT_ROW_COUNT = "configuration.system.application.export.row.count";
 	public static final String APPLICATION_DATE_FORMAT = "configuration.system.application.date.format";
+	public static final String APPLICATION_CONSOLIDATE_ROLE = "configuration.system.application.consolidate.role";
 	public static final String APPLICATION_LOGO = "configuration.system.application.logo";
 	public static final String APPLICATION_LOGO_HEIGHT = "configuration.system.application.logo.height";
 	public static final String APPLICATION_LOGO_WIDTH = "configuration.system.application.logo.width";

@@ -19,6 +19,7 @@ import software.simple.solutions.framework.core.entities.ApplicationUserRequestR
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.event.ApplicationUserEvent;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
@@ -34,12 +35,12 @@ import software.simple.solutions.framework.core.service.IApplicationUserService;
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IMailService;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
+import software.simple.solutions.framework.core.service.IPersonService;
 import software.simple.solutions.framework.core.util.ActiveDirectoryConnectionUtils;
 import software.simple.solutions.framework.core.util.Placeholders;
 import software.simple.solutions.framework.core.util.StringUtil;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
-import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
@@ -54,6 +55,9 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 	@Autowired
 	private IApplicationUserRequestResetPasswordService applicationUserRequestResetPasswordService;
+
+	@Autowired
+	private IPersonService personService;
 
 	@Autowired
 	private IPersonInformationService personInformationService;
@@ -107,7 +111,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 		applicationUser.setUseLdap(vo.getUseLdap());
 
 		applicationUser = saveOrUpdate(applicationUser, vo.isNew());
-		updateUserEmail(vo);
+		personService.updatePersonEmail(vo.getPersonId(), vo.getEmail());
 
 		if (vo.isNew()) {
 			sendPasswordToNewUser(applicationUser, vo);
@@ -126,23 +130,6 @@ public class ApplicationUserService extends SuperService implements IApplication
 			mailService.createImmediateMailMessage(MailTemplates.SEND_PASSWORD_TO_NEW_USER, email, vo.getUpdatedBy(),
 					placeholders.getMap());
 		}
-	}
-
-	private void updateUserEmail(ApplicationUserVO vo) throws FrameworkException {
-		PersonInformationVO personInformationVO = new PersonInformationVO();
-		personInformationVO.setPersonId(vo.getPersonId());
-		personInformationVO.setPrimaryEmail(vo.getEmail());
-		personInformationVO.setUpdatedBy(vo.getUpdatedBy());
-		// personInformationVO.setUpdatedDate(vo.getUpdatedDate());
-		personInformationService.updateApplicationUserEmail(personInformationVO);
-	}
-
-	private void updateMobileNumber(ApplicationUserVO vo) throws FrameworkException {
-		PersonInformationVO personInformationVO = new PersonInformationVO();
-		personInformationVO.setPersonId(vo.getPersonId());
-		personInformationVO.setPrimaryContactNumber(vo.getMobileNumber());
-		personInformationVO.setUpdatedBy(vo.getUpdatedBy());
-		personInformationService.updateApplicationUserMobileNumber(personInformationVO);
 	}
 
 	private SecurityValidation validatePasswords(String password, String confirmPassword) throws FrameworkException {
@@ -568,15 +555,18 @@ public class ApplicationUserService extends SuperService implements IApplication
 		applicationUser.setPerson(person);
 		saveOrUpdate(applicationUser, true);
 
-		updateUserEmail(vo);
-		updateMobileNumber(vo);
+		personService.updatePersonEmail(vo.getPersonId(), vo.getEmail());
+		personService.updatePersonMobileNumber(vo.getPersonId(), vo.getMobileNumber());
 
 		sendRegistrationMailToNewUser(applicationUser, vo);
+
+		applicationEventPublisher.publishEvent(new ApplicationUserEvent(applicationUser, true));
 
 		return new SecurityValidation(true);
 	}
 
-	private void sendRegistrationMailToNewUser(ApplicationUser applicationUser, ApplicationUserVO vo)
+	@Override
+	public void sendRegistrationMailToNewUser(ApplicationUser applicationUser, ApplicationUserVO vo)
 			throws FrameworkException {
 		Configuration configuration = configurationService.getByCode(ConfigurationProperty.SMTP_ENABLE);
 		if (configuration != null && configuration.getBoolean()) {

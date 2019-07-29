@@ -21,4 +21,8 @@ public interface IMenuRepository extends IGenericRepository {
 
 	List<Menu> getPossibleHomeViews() throws FrameworkException;
 
+	Boolean doesUserHaveAccess(Long applicationUserId, Long roleId, Long menuId) throws FrameworkException;
+
+	List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException;
+
 }

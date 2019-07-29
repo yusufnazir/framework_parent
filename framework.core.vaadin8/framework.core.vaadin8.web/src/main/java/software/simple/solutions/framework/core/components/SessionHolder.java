@@ -1,11 +1,14 @@
 package software.simple.solutions.framework.core.components;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import com.google.common.eventbus.EventBus;
+import com.vaadin.ui.Component;
 
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Role;
@@ -26,6 +29,11 @@ public class SessionHolder implements Serializable {
 	private Locale locale;
 	private ConcurrentMap<String, Object> referenceKeys;
 	private String password;
+	private Map<String, Component> generatedMenus;
+
+	public SessionHolder() {
+		generatedMenus = new HashMap<String, Component>();
+	}
 
 	public ApplicationUser getApplicationUser() {
 		return applicationUser;
@@ -117,6 +125,30 @@ public class SessionHolder implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Map<String, Component> getGeneratedMenus() {
+		return generatedMenus;
+	}
+
+	public void setGeneratedMenus(Map<String, Component> generatedMenus) {
+		this.generatedMenus = generatedMenus;
+	}
+
+	public void addGeneratedMenu(String uuid, Component component) {
+		generatedMenus.put(uuid, component);
+	}
+
+	public void removeGeneratedMenu(String uuid) {
+		generatedMenus.remove(uuid);
+	}
+
+	public boolean uuidExists(String uuid) {
+		return generatedMenus.containsKey(uuid);
+	}
+
+	public Component getGeneratedMenu(String uuid) {
+		return generatedMenus.get(uuid);
 	}
 
 }

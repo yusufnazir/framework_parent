@@ -30,6 +30,8 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	private Object forwardToSearchEntity;
 	private BehaviorSubject<Object> updateObserver;
 	private Boolean viewContentUpdated = false;
+	private String parentReferenceKey;
+	private String uuid;
 
 	public AbstractBaseView() {
 		super();
@@ -94,7 +96,7 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	public void addReferenceKey(String key, Object value) {
 		referenceKeys.put(key, value);
 	}
-	
+
 	public void addObserverReferenceKey(String key) {
 		referenceKeys.put(key, BehaviorSubject.create());
 	}
@@ -224,6 +226,22 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 
 	public void setViewContentUpdated(Boolean viewContentUpdated) {
 		this.viewContentUpdated = viewContentUpdated;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getParentReferenceKey() {
+		return parentReferenceKey;
+	}
+
+	public void setParentReferenceKey(String parentReferenceKey) {
+		this.parentReferenceKey = parentReferenceKey;
 	}
 
 }

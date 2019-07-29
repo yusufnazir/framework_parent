@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -15,7 +16,9 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IPersonRepository;
+import software.simple.solutions.framework.core.service.IPersonInformationService;
 import software.simple.solutions.framework.core.service.IPersonService;
+import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
@@ -25,6 +28,9 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 public class PersonService extends SuperService implements IPersonService {
 
 	private static final long serialVersionUID = 6213241143645131281L;
+
+	@Autowired
+	private IPersonInformationService personInformationService;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -38,18 +44,18 @@ public class PersonService extends SuperService implements IPersonService {
 			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(PersonProperty.LAST_NAME));
 		}
-//		if (vo.getDateOfBirth() == null) {
-//			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-//					new Arg().key(PersonProperty.DATE_OF_BIRTH));
-//		}
-		if (vo.getDateOfBirth()!=null && vo.getDateOfBirth().compareTo(LocalDate.now()) > 0) {
+		// if (vo.getDateOfBirth() == null) {
+		// throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+		// new Arg().key(PersonProperty.DATE_OF_BIRTH));
+		// }
+		if (vo.getDateOfBirth() != null && vo.getDateOfBirth().compareTo(LocalDate.now()) > 0) {
 			throw new FrameworkException(SystemMessageProperty.NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE,
 					new Arg().key(PersonProperty.DATE_OF_BIRTH));
 		}
-//		if (vo.getGenderId() == null) {
-//			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-//					new Arg().key(PersonProperty.GENDER));
-//		}
+		// if (vo.getGenderId() == null) {
+		// throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+		// new Arg().key(PersonProperty.GENDER));
+		// }
 
 		Person person = null;
 		if (vo.isNew()) {
@@ -65,6 +71,22 @@ public class PersonService extends SuperService implements IPersonService {
 		person.setActive(vo.getActive());
 
 		return (T) saveOrUpdate(person, vo.isNew());
+	}
+
+	@Override
+	public void updatePersonEmail(Long personId, String email) throws FrameworkException {
+		PersonInformationVO personInformationVO = new PersonInformationVO();
+		personInformationVO.setPersonId(personId);
+		personInformationVO.setPrimaryEmail(email);
+		personInformationService.updatePersonEmail(personInformationVO);
+	}
+
+	@Override
+	public void updatePersonMobileNumber(Long personId, String mobileNumber) throws FrameworkException {
+		PersonInformationVO personInformationVO = new PersonInformationVO();
+		personInformationVO.setPersonId(personId);
+		personInformationVO.setPrimaryContactNumber(mobileNumber);
+		personInformationService.updatePersonMobileNumber(personInformationVO);
 	}
 
 }

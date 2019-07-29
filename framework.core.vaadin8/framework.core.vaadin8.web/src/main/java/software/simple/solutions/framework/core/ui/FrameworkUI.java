@@ -1,5 +1,8 @@
 package software.simple.solutions.framework.core.ui;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -7,8 +10,11 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
+import com.vaadin.server.RequestHandler;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
@@ -39,7 +45,7 @@ import software.simple.solutions.framework.core.web.view.LoginView;
  * initialize non-component functionality.
  */
 @Theme(value = CxodeTheme.CXODE)
-public class FrameworkUI extends UI {
+public class FrameworkUI extends UI implements RequestHandler {
 
 	private static final long serialVersionUID = 845098824732445156L;
 
@@ -54,6 +60,7 @@ public class FrameworkUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
+		getSession().addRequestHandler(this);
 		sessionHolder = new SessionHolder();
 		sessionHolder.setLogoutPageLocation(vaadinRequest.getContextPath() + "/app");
 		sessionHolder.setLocale(UI.getCurrent().getLocale());
@@ -107,7 +114,7 @@ public class FrameworkUI extends UI {
 				if (configuration != null) {
 					layoutType = configuration.getLong();
 				}
-				if (layoutType == null) {
+				if (layoutType == null || layoutType.compareTo(0l) == 0) {
 					layoutType = LayoutType.TOP_MENU;
 				}
 
@@ -131,6 +138,24 @@ public class FrameworkUI extends UI {
 	@Subscribe
 	public void userLoginRequested(final UserLoginRequestedEvent event) throws FrameworkException {
 		updateContent();
+	}
+
+	@Override
+	public boolean handleRequest(VaadinSession session, VaadinRequest request, VaadinResponse response)
+			throws IOException {
+		String pathInfo = request.getPathInfo();
+		System.out.println("pathInfo:" + pathInfo);
+		Map<String, String[]> parameterMap = request.getParameterMap();
+		System.out.println("parameterMap:" + parameterMap);
+		return false;
+	}
+
+	@Override
+	public void detach() {
+		super.detach();
+
+		// Clean up
+		getSession().removeRequestHandler(this);
 	}
 
 }

@@ -48,7 +48,7 @@ public class PersonInformationService extends SuperService implements IPersonInf
 	}
 
 	@Override
-	public PersonInformation updateApplicationUserEmail(PersonInformationVO vo) throws FrameworkException {
+	public PersonInformation updatePersonEmail(PersonInformationVO vo) throws FrameworkException {
 		PersonInformation personInformation = getByPerson(vo.getPersonId());
 		boolean isNew = personInformation==null;
 		if (personInformation == null) {
@@ -63,7 +63,7 @@ public class PersonInformationService extends SuperService implements IPersonInf
 	}
 
 	@Override
-	public PersonInformation updateApplicationUserMobileNumber(PersonInformationVO vo) throws FrameworkException {
+	public PersonInformation updatePersonMobileNumber(PersonInformationVO vo) throws FrameworkException {
 		PersonInformation personInformation = getByPerson(vo.getPersonId());
 		boolean isNew = personInformation==null;
 		if (personInformation == null) {

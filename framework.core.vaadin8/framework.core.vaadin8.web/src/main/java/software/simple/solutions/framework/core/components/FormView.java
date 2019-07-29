@@ -1,7 +1,7 @@
 package software.simple.solutions.framework.core.components;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	private static final Logger logger = LogManager.getLogger(FormView.class);
 
 	private ViewDetail viewDetail;
-	private Map<String, Object> referenceKeys;
+	private ConcurrentMap<String, Object> referenceKeys;
 	protected SessionHolder sessionHolder;
 	private String validationMessage;
 	private Object parentEntity;
@@ -36,7 +36,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 		setMargin(false);
 		setWidth("-1px");
 		addStyleName(Style.MAIN_VIEW_HEADER_MARGINS);
-		referenceKeys = new HashMap<String, Object>();
+		referenceKeys = new ConcurrentHashMap<String, Object>();
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		validationMessage = "system.notif.validation.error";
 	}
@@ -126,6 +126,22 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 
 	public void setSelectedEntity(Object selectedEntity) {
 		this.selectedEntity = selectedEntity;
+	}
+
+	public void addToReferenceKey(String key, Object value) {
+		referenceKeys.put(key, value);
+	}
+
+	public <T> T getReferenceKey(String key) {
+		return (T) referenceKeys.get(key);
+	}
+
+	public ConcurrentMap<String, Object> getReferenceKeys() {
+		return referenceKeys;
+	}
+
+	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
+		this.referenceKeys = referenceKeys;
 	}
 
 }

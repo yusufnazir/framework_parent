@@ -18,13 +18,13 @@ import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Privileges;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
-import software.simple.solutions.framework.core.service.IPersonService;
 import software.simple.solutions.framework.core.service.facade.PersonServiceFacade;
 import software.simple.solutions.framework.core.upload.ImageField;
 import software.simple.solutions.framework.core.util.ComponentUtil;
@@ -184,6 +184,8 @@ public class PersonView extends BasicTemplate<Person> {
 		@Override
 		public Person setFormValues(Object entity) throws FrameworkException {
 			person = (Person) entity;
+			addToReferenceKey(ReferenceKey.PERSON, person);
+
 			firstNameFld.setValue(person.getFirstName());
 			middleNameFld.setValue(person.getMiddleName());
 			lastNameFld.setValue(person.getLastName());

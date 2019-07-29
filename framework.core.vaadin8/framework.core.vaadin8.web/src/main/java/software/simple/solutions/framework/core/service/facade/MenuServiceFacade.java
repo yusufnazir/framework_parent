@@ -34,6 +34,11 @@ public class MenuServiceFacade extends SuperServiceFacade<IMenuService> implemen
 	public List<Menu> findAuthorizedMenus(Long roleId) throws FrameworkException {
 		return service.findAuthorizedMenus(roleId);
 	}
+	
+	@Override
+	public List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException {
+		return service.findAuthorizedMenusByUser(applicationUserId);
+	}
 
 	@Override
 	public List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException {
@@ -51,6 +56,11 @@ public class MenuServiceFacade extends SuperServiceFacade<IMenuService> implemen
 
 	public List<Menu> getPossibleHomeViews() throws FrameworkException {
 		return service.getPossibleHomeViews();
+	}
+
+	@Override
+	public Boolean doesUserHaveAccess(Long applicationUserId, Long roleId, Long menuId) throws FrameworkException {
+		return service.doesUserHaveAccess(applicationUserId, roleId, menuId);
 	}
 
 }

@@ -61,6 +61,11 @@ public class MenuService extends SuperService implements IMenuService {
 	public List<Menu> findAuthorizedMenus(Long roleId) throws FrameworkException {
 		return menuRepository.findAuthorizedMenus(roleId);
 	}
+	
+	@Override
+	public List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException{
+		return menuRepository.findAuthorizedMenusByUser(applicationUserId);
+	}
 
 	@Override
 	public List<Menu> findTabMenus(Long parentMenuId, Long roleId) throws FrameworkException {
@@ -80,6 +85,11 @@ public class MenuService extends SuperService implements IMenuService {
 	@Override
 	public List<Menu> getPossibleHomeViews() throws FrameworkException {
 		return menuRepository.getPossibleHomeViews();
+	}
+
+	@Override
+	public Boolean doesUserHaveAccess(Long applicationUserId, Long roleId, Long menuId) throws FrameworkException {
+		return menuRepository.doesUserHaveAccess(applicationUserId, roleId, menuId);
 	}
 
 }

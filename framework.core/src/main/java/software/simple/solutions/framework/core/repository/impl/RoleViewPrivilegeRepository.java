@@ -15,6 +15,8 @@ import software.simple.solutions.framework.core.repository.IRoleViewPrivilegeRep
 @Repository
 public class RoleViewPrivilegeRepository extends GenericRepository implements IRoleViewPrivilegeRepository {
 
+	private static final long serialVersionUID = -541462290405216742L;
+
 	@Override
 	public List<Privilege> getByViewIdAndRoleId(Long viewId, Long roleId) throws FrameworkException {
 		if (viewId == null || roleId == null) {
@@ -34,10 +36,24 @@ public class RoleViewPrivilegeRepository extends GenericRepository implements IR
 			return Collections.emptyList();
 		}
 		ConcurrentMap<String, Object> paramMap = createParamMap();
-		String query = "select rvp.privilege.code from RoleViewPrivilege rvp left join RoleView rv on rv.id=rvp.roleView.id "
+		String query = "select distinct rvp.privilege.code from RoleViewPrivilege rvp left join RoleView rv on rv.id=rvp.roleView.id "
 				+ "where rv.view.id=:viewId " + "and rv.role.id=:roleId";
 		paramMap.put("viewId", viewId);
 		paramMap.put("roleId", roleId);
+		return createListQuery(query, paramMap);
+	}
+
+	@Override
+	public List<String> getPrivilegesByViewIdAndUserId(Long viewId, Long applicationUserId) throws FrameworkException {
+		if (viewId == null || applicationUserId == null) {
+			return Collections.emptyList();
+		}
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select distinct rvp.privilege.code from RoleViewPrivilege rvp "
+				+ "left join RoleView rv on rv.id=rvp.roleView.id " + "left join UserRole ur on ur.role.id=rv.role.id "
+				+ "where rv.view.id=:viewId " + "and ur.applicationUser.id=:applicationUserId";
+		paramMap.put("viewId", viewId);
+		paramMap.put("applicationUserId", applicationUserId);
 		return createListQuery(query, paramMap);
 	}
 

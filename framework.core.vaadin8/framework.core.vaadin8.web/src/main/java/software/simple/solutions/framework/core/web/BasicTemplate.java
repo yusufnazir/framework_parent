@@ -27,6 +27,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.Orientation;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -97,10 +98,12 @@ import software.simple.solutions.framework.core.properties.AuditProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
+import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
+import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortingHelper;
@@ -299,8 +302,23 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void setUpActionBar() throws FrameworkException {
 		actionBar = new ActionBar();
 
-		List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndRoleId(
-				getViewDetail().getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+		List<String> privileges = new ArrayList<String>();
+
+		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+		Configuration consolidateRoleConfiguration = configurationService
+				.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
+		boolean consolidateRoles = false;
+		if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
+			consolidateRoles = true;
+		}
+
+		if (consolidateRoles) {
+			privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndUserId(
+					getViewDetail().getMenu().getView().getId(), getSessionHolder().getApplicationUser().getId());
+		} else {
+			privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndRoleId(
+					getViewDetail().getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+		}
 
 		// ActionState actionState =
 		// ViewActionStateUtil.createActionState(getViewDetail().getPrivileges(),
@@ -562,6 +580,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		formView.setParentEntity(getParentEntity());
+		if (getParentReferenceKey() != null) {
+			formView.addToReferenceKey(getParentReferenceKey(), getParentEntity());
+		}
 		formView.setSelectedEntity(getSelectedEntity());
 		formView.setViewDetail(getViewDetail());
 		formView.executeBuild();
@@ -589,6 +610,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		readonlyFormView.setParentEntity(getParentEntity());
+		if (getParentReferenceKey() != null) {
+			readonlyFormView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
+		}
 		readonlyFormView.setSelectedEntity(getSelectedEntity());
 		readonlyFormView.setViewDetail(getViewDetail());
 		readonlyFormView.executeBuild();
@@ -602,7 +626,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formLayout.addComponentAsFirst(formPanel);
 	}
 
-	private void createSubTabs() throws FrameworkException {
+	private void createSubTabs(boolean editable) throws FrameworkException {
 		subTabSheet = new TabSheet();
 		subTabSheet.setVisible(false);
 		subTabSheet.setSizeFull();
@@ -618,7 +642,16 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			for (int i = 0; i < tabMenus.size(); i++) {
 				SimpleSolutionsMenuItem viewItem = tabMenus.get(i);
 				AbstractBaseView subView = initSubView(viewItem);
-				subView.setReferenceKeys(getReferenceKeys());
+				if (editable) {
+					subView.setReferenceKeys(formView.getReferenceKeys());
+				} else {
+					if (readonlyFormClass != null) {
+						subView.setReferenceKeys(readonlyFormView.getReferenceKeys());
+					} else {
+						subView.setReferenceKeys(formView.getReferenceKeys());
+					}
+				}
+
 				subView.getViewDetail().setView(viewItem.getMenu().getView());
 				subTabSheet.addTab(subView);
 				subTabSheet.getTab(subView).setCaption(viewItem.getMenu().getName());
@@ -655,22 +688,34 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private AbstractBaseView initSubView(SimpleSolutionsMenuItem viewItem) throws FrameworkException {
 		try {
-			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass(),
-					getSessionHolder().getSelectedRole().getId());
+			AbstractBaseView view = ViewUtil.initView(viewItem.getViewClass());
 
-			List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
-					.getPrivilegesByViewIdAndRoleId(viewItem.getMenu().getView().getId(),
-							getSessionHolder().getSelectedRole().getId());
 			ViewDetail viewDetail = view.getViewDetail();
-			viewDetail.setPrivileges(privileges);
+
+			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+			Configuration consolidateRoleConfiguration = configurationService
+					.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
+			boolean consolidateRoles = false;
+			if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
+				consolidateRoles = true;
+			}
+
+			if (consolidateRoles) {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndUserId(viewItem.getMenu().getView().getId(),
+								getSessionHolder().getApplicationUser().getId());
+				viewDetail.setPrivileges(privileges);
+				viewDetail.setActionState(new ActionState(privileges));
+			} else {
+				List<String> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+						.getPrivilegesByViewIdAndRoleId(viewItem.getMenu().getView().getId(),
+								getSessionHolder().getSelectedRole().getId());
+				viewDetail.setPrivileges(privileges);
+				viewDetail.setActionState(new ActionState(privileges));
+			}
+
 			viewDetail.setMenu(viewItem.getMenu());
 			viewDetail.setViewId(viewItem.getMenu().getView().getId());
-
-			// ActionState actionState =
-			// ViewActionStateUtil.createActionState(viewDetail.getPrivileges(),
-			// viewItem.getMenu().getView().getId(),
-			// getSessionHolder().getApplicationUser().getId());
-			viewDetail.setActionState(new ActionState(privileges));
 
 			view.setViewDetail(viewDetail);
 			view.setSessionHolder(getSessionHolder());
@@ -683,7 +728,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void executeSubMenuBuild(AbstractBaseView view) throws FrameworkException {
 		view.setParentEntity(getSelectedEntity());
 		view.executeBuild();
-		view.setReferenceKeys(getReferenceKeys());
 		view.executeTab();
 		if (view instanceof BasicTemplate<?>) {
 			((BasicTemplate<?>) view).setGridHeightMode(HeightMode.UNDEFINED);
@@ -749,6 +793,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 		filterView.setViewDetail(getViewDetail());
 		filterView.setParentEntity(getParentEntity());
+		filterView.setReferenceKeys(getReferenceKeys());
 		filterView.executeBuild();
 		filterPanel = new Panel();
 		filterPanel.setVisible(advancedSearch);
@@ -884,6 +929,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			public void menuSelected(MenuItem selectedItem) {
 				resetErrorContent();
 				initNewForm();
+				String state = UI.getCurrent().getNavigator().getState();
+				Page.getCurrent().pushState(state + "/teststate");
 			}
 		});
 
@@ -1325,7 +1372,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			actionBar.authorizeEdit();
 		}
 
-		createSubTabs();
+		createSubTabs(editable);
 	}
 
 	private void resetAllSelectCheckBoxes() {

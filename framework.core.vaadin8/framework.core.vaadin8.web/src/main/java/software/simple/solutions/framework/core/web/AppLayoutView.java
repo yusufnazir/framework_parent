@@ -120,6 +120,8 @@ public class AppLayoutView extends VerticalLayout {
 		tabSheet.setVisible(false);
 		tabSheet.addSelectedTabChangeListener(new SelectedTabChangeListener() {
 
+			private static final long serialVersionUID = -7530334462975633736L;
+
 			@Override
 			public void selectedTabChange(SelectedTabChangeEvent event) {
 				if (tabSheet.getComponentCount() > 0) {
@@ -143,6 +145,17 @@ public class AppLayoutView extends VerticalLayout {
 						"system.tab.closed", UI.getCurrent().getLocale(), new Object[] { tabContent.getCaption() }));
 				notification.show(Page.getCurrent());
 				tabsheet.removeComponent(tabContent);
+				
+				if (tabSheet.getComponentCount() > 0) {
+					tabSheet.setVisible(true);
+				} else {
+					tabSheet.setVisible(false);
+				}
+				if (tabSheet.getComponentCount() == 1) {
+					tabSheet.setTabsVisible(false);
+				} else {
+					tabSheet.setTabsVisible(true);
+				}
 			}
 
 			@Override
@@ -201,7 +214,8 @@ public class AppLayoutView extends VerticalLayout {
 
 							@Override
 							public void showView(View view) {
-								tabSheet.addComponent(view.getViewComponent());
+//								System.out.println(view);
+//								tabSheet.addComponent(view.getViewComponent());
 							}
 						};
 						return new Navigator(ui, viewDisplay);
@@ -255,6 +269,7 @@ public class AppLayoutView extends VerticalLayout {
 					abstractBaseView.executeSearch();
 					abstractBaseView.setMargin(true);
 
+					tabSheet.addTab(abstractBaseView);
 					String menuName = menu.getKey() == null ? menu.getName()
 							: PropertyResolver.getPropertyValueByLocale(menu.getKey(), UI.getCurrent().getLocale());
 					tabSheet.getTab(abstractBaseView).setCaption(menuName);
@@ -285,6 +300,8 @@ public class AppLayoutView extends VerticalLayout {
 					String menuName = homeMenu.getKey() == null ? homeMenu.getName()
 							: PropertyResolver.getPropertyValueByLocale(homeMenu.getKey(), UI.getCurrent().getLocale());
 					navigatorAppLayoutBuilder.addClickable(menuName, fontAwesome, new Button.ClickListener() {
+
+						private static final long serialVersionUID = -8337443024708870791L;
 
 						@Override
 						public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
@@ -347,8 +364,7 @@ public class AppLayoutView extends VerticalLayout {
 		if (homeMenu != null) {
 			Class<? extends View> viewClass = (Class<? extends View>) Class
 					.forName(homeMenu.getView().getViewClassName());
-			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(viewClass,
-					sessionHolder.getSelectedRole().getId());
+			AbstractBaseView abstractBaseView = (AbstractBaseView) ViewUtil.initView(viewClass);
 			if (abstractBaseView == null) {
 				Notification notification = new Notification(PropertyResolver.getPropertyValueByLocale(
 						"core.menu.no.view.found", UI.getCurrent().getLocale()), Type.ERROR_MESSAGE);
@@ -475,8 +491,8 @@ public class AppLayoutView extends VerticalLayout {
 			}
 		}).start();
 	}
-	
-	private void toggleProfilePopUpLayout(){
+
+	private void toggleProfilePopUpLayout() {
 		if (profilePopUpOpen) {
 			profilePopUpLayout.removeStyleName("open");
 		} else {

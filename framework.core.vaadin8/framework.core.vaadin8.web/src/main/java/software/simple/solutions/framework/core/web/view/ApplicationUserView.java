@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
@@ -28,6 +29,7 @@ import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Person;
@@ -53,12 +55,18 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 	private static final long serialVersionUID = 6503015064562511801L;
 
+	@Override
+	public void enter(ViewChangeEvent event) {
+		super.enter(event);
+	}
+
 	public ApplicationUserView() {
 		setEntityClass(ApplicationUser.class);
 		setServiceClass(ApplicationUserServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setReadonlyFormClass(ReadonlyForm.class);
+		setParentReferenceKey(ReferenceKey.APPLICATION_USER);
 	}
 
 	@Override
@@ -339,6 +347,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		public ApplicationUser setFormValues(Object entity) throws FrameworkException {
 			applicationUser = (ApplicationUser) entity;
 			person = applicationUser.getPerson();
+			addToReferenceKey(ReferenceKey.PERSON, person);
 
 			usernameFld.setReadOnly(true);
 			usernameFld.setValue(applicationUser.getUsername());
@@ -579,6 +588,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		public ApplicationUser setFormValues(Object entity) throws FrameworkException {
 			applicationUser = (ApplicationUser) entity;
 			person = applicationUser.getPerson();
+			addToReferenceKey(ReferenceKey.APPLICATION_USER, applicationUser);
+			addToReferenceKey(ReferenceKey.PERSON, person);
 
 			usernameFld.setValue(applicationUser.getUsername());
 			activeFld.setValue(applicationUser.getActive());
@@ -588,8 +599,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			ThemeResource resource = new ThemeResource("img/profile-pic-300px.jpg");
 			imageFld.setSource(resource);
 			imageFld.setHeight("120px");
-			
-			if(person!=null){
+
+			if (person != null) {
 				String email = PersonInformationServiceFacade.get(UI.getCurrent()).getEmail(person.getId());
 				emailFld.setValue(email);
 			}
