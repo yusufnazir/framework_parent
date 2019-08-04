@@ -2,10 +2,10 @@ package software.simple.solutions.framework.core.service.impl;
 
 import java.io.File;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.EntityFile;
@@ -16,7 +16,7 @@ import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 
 @Service
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IFileRepository.class)
 public class FileService extends SuperService implements IFileService {
 

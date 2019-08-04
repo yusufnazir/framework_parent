@@ -1,9 +1,19 @@
 package software.simple.solutions.framework.core.web.view;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.vaadin.data.ValueProvider;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
@@ -17,18 +27,24 @@ import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
+import software.simple.solutions.framework.core.constants.FileReference;
 import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
+import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
+import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.facade.PersonServiceFacade;
 import software.simple.solutions.framework.core.upload.ImageField;
+import software.simple.solutions.framework.core.upload.ImageField.UploadImage;
 import software.simple.solutions.framework.core.util.ComponentUtil;
+import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
@@ -37,6 +53,8 @@ import software.simple.solutions.framework.core.web.BasicTemplate;
 public class PersonView extends BasicTemplate<Person> {
 
 	private static final long serialVersionUID = 6503015064562511801L;
+
+	private static final Logger logger = LogManager.getLogger(PersonView.class);
 
 	public PersonView() {
 		setEntityClass(Person.class);
@@ -56,7 +74,41 @@ public class PersonView extends BasicTemplate<Person> {
 			public Image apply(Person source) {
 				Image image = new Image();
 				image.setSource(CxodeIcons.PROFILE_IMAGE);
+				image.setHeight("75px");
 				image.setWidth("75px");
+				image.addStyleName("appbar-profile-image");
+
+				Thread thread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							image.setSource(CxodeIcons.PROFILE_IMAGE);
+							IFileService fileService = ContextProvider.getBean(IFileService.class);
+							EntityFile entityFile = fileService.findFileByEntityAndType(source.getId().toString(),
+									ReferenceKey.PERSON, FileReference.USER_PROFILE_IMAGE);
+
+							if (entityFile != null) {
+								image.setSource(new StreamResource(new StreamSource() {
+
+									private static final long serialVersionUID = -9150451917237177393L;
+
+									@Override
+									public InputStream getStream() {
+										if (entityFile == null || entityFile.getFileObject() == null) {
+											return null;
+										}
+										return new ByteArrayInputStream(entityFile.getFileObject());
+									}
+								}, entityFile.getName()));
+							}
+						} catch (FrameworkException e) {
+							logger.error(e.getMessage(), e);
+						}
+					}
+				});
+				thread.start();
+
 				return image;
 			}
 		}, PersonProperty.IMAGE);
@@ -149,7 +201,30 @@ public class PersonView extends BasicTemplate<Person> {
 
 			imageField = new ImageField();
 			imageField.setImageHeight("100px");
+			imageField.setImageWidth("100px");
 			personInfoLayout.addComponent(imageField);
+			imageField.setUploadHandler(new UploadImage() {
+
+				@Override
+				public void upload(InputStream inputStream) {
+					try {
+						byte[] byteArray = IOUtils.toByteArray(inputStream);
+						IFileService fileService = ContextProvider.getBean(IFileService.class);
+						EntityFileVO entityFileVO = new EntityFileVO();
+						entityFileVO.setActive(true);
+						entityFileVO.setDatabase(true);
+						entityFileVO.setFilename(person.getCode() + ".png");
+						entityFileVO.setEntityName(ReferenceKey.PERSON);
+						entityFileVO.setEntityId(person.getId().toString());
+						entityFileVO.setTypeOfFile(FileReference.USER_PROFILE_IMAGE);
+						entityFileVO.setFileObject(byteArray);
+						fileService.upLoadFile(entityFileVO);
+					} catch (IOException | FrameworkException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 
 			formGrid = ComponentUtil.createGrid();
 			personInfoLayout.addComponent(formGrid);
@@ -198,6 +273,25 @@ public class PersonView extends BasicTemplate<Person> {
 			lastNameFld.setRequiredIndicatorVisible(true);
 			dateOfBirthFld.setRequiredIndicatorVisible(true);
 			genderFld.setRequiredIndicatorVisible(true);
+
+			IFileService fileService = ContextProvider.getBean(IFileService.class);
+			EntityFile entityFile = fileService.findFileByEntityAndType(person.getId().toString(), ReferenceKey.PERSON,
+					FileReference.USER_PROFILE_IMAGE);
+			if (entityFile != null) {
+				imageField.setSource(new StreamResource(new StreamSource() {
+
+					private static final long serialVersionUID = -1143826625995236036L;
+
+					@Override
+					public InputStream getStream() {
+						if (entityFile == null || entityFile.getFileObject() == null) {
+							return null;
+						}
+						return new ByteArrayInputStream(entityFile.getFileObject());
+					}
+				}, entityFile.getName()));
+			}
+
 			return person;
 		}
 

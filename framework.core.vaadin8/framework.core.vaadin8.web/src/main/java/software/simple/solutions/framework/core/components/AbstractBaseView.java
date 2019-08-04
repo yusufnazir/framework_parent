@@ -244,4 +244,8 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		this.parentReferenceKey = parentReferenceKey;
 	}
 
+	public boolean isSubMenuValid() {
+		return true;
+	}
+
 }

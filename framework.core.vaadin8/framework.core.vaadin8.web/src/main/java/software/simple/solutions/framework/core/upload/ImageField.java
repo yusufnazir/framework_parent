@@ -1,7 +1,10 @@
 package software.simple.solutions.framework.core.upload;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+
+import org.apache.commons.io.IOUtils;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
@@ -28,6 +31,13 @@ public class ImageField extends VerticalLayout implements Upload.SucceededListen
 	private Image image;
 	private Upload upload;
 	private UploadFieldReceiver receiver;
+	private UploadImage uploadImage;
+
+	public interface UploadImage {
+
+		public void upload(InputStream inputStream);
+
+	}
 
 	public ImageField() {
 		setMargin(false);
@@ -68,6 +78,9 @@ public class ImageField extends VerticalLayout implements Upload.SucceededListen
 
 			@Override
 			public InputStream getStream() {
+				if (uploadImage != null) {
+					uploadImage.upload(receiver.getContentAsStream());
+				}
 				return receiver.getContentAsStream();
 			}
 		}, UUID.randomUUID().toString());
@@ -92,6 +105,37 @@ public class ImageField extends VerticalLayout implements Upload.SucceededListen
 
 	public void setImageHeight(String height) {
 		image.setHeight(height);
+	}
+
+	public void setImageWidth(String height) {
+		image.setWidth(height);
+	}
+
+	public UploadFieldReceiver getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UploadFieldReceiver receiver) {
+		this.receiver = receiver;
+	}
+
+	public byte[] getBytes() {
+		byte[] bytes;
+		try {
+			bytes = IOUtils.toByteArray(receiver.getContentAsStream());
+			return bytes;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new byte[0];
+	}
+
+	public void setSource(Resource source) {
+		image.setSource(source);
+	}
+
+	public void setUploadHandler(UploadImage uploadImage) {
+		this.uploadImage = uploadImage;
 	}
 
 }

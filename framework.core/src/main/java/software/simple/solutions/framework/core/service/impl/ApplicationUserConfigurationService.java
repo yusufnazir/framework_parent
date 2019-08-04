@@ -3,10 +3,10 @@ package software.simple.solutions.framework.core.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.constants.ApplicationUserConfigurationCodes;
@@ -19,11 +19,12 @@ import software.simple.solutions.framework.core.service.IApplicationUserConfigur
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserConfigurationVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IConfigurationRepository.class)
 public class ApplicationUserConfigurationService extends SuperService implements IApplicationUserConfigurationService {
 
+	private static final long serialVersionUID = -3815485237174928548L;
 	@Autowired
 	private IApplicationUserConfigurationRepository applicationUserConfigurationRepository;
 

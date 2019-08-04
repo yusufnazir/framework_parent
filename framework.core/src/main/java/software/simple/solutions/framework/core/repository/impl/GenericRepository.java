@@ -50,6 +50,8 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @Repository
 public class GenericRepository implements IGenericRepository {
 
+	private static final long serialVersionUID = -7098826691200575726L;
+
 	public static Map<Class<?>, Long> toDeleteEntityMap;
 
 	public static final Logger logger = LogManager.getLogger(GenericRepository.class);

@@ -1,11 +1,18 @@
 package software.simple.solutions.framework.core.web.view;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
@@ -29,9 +36,11 @@ import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.FileReference;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
+import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
@@ -40,21 +49,24 @@ import software.simple.solutions.framework.core.properties.ConfigurationProperty
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
+import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.facade.ApplicationUserServiceFacade;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.service.facade.PersonInformationServiceFacade;
 import software.simple.solutions.framework.core.upload.ImageField;
 import software.simple.solutions.framework.core.util.ComponentUtil;
+import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
-import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
 import software.simple.solutions.framework.core.web.view.password.ResetPasswordLayout;
 
 public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 	private static final long serialVersionUID = 6503015064562511801L;
+
+	private static final Logger logger = LogManager.getLogger(ApplicationUserView.class);
 
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -80,7 +92,44 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			public Image apply(ApplicationUser source) {
 				Image image = new Image();
 				image.setSource(CxodeIcons.PROFILE_IMAGE);
+				image.setHeight("75px");
 				image.setWidth("75px");
+				image.addStyleName("appbar-profile-image");
+
+				Thread thread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							image.setSource(CxodeIcons.PROFILE_IMAGE);
+							Person person = source.getPerson();
+							if (person != null) {
+								IFileService fileService = ContextProvider.getBean(IFileService.class);
+								EntityFile entityFile = fileService.findFileByEntityAndType(person.getId().toString(),
+										ReferenceKey.PERSON, FileReference.USER_PROFILE_IMAGE);
+
+								if (entityFile != null) {
+									image.setSource(new StreamResource(new StreamSource() {
+
+										private static final long serialVersionUID = -9150451917237177393L;
+
+										@Override
+										public InputStream getStream() {
+											if (entityFile == null || entityFile.getFileObject() == null) {
+												return null;
+											}
+											return new ByteArrayInputStream(entityFile.getFileObject());
+										}
+									}, entityFile.getName()));
+								}
+							}
+						} catch (FrameworkException e) {
+							logger.error(e.getMessage(), e);
+						}
+					}
+				});
+				thread.start();
+
 				return image;
 			}
 		}, ApplicationUserProperty.IMAGE);
@@ -307,8 +356,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 					personInfoLayout.setVisible(false);
 					if (person != null) {
 						personInfoLayout.setVisible(true);
-						setPersonInfo();
 						try {
+							setPersonInfo();
 							String email = PersonInformationServiceFacade.get(UI.getCurrent()).getEmail(person.getId());
 							emailFld.setValue(email);
 						} catch (FrameworkException e) {
@@ -342,7 +391,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 				}
 			});
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public ApplicationUser setFormValues(Object entity) throws FrameworkException {
@@ -397,7 +446,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 			return applicationUser;
 		}
-		
+
 		protected void resetPasswordAndSendMail() throws FrameworkException {
 			applicationUser = ApplicationUserServiceFacade.get(UI.getCurrent())
 					.resetUserPassword(applicationUser.getId(), sessionHolder.getApplicationUser().getId());
@@ -405,7 +454,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 		}
 
-		private void setPersonInfo() {
+		private void setPersonInfo() throws FrameworkException {
 			firstNameFld.setValue(person.getFirstName());
 			middleNameFld.setValue(person.getMiddleName());
 			lastNameFld.setValue(person.getLastName());
@@ -414,6 +463,24 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 					: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
 							UI.getCurrent().getLocale()));
 			isPersonActiveFld.setValue(person.getActive());
+
+			IFileService fileService = ContextProvider.getBean(IFileService.class);
+			EntityFile entityFile = fileService.findFileByEntityAndType(person.getId().toString(), ReferenceKey.PERSON,
+					FileReference.USER_PROFILE_IMAGE);
+			if (entityFile != null) {
+				imageField.setSource(new StreamResource(new StreamSource() {
+
+					private static final long serialVersionUID = -1143826625995236036L;
+
+					@Override
+					public InputStream getStream() {
+						if (entityFile == null || entityFile.getFileObject() == null) {
+							return null;
+						}
+						return new ByteArrayInputStream(entityFile.getFileObject());
+					}
+				}, entityFile.getName()));
+			}
 		}
 
 		@Override
@@ -590,7 +657,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			applicationUser = (ApplicationUser) entity;
 			person = applicationUser.getPerson();
 			addToReferenceKey(ReferenceKey.APPLICATION_USER, applicationUser);
-				addToReferenceKey(ReferenceKey.PERSON, person);
+			addToReferenceKey(ReferenceKey.PERSON, person);
 
 			usernameFld.setValue(applicationUser.getUsername());
 			activeFld.setValue(applicationUser.getActive());
@@ -604,6 +671,24 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			if (person != null) {
 				String email = PersonInformationServiceFacade.get(UI.getCurrent()).getEmail(person.getId());
 				emailFld.setValue(email);
+
+				IFileService fileService = ContextProvider.getBean(IFileService.class);
+				EntityFile entityFile = fileService.findFileByEntityAndType(person.getId().toString(),
+						ReferenceKey.PERSON, FileReference.USER_PROFILE_IMAGE);
+				if (entityFile != null) {
+					imageFld.setSource(new StreamResource(new StreamSource() {
+
+						private static final long serialVersionUID = -1143826625995236036L;
+
+						@Override
+						public InputStream getStream() {
+							if (entityFile == null || entityFile.getFileObject() == null) {
+								return null;
+							}
+							return new ByteArrayInputStream(entityFile.getFileObject());
+						}
+					}, entityFile.getName()));
+				}
 			}
 
 			setPersonInfo();
@@ -611,7 +696,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			return applicationUser;
 		}
 
-		private void setPersonInfo() {
+		private void setPersonInfo() throws FrameworkException {
 			personInfoLayout.setVisible(false);
 			if (person != null) {
 				personInfoLayout.setVisible(true);
@@ -625,6 +710,24 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 						: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
 								UI.getCurrent().getLocale()));
 				isPersonActiveFld.setValue(person.getActive());
+
+				IFileService fileService = ContextProvider.getBean(IFileService.class);
+				EntityFile entityFile = fileService.findFileByEntityAndType(person.getId().toString(),
+						ReferenceKey.PERSON, FileReference.USER_PROFILE_IMAGE);
+				if (entityFile != null) {
+					imageFld.setSource(new StreamResource(new StreamSource() {
+
+						private static final long serialVersionUID = -1143826625995236036L;
+
+						@Override
+						public InputStream getStream() {
+							if (entityFile == null || entityFile.getFileObject() == null) {
+								return null;
+							}
+							return new ByteArrayInputStream(entityFile.getFileObject());
+						}
+					}, entityFile.getName()));
+				}
 			}
 		}
 	}

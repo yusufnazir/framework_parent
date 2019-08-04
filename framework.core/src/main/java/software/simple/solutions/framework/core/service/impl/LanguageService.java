@@ -1,8 +1,8 @@
 package software.simple.solutions.framework.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Language;
@@ -12,7 +12,7 @@ import software.simple.solutions.framework.core.service.ILanguageService;
 import software.simple.solutions.framework.core.valueobjects.LanguageVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = ILanguageRepository.class)
 public class LanguageService extends SuperService implements ILanguageService {

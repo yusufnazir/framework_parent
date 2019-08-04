@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.View;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
 import com.vaadin.server.RequestHandler;
@@ -15,6 +16,7 @@ import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
@@ -54,9 +56,14 @@ public class FrameworkUI extends UI implements RequestHandler {
 	private final SimpleSolutionsEventBus dashboardEventbus = new SimpleSolutionsEventBus();
 
 	private SessionHolder sessionHolder;
+	private Class<? extends View> loginView;
 
 	// @Autowired
 	// private SpringViewProvider viewProvider;
+
+	public FrameworkUI() {
+		setLoginView(LoginView.class);
+	}
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
@@ -129,9 +136,13 @@ public class FrameworkUI extends UI implements RequestHandler {
 			}
 		} else {
 			getNavigator().setErrorView(ErrorView.class);
-			LoginView loginView = new LoginView();
-			this.setContent(loginView);
-			// addStyleName("loginview");
+			try {
+				Component newInstance = (Component) getLoginView().newInstance();
+				this.setContent(newInstance);
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -144,9 +155,9 @@ public class FrameworkUI extends UI implements RequestHandler {
 	public boolean handleRequest(VaadinSession session, VaadinRequest request, VaadinResponse response)
 			throws IOException {
 		String pathInfo = request.getPathInfo();
-		System.out.println("pathInfo:" + pathInfo);
+		// System.out.println("pathInfo:" + pathInfo);
 		Map<String, String[]> parameterMap = request.getParameterMap();
-		System.out.println("parameterMap:" + parameterMap);
+		// System.out.println("parameterMap:" + parameterMap);
 		return false;
 	}
 
@@ -156,6 +167,14 @@ public class FrameworkUI extends UI implements RequestHandler {
 
 		// Clean up
 		getSession().removeRequestHandler(this);
+	}
+
+	public Class<? extends View> getLoginView() {
+		return loginView;
+	}
+
+	public void setLoginView(Class<? extends View> loginView) {
+		this.loginView = loginView;
 	}
 
 }

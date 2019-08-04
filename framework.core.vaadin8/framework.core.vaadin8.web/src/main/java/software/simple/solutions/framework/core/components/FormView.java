@@ -146,9 +146,4 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
 		this.referenceKeys = referenceKeys;
 	}
-	
-	public boolean isSubMenuValid(SimpleSolutionsMenuItem viewItem) {
-		return true;
-	}
-
 }

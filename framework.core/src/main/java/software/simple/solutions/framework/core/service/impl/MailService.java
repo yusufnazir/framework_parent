@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,6 +25,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -48,7 +49,7 @@ import software.simple.solutions.framework.core.service.IPersonInformationServic
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.valueobjects.GeneratedMailVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 public class MailService extends SuperService implements IMailService {
 

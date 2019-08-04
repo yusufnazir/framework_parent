@@ -2,10 +2,10 @@ package software.simple.solutions.framework.core.service.impl;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Language;
@@ -17,7 +17,7 @@ import software.simple.solutions.framework.core.service.IPropertyPerLocaleServic
 import software.simple.solutions.framework.core.valueobjects.PropertyPerLocaleVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IPropertyPerLocaleRepository.class)
 public class PropertyPerLocaleService extends SuperService implements IPropertyPerLocaleService {

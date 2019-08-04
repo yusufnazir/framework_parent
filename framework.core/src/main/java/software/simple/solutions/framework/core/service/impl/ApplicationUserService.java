@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.constants.MailTemplates;
@@ -44,7 +44,7 @@ import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IApplicationUserRepository.class)
 public class ApplicationUserService extends SuperService implements IApplicationUserService {
 

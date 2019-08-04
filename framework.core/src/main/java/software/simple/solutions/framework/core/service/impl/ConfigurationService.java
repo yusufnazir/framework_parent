@@ -3,10 +3,10 @@ package software.simple.solutions.framework.core.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Configuration;
@@ -19,7 +19,7 @@ import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IConfigurationRepository.class)
 public class ConfigurationService extends SuperService implements IConfigurationService {

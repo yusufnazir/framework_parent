@@ -3,11 +3,11 @@ package software.simple.solutions.framework.core.service.impl;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.constants.MailTemplates;
@@ -26,7 +26,7 @@ import software.simple.solutions.framework.core.service.IMailService;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
 import software.simple.solutions.framework.core.util.Placeholders;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IApplicationUserRequestResetPasswordRepository.class)
 public class ApplicationUserRequestResetPasswordService extends SuperService

@@ -1,8 +1,8 @@
 package software.simple.solutions.framework.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.View;
@@ -12,7 +12,7 @@ import software.simple.solutions.framework.core.service.IViewService;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 import software.simple.solutions.framework.core.valueobjects.ViewVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IViewRepository.class)
 public class ViewService extends SuperService implements IViewService {

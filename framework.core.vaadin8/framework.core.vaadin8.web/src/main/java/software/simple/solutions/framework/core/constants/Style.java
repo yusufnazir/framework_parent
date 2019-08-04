@@ -74,6 +74,7 @@ public class Style {
 	public static final String RESIZED_ICON = "resized-icon";
 	public static final String RESIZED_ICON_80 = "resized-icon-80";
 	public static final String LOGIN_PANEL = "login-panel";
+	public static final String LANDING_PAGE_PANEL = "landing-page-panel";
 	public static final String LABELS = "labels";
 	public static final String FIELDS = "fields";
 	public static final String BUTTON_DANGEROUS = "dangerous";

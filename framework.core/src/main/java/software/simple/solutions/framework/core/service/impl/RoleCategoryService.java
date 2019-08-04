@@ -1,10 +1,10 @@
 package software.simple.solutions.framework.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.RoleCategory;
@@ -18,7 +18,7 @@ import software.simple.solutions.framework.core.valueobjects.RoleCategoryVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IRoleCategoryRepository.class)
 public class RoleCategoryService extends SuperService implements IRoleCategoryService {
 

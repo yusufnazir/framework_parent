@@ -1,9 +1,9 @@
 package software.simple.solutions.framework.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.RelationType;
@@ -18,7 +18,7 @@ import software.simple.solutions.framework.core.valueobjects.RelationTypeVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IRelationTypeRepository.class)
 public class RelationTypeService extends SuperService implements IRelationTypeService {
 

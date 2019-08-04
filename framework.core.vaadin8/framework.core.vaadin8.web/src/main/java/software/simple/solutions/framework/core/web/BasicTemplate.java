@@ -641,17 +641,19 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			subTabSheet.setVisible(true);
 			for (int i = 0; i < tabMenus.size(); i++) {
 				SimpleSolutionsMenuItem viewItem = tabMenus.get(i);
-				if (formView.isSubMenuValid(viewItem)) {
-					AbstractBaseView subView = initSubView(viewItem);
-					if (editable) {
-						subView.setReferenceKeys(formView.getReferenceKeys());
+				AbstractBaseView subView = initSubView(viewItem);
+				if (editable) {
+					subView.setReferenceKeys(formView.getReferenceKeys());
+				} else {
+					if (readonlyFormClass != null) {
+						subView.setReferenceKeys(readonlyFormView.getReferenceKeys());
 					} else {
-						if (readonlyFormClass != null) {
-							subView.setReferenceKeys(readonlyFormView.getReferenceKeys());
-						} else {
-							subView.setReferenceKeys(formView.getReferenceKeys());
-						}
+						subView.setReferenceKeys(formView.getReferenceKeys());
 					}
+				}
+
+				boolean isSubmenuValid = subView.isSubMenuValid();
+				if (isSubmenuValid) {
 
 					subView.getViewDetail().setView(viewItem.getMenu().getView());
 					subTabSheet.addTab(subView);

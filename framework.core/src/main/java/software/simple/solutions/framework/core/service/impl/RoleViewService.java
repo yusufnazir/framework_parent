@@ -1,9 +1,9 @@
 package software.simple.solutions.framework.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Role;
@@ -15,7 +15,7 @@ import software.simple.solutions.framework.core.service.IRoleViewService;
 import software.simple.solutions.framework.core.valueobjects.RoleViewVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IRoleViewRepository.class)
 public class RoleViewService extends SuperService implements IRoleViewService {
