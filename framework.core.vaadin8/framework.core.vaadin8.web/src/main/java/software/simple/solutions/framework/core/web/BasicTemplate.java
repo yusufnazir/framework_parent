@@ -578,7 +578,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				| IllegalAccessException | InvocationTargetException e) {
 			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
-
+		formView.setReferenceKeys(getReferenceKeys());
 		formView.setParentEntity(getParentEntity());
 		if (getParentReferenceKey() != null) {
 			formView.addToReferenceKey(getParentReferenceKey(), getParentEntity());
@@ -731,6 +731,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private void executeSubMenuBuild(AbstractBaseView view) throws FrameworkException {
 		view.setParentEntity(getSelectedEntity());
+		view.setReferenceKeys(getReferenceKeys());
 		view.executeBuild();
 		view.executeTab();
 		if (view instanceof BasicTemplate<?>) {

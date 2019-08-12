@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeRequests()
-				.antMatchers("/app**", "/actuator/**", "/vaadinServlet/**", "/VAADIN/**", "/HEARTBEAT/**", "/UIDL/**",
+				.antMatchers("/app/VAADIN/themes/wtpdfviewer/pdf.worker.js","/app/VAADIN/**","/app/**","/app**", "/actuator/**", "/vaadinServlet/**", "/VAADIN/**", "/HEARTBEAT/**", "/UIDL/**",
 						"/resources/**")
 				.permitAll().anyRequest().authenticated().and().formLogin().and().logout()
 				.logoutSuccessUrl("/login?logout");

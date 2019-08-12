@@ -188,8 +188,11 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		String query = "select m from Menu m left join RoleView rv on rv.view.id=m.view.id "
 				+ "left join RoleViewPrivilege rvp on rvp.roleView.id=rv.id " + "where rvp.privilege is not null "
-				+ "and rv.role.id=:roleId and m.id=:menuId";
-		paramMap.put("roleId", roleId);
+				+ "and m.id=:menuId";
+		if(roleId!=null){
+			query +=" and rv.role.id=:roleId ";
+			paramMap.put("roleId", roleId);
+		}
 		paramMap.put("menuId", menuId);
 		Menu menu = getByQuery(query, paramMap);
 		return menu != null;

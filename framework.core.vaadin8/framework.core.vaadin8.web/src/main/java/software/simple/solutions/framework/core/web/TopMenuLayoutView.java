@@ -114,6 +114,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private Image applicationLogoImage;
 	private Navigator navigator;
 	private UI ui;
+	private boolean authorizationByRole = true;
 
 	public TopMenuLayoutView() throws FrameworkException {
 		super();
@@ -145,9 +146,15 @@ public class TopMenuLayoutView extends VerticalLayout {
 				if (menuId != null) {
 					IMenuService menuService = ContextProvider.getBean(IMenuService.class);
 					try {
-						boolean userHasAccess = menuService.doesUserHaveAccess(
-								sessionHolder.getApplicationUser().getId(), sessionHolder.getSelectedRole().getId(),
-								menuId);
+						boolean userHasAccess = false;
+						if (authorizationByRole) {
+							userHasAccess = menuService.doesUserHaveAccess(sessionHolder.getApplicationUser().getId(),
+									sessionHolder.getSelectedRole().getId(), menuId);
+						} else {
+							userHasAccess = menuService.doesUserHaveAccess(sessionHolder.getApplicationUser().getId(),
+									null, menuId);
+						}
+
 						if (userHasAccess) {
 							Map<String, String> parameterMap = event.getParameterMap();
 							String uuid = parameterMap.get("uuid");
@@ -213,14 +220,14 @@ public class TopMenuLayoutView extends VerticalLayout {
 		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 		Configuration consolidateRoleConfiguration = configurationService
 				.getByCode(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE);
-		boolean consolidateRoles = false;
+		authorizationByRole = true;
 		if (consolidateRoleConfiguration != null && consolidateRoleConfiguration.getBoolean()) {
-			consolidateRoles = true;
+			authorizationByRole = false;
 		}
-		if (consolidateRoles) {
-			createMenu(null);
-		} else {
+		if (authorizationByRole) {
 			createRoleMenuItems();
+		} else {
+			createMenu(null);
 		}
 
 		/*
