@@ -47,39 +47,36 @@ public class DataProperty extends CustomDataTaskChange {
 		connection = (JdbcConnection) database.getConnection();
 
 		try {
-			String query = "select id_ from properties_ where id_=?";
-			PreparedStatement prepareStatement = connection.prepareStatement(query);
-			setData(prepareStatement, 1, id);
-			ResultSet resultSet = prepareStatement.executeQuery();
-
 			boolean exists = false;
-			while (resultSet.next()) {
-				exists = true;
+			String query = "select id_ from properties_ where id_=?";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+				setData(prepareStatement, 1, id);
+				try (ResultSet resultSet = prepareStatement.executeQuery()) {
+
+					while (resultSet.next()) {
+						exists = true;
+					}
+				}
 			}
-			resultSet.close();
-			prepareStatement.close();
 
 			if (exists) {
 				String update = "update properties_ set key_=? where id_=?";
-				prepareStatement = connection.prepareStatement(update);
-				setData(prepareStatement, 1, key);
-				setData(prepareStatement, 2, id);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+					setData(prepareStatement, 1, key);
+					setData(prepareStatement, 2, id);
+					prepareStatement.executeUpdate();
+				}
 			} else {
 				String insert = "insert into properties_(id_,active_,key_) " + "values(?,?,?)";
-				prepareStatement = connection.prepareStatement(insert);
-				setData(prepareStatement, 1, id);
-				prepareStatement.setBoolean(2, true);
-				// prepareStatement.setDate(3, new
-				// Date(Calendar.getInstance().getTime().getTime()));
-				setData(prepareStatement, 3, key);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+					setData(prepareStatement, 1, id);
+					prepareStatement.setBoolean(2, true);
+					setData(prepareStatement, 3, key);
+					prepareStatement.executeUpdate();
+				}
 			}
 
 		} catch (DatabaseException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

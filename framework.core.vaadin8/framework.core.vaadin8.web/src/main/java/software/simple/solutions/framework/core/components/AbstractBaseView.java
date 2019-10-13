@@ -96,6 +96,10 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	public void addReferenceKey(String key, Object value) {
 		referenceKeys.put(key, value);
 	}
+	
+	public void addReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
+		referenceKeys.putAll(referenceKeys);
+	}
 
 	public void addObserverReferenceKey(String key) {
 		referenceKeys.put(key, BehaviorSubject.create());

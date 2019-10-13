@@ -731,7 +731,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	private void executeSubMenuBuild(AbstractBaseView view) throws FrameworkException {
 		view.setParentEntity(getSelectedEntity());
-		view.setReferenceKeys(getReferenceKeys());
+		view.addReferenceKeys(getReferenceKeys());
 		view.executeBuild();
 		view.executeTab();
 		if (view instanceof BasicTemplate<?>) {

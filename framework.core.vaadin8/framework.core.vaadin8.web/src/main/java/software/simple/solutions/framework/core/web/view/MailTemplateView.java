@@ -16,13 +16,12 @@ import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
-import software.simple.solutions.framework.core.constants.MailTemplateGroup;
+import software.simple.solutions.framework.core.config.MailTemplateGroup;
 import software.simple.solutions.framework.core.constants.MailTemplatePlaceholderItem;
 import software.simple.solutions.framework.core.entities.MailTemplate;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.LanguageProperty;
 import software.simple.solutions.framework.core.properties.MailTemplateProperty;
-import software.simple.solutions.framework.core.service.IMailTemplateService;
 import software.simple.solutions.framework.core.service.facade.MailTemplateServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -122,7 +121,7 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 		}
 
 		private void createTabs() {
-			Map<String, List<MailTemplatePlaceholderItem>> groupMap = new MailTemplateGroup().getItems();
+			Map<String, List<MailTemplatePlaceholderItem>> groupMap = MailTemplateGroup.getItems();
 			for (Entry<String, List<MailTemplatePlaceholderItem>> entry : groupMap.entrySet()) {
 				VerticalLayout verticalLayout = new VerticalLayout();
 				accordion.addTab(verticalLayout);
@@ -156,6 +155,7 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 
 		@Override
 		public void handleNewForm() throws FrameworkException {
+			createTabs();
 		}
 
 		@Override
