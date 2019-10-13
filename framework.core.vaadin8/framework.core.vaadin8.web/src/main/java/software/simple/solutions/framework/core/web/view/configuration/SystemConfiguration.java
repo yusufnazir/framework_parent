@@ -46,6 +46,7 @@ import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.components.select.LayoutSelect;
+import software.simple.solutions.framework.core.components.select.RoleSelect;
 import software.simple.solutions.framework.core.config.SystemObserver;
 import software.simple.solutions.framework.core.constants.MimeType;
 import software.simple.solutions.framework.core.constants.Style;
@@ -84,6 +85,7 @@ public class SystemConfiguration extends CGridLayout {
 	private CDiscreetNumberField applicationLogoHeight;
 	private CDiscreetNumberField applicationLogoWidth;
 	private CCheckBox enableRegistrationFld;
+	private RoleSelect defaultUserRoleFld;
 	private CComboBox homeViewFld;
 	private LayoutSelect layoutFld;
 
@@ -110,6 +112,7 @@ public class SystemConfiguration extends CGridLayout {
 		layoutFld = addField(LayoutSelect.class, ConfigurationProperty.APPLICATION_LAYOUT, 0, ++i);
 		enableRegistrationFld = addField(CCheckBox.class, ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION, 0,
 				++i);
+		defaultUserRoleFld = addField(RoleSelect.class, ConfigurationProperty.APPLICATION_DEFAULT_USER_ROLE, 0, ++i);
 
 		HorizontalLayout horizontalLayout = createLogoImageHolder();
 		VerticalLayout logoImageLayout = addField(VerticalLayout.class, ConfigurationProperty.APPLICATION_LOGO, 0, ++i);
@@ -213,6 +216,8 @@ public class SystemConfiguration extends CGridLayout {
 						.add(getValue(ConfigurationProperty.APPLICATION_LOGO_WIDTH, applicationLogoWidth.getValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_HOME_VIEW, homeViewFld.getStringValue()));
 				configurations.add(getValue(ConfigurationProperty.APPLICATION_LAYOUT, layoutFld.getStringValue()));
+				configurations.add(getValue(ConfigurationProperty.APPLICATION_DEFAULT_USER_ROLE,
+						defaultUserRoleFld.getStringValue()));
 				try {
 					if (receiver.getLastFileSize() > 0) {
 						InputStream inputStream = receiver.getContentAsStream();
@@ -225,7 +230,6 @@ public class SystemConfiguration extends CGridLayout {
 					logger.error(e.getMessage(), e);
 				}
 
-				
 				try {
 					List<Configuration> configs = ConfigurationServiceFacade.get(UI.getCurrent())
 							.update(configurations);
@@ -243,7 +247,7 @@ public class SystemConfiguration extends CGridLayout {
 							SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
 							systemObserver.getApplicationLogoChangeObserver().onNext(true);
 						}
-						
+
 						// role consolidation
 						configurationCodes = configs.stream().filter(
 								p -> p.getCode().equalsIgnoreCase(ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE))
@@ -362,6 +366,9 @@ public class SystemConfiguration extends CGridLayout {
 				break;
 			case ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION:
 				enableRegistrationFld.setValue(configuration.getBoolean());
+				break;
+			case ConfigurationProperty.APPLICATION_DEFAULT_USER_ROLE:
+				defaultUserRoleFld.setLongValue(configuration.getLong());
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO:
 				applicationLogoConfiguration = configuration;

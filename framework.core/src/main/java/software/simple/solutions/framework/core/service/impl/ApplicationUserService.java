@@ -115,6 +115,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 		if (vo.isNew()) {
 			sendPasswordToNewUser(applicationUser, vo);
+			applicationEventPublisher.publishEvent(new ApplicationUserEvent(applicationUser, true));
 		}
 
 		return (T) applicationUser;
@@ -522,9 +523,9 @@ public class ApplicationUserService extends SuperService implements IApplication
 			return securityValidation;
 		}
 
-		if (vo.getTermsAccepted() == null || !vo.getTermsAccepted()) {
-			return SecurityValidation.build(RegistrationProperty.TERMS_AND_CONDITIONS_REQUIRED);
-		}
+//		if (vo.getTermsAccepted() == null || !vo.getTermsAccepted()) {
+//			return SecurityValidation.build(RegistrationProperty.TERMS_AND_CONDITIONS_REQUIRED);
+//		}
 
 		ApplicationUser applicationUser = getByUsername(vo.getEmail());
 		if (applicationUser != null) {

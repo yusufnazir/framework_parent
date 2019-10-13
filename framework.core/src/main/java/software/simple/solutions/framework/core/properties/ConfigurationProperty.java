@@ -14,6 +14,7 @@ public class ConfigurationProperty {
 	public static final String APPLICATION_ENABLE_REGISTRATION = "configuration.system.application.enable.registration";
 	public static final String APPLICATION_HOME_VIEW = "configuration.system.application.home.view";
 	public static final String APPLICATION_LAYOUT = "configuration.system.application.layout";
+	public static final String APPLICATION_DEFAULT_USER_ROLE = "configuration.system.application.default.user.role";
 
 	public static final String SMTP_ENABLE = "configuration.smtp.enable";
 	public static final String SMTP_HOST = "configuration.smtp.host";

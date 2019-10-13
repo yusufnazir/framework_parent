@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
@@ -27,6 +26,7 @@ import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
+import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.constants.FileReference;
 import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
@@ -237,6 +237,7 @@ public class PersonView extends BasicTemplate<Person> {
 
 			dateOfBirthFld = formGrid.addField(CPopupDateField.class, PersonProperty.DATE_OF_BIRTH, 1, 0);
 			dateOfBirthFld.setRangeEnd(LocalDate.now());
+			dateOfBirthFld.setDateFormat(Constants.SIMPLE_DATE_FORMAT.toPattern());
 			dateOfBirthFld.setVisible(false);
 			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_DOB)) {
 				dateOfBirthFld.setVisible(true);

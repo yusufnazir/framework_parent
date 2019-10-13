@@ -50,43 +50,42 @@ public class DataConfiguration extends CustomDataTaskChange {
 		connection = (JdbcConnection) database.getConnection();
 
 		try {
-			String query = "select id_ from " + CxodeTables.CONFIGURATION.NAME + " where " + CxodeTables.CONFIGURATION.COLUMNS.ID
-					+ "=?";
-			PreparedStatement prepareStatement = connection.prepareStatement(query);
-			setData(prepareStatement, 1, id);
-			ResultSet resultSet = prepareStatement.executeQuery();
-
 			boolean exists = false;
-			while (resultSet.next()) {
-				exists = true;
+			String query = "select id_ from " + CxodeTables.CONFIGURATION.NAME + " where "
+					+ CxodeTables.CONFIGURATION.COLUMNS.ID + "=?";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+				setData(prepareStatement, 1, id);
+				try (ResultSet resultSet = prepareStatement.executeQuery()) {
+
+					while (resultSet.next()) {
+						exists = true;
+					}
+				}
 			}
-			resultSet.close();
-			prepareStatement.close();
 
 			if (exists) {
-				String update = "update " + CxodeTables.CONFIGURATION.NAME + " set " + CxodeTables.CONFIGURATION.COLUMNS.CODE
-						+ "=?, " + CxodeTables.CONFIGURATION.COLUMNS.NAME + "=?," + CxodeTables.CONFIGURATION.COLUMNS.VALUE
-						+ "=? where id_=?";
-				prepareStatement = connection.prepareStatement(update);
-				setData(prepareStatement, 1, code);
-				setData(prepareStatement, 2, name);
-				setData(prepareStatement, 3, value);
-				setData(prepareStatement, 4, id);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String update = "update " + CxodeTables.CONFIGURATION.NAME + " set "
+						+ CxodeTables.CONFIGURATION.COLUMNS.CODE + "=?, " + CxodeTables.CONFIGURATION.COLUMNS.NAME
+						+ "=?," + CxodeTables.CONFIGURATION.COLUMNS.VALUE + "=? where id_=?";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+					setData(prepareStatement, 1, code);
+					setData(prepareStatement, 2, name);
+					setData(prepareStatement, 3, value);
+					setData(prepareStatement, 4, id);
+					prepareStatement.executeUpdate();
+				}
 			} else {
-				String insert = "insert into " + CxodeTables.CONFIGURATION.NAME + "(" + CxodeTables.CONFIGURATION.COLUMNS.ID + ","
-						+ CxodeTables.CONFIGURATION.COLUMNS.ACTIVE + ",code_,name_,value_) "
-						+ "values(?,?,?,?,?)";
-				prepareStatement = connection.prepareStatement(insert);
-				setData(prepareStatement, 1, id);
-				prepareStatement.setBoolean(2, true);
-//				prepareStatement.setDate(3, new Date(Calendar.getInstance().getTime().getTime()));
-				setData(prepareStatement, 3, code);
-				setData(prepareStatement, 4, name);
-				setData(prepareStatement, 5, value);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String insert = "insert into " + CxodeTables.CONFIGURATION.NAME + "("
+						+ CxodeTables.CONFIGURATION.COLUMNS.ID + "," + CxodeTables.CONFIGURATION.COLUMNS.ACTIVE
+						+ ",code_,name_,value_) " + "values(?,?,?,?,?)";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+					setData(prepareStatement, 1, id);
+					prepareStatement.setBoolean(2, true);
+					setData(prepareStatement, 3, code);
+					setData(prepareStatement, 4, name);
+					setData(prepareStatement, 5, value);
+					prepareStatement.executeUpdate();
+				}
 			}
 
 		} catch (DatabaseException | SQLException e) {

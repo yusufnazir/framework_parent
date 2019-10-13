@@ -7,6 +7,7 @@ import com.vaadin.data.ValueProvider;
 import io.reactivex.functions.Consumer;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
+import software.simple.solutions.framework.core.components.CRichTextArea;
 import software.simple.solutions.framework.core.components.CTextArea;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
@@ -119,7 +120,7 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 
 		private CGridLayout formGrid;
 		private CTextArea propertyFld;
-		private CTextArea valueFld;
+		private CRichTextArea valueFld;
 		private LanguageSelect languageFld;
 		private CCheckBox activeFld;
 
@@ -144,7 +145,9 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 
 			activeFld = formGrid.addField(CCheckBox.class, PropertyPerLocaleProperty.ACTIVE, 0, 3);
 
-			valueFld = formGrid.addField(CTextArea.class, PropertyPerLocaleProperty.VALUE, 1, 0, 1, 1);
+			valueFld = formGrid.addField(CRichTextArea.class, PropertyPerLocaleProperty.VALUE, 0, 4);
+			valueFld.setWidth("1000px");
+			valueFld.setHeight("600px");
 
 			return formGrid;
 		}

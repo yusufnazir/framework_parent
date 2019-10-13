@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1500330516290-26">
+		author="yusuf (generated)" id="1570914715619">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="properties_per_locales_" />
@@ -15,14 +15,14 @@
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
 
-			<column name="VALUE_" type="VARCHAR(255)" />
+			<column name="VALUE_" type="VARCHAR(4000)" />
 			<column name="LOCALE_ID_" type="BIGINT" />
 			<column name="PROPERTY_ID_" type="BIGINT" />
 
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1500330516290-27">
+		author="yusuf (generated)" id="1570914721941">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="properties_per_locales_aud" />
@@ -39,11 +39,31 @@
 
 			<column name="ACTIVE_" type="BIT(1)" />
 
-			<column name="VALUE_" type="VARCHAR(255)" />
+			<column name="VALUE_" type="VARCHAR(4000)" />
 			<column name="LOCALE_ID_" type="BIGINT" />
 			<column name="PROPERTY_ID_" type="BIGINT" />
 
 		</createTable>
+	</changeSet>
+
+	<changeSet id="1570914412849" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="properties_per_locales_"
+				columnName="VALUE_" />
+		</preConditions>
+		<modifyDataType tableName="properties_per_locales_"
+			columnName="VALUE_" newDataType="VARCHAR(4000)" />
+	</changeSet>
+
+	<changeSet id="1570914479641" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="properties_per_locales_aud"
+				columnName="VALUE_" />
+		</preConditions>
+		<modifyDataType tableName="properties_per_locales_aud"
+			columnName="VALUE_" newDataType="VARCHAR(4000)" />
 	</changeSet>
 
 </databaseChangeLog>

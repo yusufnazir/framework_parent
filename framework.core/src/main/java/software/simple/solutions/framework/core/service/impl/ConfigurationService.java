@@ -19,7 +19,7 @@ import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IConfigurationRepository.class)
 public class ConfigurationService extends SuperService implements IConfigurationService {
@@ -97,7 +97,8 @@ public class ConfigurationService extends SuperService implements IConfiguration
 				ConfigurationProperty.APPLICATION_URL, ConfigurationProperty.APPLICATION_LOGO,
 				ConfigurationProperty.APPLICATION_DATE_FORMAT, ConfigurationProperty.APPLICATION_CONSOLIDATE_ROLE,
 				ConfigurationProperty.APPLICATION_LOGO_HEIGHT, ConfigurationProperty.APPLICATION_LOGO_WIDTH,
-				ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION, ConfigurationProperty.APPLICATION_HOME_VIEW,
+				ConfigurationProperty.APPLICATION_ENABLE_REGISTRATION,
+				ConfigurationProperty.APPLICATION_DEFAULT_USER_ROLE, ConfigurationProperty.APPLICATION_HOME_VIEW,
 				ConfigurationProperty.APPLICATION_LAYOUT));
 	}
 

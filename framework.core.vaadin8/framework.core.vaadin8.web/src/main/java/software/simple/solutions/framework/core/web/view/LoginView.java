@@ -277,13 +277,13 @@ public class LoginView extends VerticalLayout implements View {
 		confirmPasswordFld.setRequiredIndicatorVisible(true);
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-		CCheckBox termsAndConditionCheckFld = new CCheckBox();
-		horizontalLayout.addComponent(termsAndConditionCheckFld);
-		Link link = new Link();
-		link.setCaption(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
-		link.addStyleName(Style.REGISTER_LINK);
-		horizontalLayout.addComponent(link);
+//		CCheckBox termsAndConditionCheckFld = new CCheckBox();
+//		horizontalLayout.addComponent(termsAndConditionCheckFld);
+//		Link link = new Link();
+//		link.setCaption(
+//				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
+//		link.addStyleName(Style.REGISTER_LINK);
+//		horizontalLayout.addComponent(link);
 
 		final CButton registerFld = new CButton();
 		registerFld.setSizeFull();
@@ -321,7 +321,7 @@ public class LoginView extends VerticalLayout implements View {
 				emailFld.clear();
 				passwordFld.clear();
 				confirmPasswordFld.clear();
-				termsAndConditionCheckFld.clear();
+//				termsAndConditionCheckFld.clear();
 			}
 
 			private void registerUser() {
@@ -338,7 +338,7 @@ public class LoginView extends VerticalLayout implements View {
 				vo.setEmail(emailFld.getValue());
 				vo.setPassword(passwordFld.getValue());
 				vo.setPasswordConfirm(confirmPasswordFld.getValue());
-				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
+//				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
 				try {
 					SecurityValidation securityValidation = applicationUserService.registerUser(vo);
 					if (!securityValidation.isSuccess()) {
