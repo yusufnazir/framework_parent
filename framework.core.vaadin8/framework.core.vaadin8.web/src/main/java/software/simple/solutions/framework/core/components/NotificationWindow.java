@@ -9,13 +9,32 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
+import software.simple.solutions.framework.core.entities.Configuration;
+import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.ConfigurationProperty;
+import software.simple.solutions.framework.core.service.IConfigurationService;
+import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class NotificationWindow {
 
 	public static void notificationErrorWindow(String description, Locale locale) {
-		Notification notification = new Notification(
-				PropertyResolver.getPropertyValueByLocale("application.name", locale), Type.ERROR_MESSAGE);
+		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+		String applicationName = "";
+
+		try {
+			Configuration configuration = configurationService.getByCode(ConfigurationProperty.APPLICATION_NAME);
+			if (configuration != null) {
+				applicationName = configuration.getValue();
+			}
+			if (applicationName == null) {
+				applicationName = "";
+			}
+		} catch (FrameworkException e) {
+			e.printStackTrace();
+		}
+
+		Notification notification = new Notification(applicationName, Type.ERROR_MESSAGE);
 		notification.setDescription("<span>" + description + "</span>");
 		notification.setHtmlContentAllowed(true);
 		// notification.setStyleName("tray small closable");

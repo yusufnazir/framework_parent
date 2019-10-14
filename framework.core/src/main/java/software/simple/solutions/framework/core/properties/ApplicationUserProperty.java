@@ -30,6 +30,7 @@ public class ApplicationUserProperty {
 	
 	public static final String LOGIN_INVALID_CREDENTIALS = "model.application.user.login.invalid.credentials";
 	public static final String LOGIN_USER_IS_INACTIVE = "model.application.user.login.inactive.user";
+	public static final String LOGIN_USER_NO_ROLES = "model.application.user.login.no.roles";
 	public static final String USE_LDAP = "model.application.user.use.ldap";
 	public static final String LDAP_LAYOUT = "model.application.user.ldap.layout";
 }

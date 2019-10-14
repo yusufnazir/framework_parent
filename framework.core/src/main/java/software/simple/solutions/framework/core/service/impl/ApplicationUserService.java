@@ -19,6 +19,7 @@ import software.simple.solutions.framework.core.entities.ApplicationUserRequestR
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.event.ApplicationUserEvent;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -36,6 +37,7 @@ import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IMailService;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
 import software.simple.solutions.framework.core.service.IPersonService;
+import software.simple.solutions.framework.core.service.IUserRoleService;
 import software.simple.solutions.framework.core.util.ActiveDirectoryConnectionUtils;
 import software.simple.solutions.framework.core.util.Placeholders;
 import software.simple.solutions.framework.core.util.StringUtil;
@@ -67,6 +69,9 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 	@Autowired
 	private IConfigurationService configurationService;
+	
+	@Autowired
+	private IUserRoleService userRoleService;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R entityVO) throws FrameworkException {
@@ -228,6 +233,12 @@ public class ApplicationUserService extends SuperService implements IApplication
 			 */
 			return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
 		}
+		
+		List<Role> rolesByUser = userRoleService.findRolesByUser(applicationUser.getId());
+		if(rolesByUser==null || rolesByUser.isEmpty()){
+			return SecurityValidation.build(ApplicationUserProperty.LOGIN_USER_NO_ROLES);
+		}
+		
 
 		Boolean useLdap = applicationUser.getUseLdap();
 		if (applicationUser.getId().compareTo(1L) != 0 && useLdap) {

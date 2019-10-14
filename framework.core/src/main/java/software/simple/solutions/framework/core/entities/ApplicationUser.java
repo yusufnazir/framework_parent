@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
@@ -56,6 +58,7 @@ public class ApplicationUser extends MappedSuperClass {
 
 	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = PersonProperty.FIRST_NAME),
 			@FilterFieldProperty(fieldProperty = PersonProperty.LAST_NAME) })
+	@NotFound(action=NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = CxodeTables.APPLICATION_USER.COLUMNS.PERSON_ID, referencedColumnName = CxodeTables.PERSON.COLUMNS.ID)
 	private Person person;
