@@ -82,6 +82,8 @@ public class Style {
 	public static final String NO_PADDING = "no-padding";
 	public static final String GIRD_HEADER_COLUMN_CENTERED = "header-column-centered";
 	public static final String ERROR_BACKGROUND_REDDISH = "error-background-reddish";
+	public static final String LABEL_PRE_WRAPPED = "label-pre-wrapped";
+	
 	
 	public static final String MENU_BAR_BROAD = "broadmenu";
 	public static final String APPLICATION_NAME_HEADER = "application-name-header";

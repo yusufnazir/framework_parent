@@ -19549,3 +19549,7 @@ div.v-layout.v-horizontal.v-widget {
 .cxode .backgroundimage {
 	background: url("img/patterns/dust_scratches.png") !important;
 }
+
+.cxode .label-pre-wrapped {
+	white-space: pre-wrap !important;
+}

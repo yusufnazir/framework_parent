@@ -220,10 +220,39 @@ public class ApplicationUserService extends SuperService implements IApplication
 		}
 
 		String applicationUserName = null;
-		if (username.contains("@")) {
-			applicationUserName = username.substring(0, username.indexOf('@'));
-		} else if (username.contains("\\")) {
-			applicationUserName = username.substring(username.indexOf('\\') + 1, username.length());
+		
+		Configuration configuration = configurationService
+				.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
+		if (configuration != null && configuration.getBoolean()) {
+			//via ldap
+			
+			if (username.contains("@")) {
+				applicationUserName = username.substring(0, username.indexOf('@'));
+			} else if (username.contains("\\")) {
+				applicationUserName = username.substring(username.indexOf('\\') + 1, username.length());
+			}
+			
+			ApplicationUser applicationUser = getByUsername(applicationUserName == null ? username : applicationUserName);
+			if (applicationUser == null) {
+				/**
+				 * Invalid username.
+				 */
+				return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
+			}
+			
+			Boolean useLdap = applicationUser.getUseLdap();
+			if (applicationUser.getId().compareTo(1L) != 0 && useLdap) {
+				Configuration hostConfig = configurationService
+						.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_HOST);
+				ActiveDirectoryConnectionUtils activeDirectoryConnectionUtils = new ActiveDirectoryConnectionUtils();
+				boolean validated = activeDirectoryConnectionUtils.createContext(hostConfig.getValue(), username,
+						password);
+				if (validated) {
+					return new SecurityValidation(validated);
+				} else {
+					return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
+				}
+			}
 		}
 
 		ApplicationUser applicationUser = getByUsername(applicationUserName == null ? username : applicationUserName);
@@ -239,25 +268,6 @@ public class ApplicationUserService extends SuperService implements IApplication
 			return SecurityValidation.build(ApplicationUserProperty.LOGIN_USER_NO_ROLES);
 		}
 		
-
-		Boolean useLdap = applicationUser.getUseLdap();
-		if (applicationUser.getId().compareTo(1L) != 0 && useLdap) {
-			Configuration configuration = configurationService
-					.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
-			if (configuration != null && configuration.getBoolean()) {
-				Configuration hostConfig = configurationService
-						.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_HOST);
-				ActiveDirectoryConnectionUtils activeDirectoryConnectionUtils = new ActiveDirectoryConnectionUtils();
-				boolean validated = activeDirectoryConnectionUtils.createContext(hostConfig.getValue(), username,
-						password);
-				if (validated) {
-					return new SecurityValidation(validated);
-				} else {
-					return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
-				}
-			}
-		}
-
 		PasswordUtil passwordUtil = new PasswordUtil();
 		Boolean correctPassword = passwordUtil.isCorrectPassword(password, applicationUser.getPassword());
 		if (!correctPassword) {
@@ -567,8 +577,8 @@ public class ApplicationUserService extends SuperService implements IApplication
 		applicationUser.setPerson(person);
 		saveOrUpdate(applicationUser, true);
 
-		personService.updatePersonEmail(vo.getPersonId(), vo.getEmail());
-		personService.updatePersonMobileNumber(vo.getPersonId(), vo.getMobileNumber());
+		personService.updatePersonEmail(person.getId(), vo.getEmail());
+		personService.updatePersonMobileNumber(person.getId(), vo.getMobileNumber());
 
 		sendRegistrationMailToNewUser(applicationUser, vo);
 

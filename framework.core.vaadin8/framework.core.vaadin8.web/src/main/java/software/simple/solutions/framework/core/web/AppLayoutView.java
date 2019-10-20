@@ -145,7 +145,7 @@ public class AppLayoutView extends VerticalLayout {
 						"system.tab.closed", UI.getCurrent().getLocale(), new Object[] { tabContent.getCaption() }));
 				notification.show(Page.getCurrent());
 				tabsheet.removeComponent(tabContent);
-				
+
 				if (tabSheet.getComponentCount() > 0) {
 					tabSheet.setVisible(true);
 				} else {
@@ -214,8 +214,8 @@ public class AppLayoutView extends VerticalLayout {
 
 							@Override
 							public void showView(View view) {
-//								System.out.println(view);
-//								tabSheet.addComponent(view.getViewComponent());
+								// System.out.println(view);
+								// tabSheet.addComponent(view.getViewComponent());
 							}
 						};
 						return new Navigator(ui, viewDisplay);
@@ -235,6 +235,7 @@ public class AppLayoutView extends VerticalLayout {
 						new Object[] { sessionHolder.getApplicationUser().getUsername() }));
 		loggedInAsUserLbl.addStyleName(ValoTheme.LABEL_H2);
 		loggedInAsUserLbl.addStyleName(ValoTheme.LABEL_COLORED);
+		loggedInAsUserLbl.addStyleName(Style.LABEL_PRE_WRAPPED);
 		loggedInAsLayout.addComponent(loggedInAsUserLbl);
 
 		navigatorAppLayoutBuilder.add(loggedInAsLayout, Section.HEADER);

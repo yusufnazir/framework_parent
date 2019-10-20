@@ -19,7 +19,6 @@ public class ContextProvider implements ApplicationContextAware {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(Class<?> cl) {
-		Object bean = ctx.getBean(cl);
 		return (T) ctx.getBean(cl);
 	}
 
