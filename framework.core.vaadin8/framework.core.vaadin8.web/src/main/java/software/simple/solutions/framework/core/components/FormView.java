@@ -35,7 +35,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	public FormView() {
 		super();
 		setMargin(false);
-		setWidth("-1px");
+		setWidth("100%");
 		addStyleName(Style.MAIN_VIEW_HEADER_MARGINS);
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();

@@ -64,6 +64,19 @@ public class CxodeTables {
 
 		}
 	}
+	
+	public final class COUNTRY {
+
+		public static final String NAME = "COUNTRIES_";
+
+		public final class COLUMNS {
+			public static final String ID = "ID_";
+			public static final String ALPHA2 = "ALPHA2_";
+			public static final String ALPHA3 = "ALPHA3_";
+			public static final String NAME = "NAME_";
+			public static final String ACTIVE = "ACTIVE_";
+		}
+	}
 
 	public final class CURRENCY {
 
@@ -236,6 +249,19 @@ public class CxodeTables {
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}
 	}
+	
+	public final class PERSON_EMERGENCY_CONTACT {
+
+		public static final String NAME = "PERSON_EMERGENCY_CONTACTS_";
+
+		public final class COLUMNS {
+			public static final String NAME = "NAME_";
+			public static final String RELATIONSHIP = "RELATIONSHIP_";
+			public static final String CONTACT_NUMBER = "CONTACT_NUMBER_";
+			public static final String ACTIVE = "ACTIVE_";
+			public static final String SOFT_DELETE = "SOFT_DELETE_";
+		}
+	}
 
 	public final class PERSON_INFORMATION {
 
@@ -249,6 +275,11 @@ public class CxodeTables {
 			public static final String SECONDARY_EMAIL = "SECONDARY_EMAIL_";
 			public static final String PRIMARY_CONTACT_NUMBER = "PRIMARY_CONTACT_NUMBER_";
 			public static final String SECONDARY_CONTACT_NUMBER = "SECONDARY_CONTACT_NUMBER_";
+			public static final String STREET_ADDRESS = "STREET_ADDRESS_";
+			public static final String CITY = "CITY_";
+			public static final String STATE = "STATE_";
+			public static final String POSTAL_CODE = "POSTAL_CODE_";
+			public static final String COUNTRY_ID = "COUNTRY_ID_";
 			public static final String ACTIVE = "ACTIVE_";
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}

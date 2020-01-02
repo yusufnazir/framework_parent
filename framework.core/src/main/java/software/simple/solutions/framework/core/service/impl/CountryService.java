@@ -13,4 +13,6 @@ import software.simple.solutions.framework.core.service.ICountryService;
 @ServiceRepository(claz = ICountryRepository.class)
 public class CountryService extends SuperService implements ICountryService {
 
+	private static final long serialVersionUID = -1080525256146667917L;
+
 }

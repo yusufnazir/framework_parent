@@ -25,4 +25,6 @@ public class Constants {
 	public static final String[] IMAGE_EXTENSIONS = { "png", "jpeg", "jpg", "gif", "bmp" };
 
 	public static File APPLICATION_HOME;
+	
+	public static final String SESSION_HOLDER = "SESSION_HOLDER";
 }

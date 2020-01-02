@@ -11,6 +11,7 @@ import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
+import software.simple.solutions.framework.core.util.NumberUtil;
 
 public class SimpleSolutionsMenuItem {
 
@@ -55,9 +56,9 @@ public class SimpleSolutionsMenuItem {
 		if (menu.getIcon() == null) {
 			return null;
 		}
-		Resource icon = FontAwesome.fromCodepoint(menu.getIcon());
+		Resource icon = FontAwesome.fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
 		if (icon == null) {
-			icon = fromCodepoint(menu.getIcon());
+			icon = fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
 		}
 		return icon;
 	}
