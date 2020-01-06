@@ -57,4 +57,44 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333251838">
+		<preConditions>
+			<columnExists tableName="menus_" columnName="ICON_" />
+		</preConditions>
+		<dropColumn tableName="menus_" columnName="ICON_" />
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333253845">
+		<preConditions>
+			<columnExists tableName="menus_aud" columnName="ICON_" />
+		</preConditions>
+		<dropColumn tableName="menus_aud" columnName="ICON_" />
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333265848">
+		<preConditions>
+			<not>
+				<columnExists tableName="menus_" columnName="ICON_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="menus_">
+			<column name="ICON_" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333273849">
+		<preConditions>
+			<not>
+				<columnExists tableName="menus_aud" columnName="ICON_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="menus_aud">
+			<column name="ICON_" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

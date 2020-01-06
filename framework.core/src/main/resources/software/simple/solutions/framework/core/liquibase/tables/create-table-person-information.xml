@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1578329766606">
+		author="simplesolutions" id="1578341222099">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_information_" />
@@ -30,7 +30,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1578329773554">
+		author="simplesolutions" id="1578341224107">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_information_aud" />
@@ -61,8 +61,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330016431">
-		<preConditions>
+		author="yusuf (generated)" id="1578341393801">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="STREET_ADDRESS_" />
 			</not>
@@ -73,8 +73,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330023365">
-		<preConditions>
+		author="yusuf (generated)" id="1578341395808">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="STREET_ADDRESS_" />
 			</not>
@@ -85,8 +85,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330376117">
-		<preConditions>
+		author="yusuf (generated)" id="1578341401809">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="STREET_ADDRESS_NUMBER_" />
 			</not>
@@ -97,8 +97,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330382841">
-		<preConditions>
+		author="yusuf (generated)" id="1578341407811">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="STREET_ADDRESS_NUMBER_" />
 			</not>
@@ -109,8 +109,8 @@
 	</changeSet>
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330493355">
-		<preConditions>
+		author="yusuf (generated)" id="1578341413813">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="CITY_" />
 			</not>
@@ -121,8 +121,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330497356">
-		<preConditions>
+		author="yusuf (generated)" id="1578341417813">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="CITY_" />
 			</not>
@@ -133,8 +133,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330621380">
-		<preConditions>
+		author="yusuf (generated)" id="1578341421814">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="STATE_" />
 			</not>
@@ -145,8 +145,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330625380">
-		<preConditions>
+		author="yusuf (generated)" id="1578341425815">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="STATE_" />
 			</not>
@@ -157,8 +157,8 @@
 	</changeSet>
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1578330655383">
-		<preConditions>
+		author="yusuf (generated)" id="1578341435816">
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="POSTAL_CODE_" />
 			</not>
@@ -170,7 +170,7 @@
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
 		author="yusuf (generated)" id="1578330659384">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="POSTAL_CODE_" />
 			</not>
@@ -182,7 +182,7 @@
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
 		author="yusuf (generated)" id="1578330683388">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_" columnName="COUNTRY_ID_" />
 			</not>
@@ -194,7 +194,7 @@
 	
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
 		author="yusuf (generated)" id="1578330687389">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="person_information_aud" columnName="COUNTRY_ID_" />
 			</not>
