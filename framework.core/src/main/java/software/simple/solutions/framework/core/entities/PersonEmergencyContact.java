@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -38,6 +40,10 @@ public class PersonEmergencyContact extends MappedSuperClass {
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = CxodeTables.PERSON_EMERGENCY_CONTACT.COLUMNS.PERSON_ID)
+	private Person person;
 
 	@Column(name = CxodeTables.PERSON_EMERGENCY_CONTACT.COLUMNS.NAME)
 	private String name;
@@ -91,6 +97,14 @@ public class PersonEmergencyContact extends MappedSuperClass {
 		this.contactNumber = contactNumber;
 	}
 
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -99,6 +113,7 @@ public class PersonEmergencyContact extends MappedSuperClass {
 		result = prime * result + ((contactNumber == null) ? 0 : contactNumber.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((person == null) ? 0 : person.hashCode());
 		result = prime * result + ((relationship == null) ? 0 : relationship.hashCode());
 		return result;
 	}
@@ -132,12 +147,23 @@ public class PersonEmergencyContact extends MappedSuperClass {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (person == null) {
+			if (other.person != null)
+				return false;
+		} else if (!person.equals(other.person))
+			return false;
 		if (relationship == null) {
 			if (other.relationship != null)
 				return false;
 		} else if (!relationship.equals(other.relationship))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PersonEmergencyContact [id=" + id + ", person=" + person + ", name=" + name + ", relationship="
+				+ relationship + ", contactNumber=" + contactNumber + ", active=" + active + "]";
 	}
 
 }

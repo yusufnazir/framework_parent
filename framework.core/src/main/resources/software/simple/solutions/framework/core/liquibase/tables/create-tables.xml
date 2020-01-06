@@ -108,4 +108,7 @@
 	<include file="create-table-country.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-person-emergency-contact.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>

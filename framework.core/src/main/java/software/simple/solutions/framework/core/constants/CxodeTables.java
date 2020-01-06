@@ -255,6 +255,7 @@ public class CxodeTables {
 		public static final String NAME = "PERSON_EMERGENCY_CONTACTS_";
 
 		public final class COLUMNS {
+			public static final String PERSON_ID = "PERSON_ID_";
 			public static final String NAME = "NAME_";
 			public static final String RELATIONSHIP = "RELATIONSHIP_";
 			public static final String CONTACT_NUMBER = "CONTACT_NUMBER_";

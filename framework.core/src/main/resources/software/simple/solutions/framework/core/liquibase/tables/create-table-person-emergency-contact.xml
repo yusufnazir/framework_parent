@@ -13,9 +13,11 @@
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
+			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="NAME_" type="VARCHAR(1000)" />
 			<column name="RELATIONSHIP_" type="VARCHAR(100)" />
 			<column name="CONTACT_NUMBER_" type="VARCHAR(100)" />
+			<column name="ACTIVE_" type="BIT(1)" />
 		</createTable>
 	</changeSet>
 
@@ -34,9 +36,11 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="NAME_" type="VARCHAR(1000)" />
 			<column name="RELATIONSHIP_" type="VARCHAR(100)" />
 			<column name="CONTACT_NUMBER_" type="VARCHAR(100)" />
+			<column name="ACTIVE_" type="BIT(1)" />
 
 		</createTable>
 	</changeSet>
