@@ -3,9 +3,11 @@ package software.simple.solutions.framework.core.web.view.forms;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.github.appreciated.card.Card;
@@ -14,6 +16,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,6 +28,12 @@ import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent;
 import com.vaadin.flow.component.upload.SucceededEvent;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.provider.SortDirection;
+import com.vaadin.flow.data.provider.SortOrder;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
@@ -34,15 +44,22 @@ import software.simple.solutions.framework.core.constants.FileReference;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.entities.PersonEmergencyContact;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
+import software.simple.solutions.framework.core.pojo.PagingResult;
+import software.simple.solutions.framework.core.pojo.PagingSetting;
+import software.simple.solutions.framework.core.pojo.SortQuery;
 import software.simple.solutions.framework.core.properties.GenderProperty;
+import software.simple.solutions.framework.core.properties.PersonEmergencyContactProperty;
 import software.simple.solutions.framework.core.properties.PersonInformationProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IFileService;
+import software.simple.solutions.framework.core.service.IPersonEmergencyContactService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.valueobjects.PersonEmergencyContactVO;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CButton;
@@ -51,6 +68,7 @@ import software.simple.solutions.framework.core.web.components.CEmailField;
 import software.simple.solutions.framework.core.web.components.CFormLayout;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.GridFormCard;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.routing.Routes;
@@ -78,8 +96,9 @@ public class PersonForm extends FormView {
 	private VerticalLayout personMainLayout;
 
 	private Panel contactInfoCard;
-
 	private CFormLayout contactInformationForm;
+	private GridFormCard emergencyContactInfoCard;
+	private CFormLayout emergencyContactInformationForm;
 
 	private CEmailField primaryEmailFld;
 	private CEmailField secondaryEmailFld;
@@ -90,6 +109,10 @@ public class PersonForm extends FormView {
 	private CTextField stateFld;
 	private CTextField postalCodeFld;
 	private CountrySelect countryFld;
+
+	private PagingResult<PersonEmergencyContact> pagingResult;
+
+	private IPersonEmergencyContactService personEmergencyContactService;
 
 	// @formatter:off
 		private String styles = ".applayout-profile-image { "
@@ -113,6 +136,8 @@ public class PersonForm extends FormView {
 					return new ByteArrayInputStream(bytes);
 				}));
 		UI.getCurrent().getPage().addStyleSheet("base://" + resource.getResourceUri().toString());
+
+		personEmergencyContactService = ContextProvider.getBean(IPersonEmergencyContactService.class);
 	}
 
 	@Override
@@ -207,6 +232,10 @@ public class PersonForm extends FormView {
 		contactInfoCard = createContactInformationLayout();
 		contactInfoCard.setWidthFull();
 		personMainLayout.add(contactInfoCard);
+
+		emergencyContactInfoCard = createEmergencyContactInformationLayout();
+		emergencyContactInfoCard.setWidthFull();
+		personMainLayout.add(emergencyContactInfoCard);
 	}
 
 	private Panel createPersonLayout() {
@@ -291,6 +320,126 @@ public class PersonForm extends FormView {
 		countryFld = contactInformationForm.add(CountrySelect.class, PersonInformationProperty.COUNTRY);
 
 		return contactInfoCard;
+	}
+
+	private GridFormCard createEmergencyContactInformationLayout() {
+		emergencyContactInfoCard = new GridFormCard();
+		emergencyContactInfoCard.setHeaderKey(PersonInformationProperty.PERSON_INFORMATION);
+
+		Grid<PersonEmergencyContact> emergencyContactGrid = emergencyContactInfoCard.getGrid();
+		Column<PersonEmergencyContact> nameColumn = emergencyContactGrid
+				.addColumn(new ValueProvider<PersonEmergencyContact, String>() {
+
+					private static final long serialVersionUID = -1015344431737583501L;
+
+					@Override
+					public String apply(PersonEmergencyContact source) {
+						return source.getName();
+					}
+				});
+		nameColumn.setHeader(PropertyResolver.getPropertyValueByLocale(PersonEmergencyContactProperty.NAME,
+				UI.getCurrent().getLocale()));
+
+		Column<PersonEmergencyContact> relationshipColumn = emergencyContactGrid
+				.addColumn(new ValueProvider<PersonEmergencyContact, String>() {
+
+					private static final long serialVersionUID = -1015344431737583501L;
+
+					@Override
+					public String apply(PersonEmergencyContact source) {
+						return source.getRelationship();
+					}
+				});
+		relationshipColumn.setHeader(PropertyResolver
+				.getPropertyValueByLocale(PersonEmergencyContactProperty.RELATIONSHIP, UI.getCurrent().getLocale()));
+
+		Column<PersonEmergencyContact> contactNumberColumn = emergencyContactGrid
+				.addColumn(new ValueProvider<PersonEmergencyContact, String>() {
+
+					private static final long serialVersionUID = -1015344431737583501L;
+
+					@Override
+					public String apply(PersonEmergencyContact source) {
+						return source.getContactNumber();
+					}
+				});
+		contactNumberColumn.setHeader(PropertyResolver
+				.getPropertyValueByLocale(PersonEmergencyContactProperty.CONTACT_NUMBER, UI.getCurrent().getLocale()));
+		CallbackDataProvider<PersonEmergencyContact, Void> dataProvider = DataProvider
+				.fromCallbacks(new CallbackDataProvider.FetchCallback<PersonEmergencyContact, Void>() {
+
+					@Override
+					public Stream<PersonEmergencyContact> fetch(Query<PersonEmergencyContact, Void> query) {
+						List<SortQuery> sortOrders = new ArrayList<>();
+						for (SortOrder<String> queryOrder : query.getSortOrders()) {
+							sortOrders.add(new SortQuery(queryOrder.getSorted(),
+									queryOrder.getDirection() == SortDirection.DESCENDING));
+						}
+						PagingSetting pagingSetting = new PagingSetting(query.getOffset(), query.getLimit(),
+								sortOrders);
+
+						try {
+							pagingResult = personEmergencyContactService.findBySearch(createCriteria(), pagingSetting);
+						} catch (FrameworkException e) {
+							e.printStackTrace();
+						}
+						return pagingResult == null ? Stream.empty() : pagingResult.getResult().stream();
+					}
+				}, new CallbackDataProvider.CountCallback<PersonEmergencyContact, Void>() {
+
+					@Override
+					public int count(Query<PersonEmergencyContact, Void> query) {
+						return pagingResult == null ? 1 : pagingResult.getCount().intValue();
+					}
+				});
+		// CallbackDataProvider<PersonEmergencyContact, Void> dataProvider =
+		// DataProvider.fromCallbacks(query -> {
+		// List<SortQuery> sortOrders = new ArrayList<>();
+		// for (SortOrder<String> queryOrder : query.getSortOrders()) {
+		// sortOrders.add(
+		// new SortQuery(queryOrder.getSorted(), queryOrder.getDirection() ==
+		// SortDirection.DESCENDING));
+		// }
+		// PagingSetting pagingSetting = new PagingSetting(query.getOffset(),
+		// query.getLimit(), sortOrders);
+		//
+		// try {
+		// pagingResult =
+		// personEmergencyContactService.findBySearch(createCriteria(),
+		// pagingSetting);
+		// } catch (FrameworkException e) {
+		// e.printStackTrace();
+		// }
+		// return pagingResult == null ? null :
+		// pagingResult.getResult().stream();
+		// },
+		//
+		// // The number of persons is the same
+		// // regardless of ordering
+		// query -> pagingResult==null?0:pagingResult.getCount().intValue());
+		emergencyContactGrid.setDataProvider(dataProvider);
+		emergencyContactGrid.getDataProvider().withConfigurableFilter().refreshAll();
+
+		emergencyContactGrid.setHeightByRows(true);
+		// Label noRecordsFoundFld = new
+		// Label(PropertyResolver.getPropertyValueByLocale(
+		// SystemProperty.TOTAL_RECORDS_FOUND, UI.getCurrent().getLocale(), new
+		// Object[] { 0 }));
+		// verticalLayout.add(noRecordsFoundFld);
+		// verticalLayout.setHorizontalComponentAlignment(Alignment.CENTER,
+		// noRecordsFoundFld);
+
+		emergencyContactInformationForm = emergencyContactInfoCard.getMainFormLayout();
+		emergencyContactInformationForm.setMaxWidth("800px");
+
+		return emergencyContactInfoCard;
+	}
+
+	private Object createCriteria() {
+		// TODO Auto-generated method stub
+		PersonEmergencyContactVO personEmergencyContactVO = new PersonEmergencyContactVO();
+		personEmergencyContactVO.setEntityClass(PersonEmergencyContact.class);
+		return personEmergencyContactVO;
 	}
 
 	@SuppressWarnings("unchecked")

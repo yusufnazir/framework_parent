@@ -67,7 +67,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		this.actionState = actionState;
 		deleteBtn.setVisible(actionState.getDeleteEnabled());
 		newBtn.setVisible(actionState.getInsertEnabled());
-		printBtn.setVisible(actionState.getPrintEnabled());
+		printBtn.setVisible(actionState.getReportsEnabled());
 		saveBtn.setVisible(actionState.getUpdateEnabled() || actionState.getInsertEnabled());
 		editBtn.setVisible(actionState.getUpdateEnabled());
 	}

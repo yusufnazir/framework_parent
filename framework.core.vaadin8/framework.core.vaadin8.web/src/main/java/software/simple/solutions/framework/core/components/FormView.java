@@ -85,7 +85,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 		return viewDetail;
 	}
 
-	public boolean handleClose(TabSheet tabsheet, Component tabContent) {
+	public boolean handleClose(TabSheet tabSheet, Component tabContent) {
 		return false;
 	}
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,13 +34,16 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.Command;
 
 import io.reactivex.functions.Consumer;
@@ -485,7 +489,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 					
 					@Override
 					public void onComponentEvent(ClickEvent<Button> event) {
-						UI.getCurrent().navigate(editRoute);
+						Map<String, String> parameters = new ConcurrentHashMap<String, String>();
+						parameters.put("edit", "true");
+//						RouteConfiguration.forSessionScope().getUrl(navigationTarget);
+						UI.getCurrent().navigate(editRoute,QueryParameters.simple(parameters));
 					}
 				});
 				return formBtn;
