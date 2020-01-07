@@ -115,12 +115,64 @@ public class TopMenuLayoutView extends VerticalLayout {
 	private Navigator navigator;
 	private UI ui;
 	private boolean authorizationByRole = true;
+	private boolean useNavigator = false;
 
 	public TopMenuLayoutView() throws FrameworkException {
 		super();
 		ui = UI.getCurrent();
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 
+		if (useNavigator) {
+			createNavigatorListeners();
+		}
+
+		referenceKeys = new ConcurrentHashMap<String, Object>();
+		sessionHolder.setReferenceKeys(referenceKeys);
+		SimpleSolutionsEventBus.register(this);
+
+		setMargin(true);
+		setSpacing(true);
+		buildLayout();
+
+		setUpMenus();
+
+		SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+		systemObserver.getApplicationLogoChangeObserver().subscribe(new Consumer<Boolean>() {
+
+			@Override
+			public void accept(Boolean t) throws Exception {
+				updateApplicationLogo();
+			}
+		});
+
+		if (useNavigator) {
+			createDefaultNavigation();
+		}
+
+	}
+
+	private void createDefaultNavigation() {
+		String state = navigator.getState();
+		if (StringUtils.isNotBlank(state)) {
+			try {
+				navigator.navigateTo(state);
+			} catch (IllegalArgumentException e) {
+				Notification notification = new Notification(
+						PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED,
+								UI.getCurrent().getLocale()),
+						Type.TRAY_NOTIFICATION);
+				notification.setDescription(PropertyResolver.getPropertyValueByLocale(
+						SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED_MESSAGE, UI.getCurrent().getLocale()));
+				notification.show(UI.getCurrent().getPage());
+				VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+				HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+				String requestUrl = httpServletRequest.getServletContext().getContextPath();
+				Page.getCurrent().replaceState(requestUrl + "/app");
+			}
+		}
+	}
+
+	private void createNavigatorListeners() {
 		navigator = new Navigator(ui, new ViewDisplay() {
 
 			private static final long serialVersionUID = -799205460550821576L;
@@ -174,45 +226,6 @@ public class TopMenuLayoutView extends VerticalLayout {
 				return true;
 			}
 		});
-
-		referenceKeys = new ConcurrentHashMap<String, Object>();
-		sessionHolder.setReferenceKeys(referenceKeys);
-		SimpleSolutionsEventBus.register(this);
-
-		setMargin(true);
-		setSpacing(true);
-		buildLayout();
-
-		setUpMenus();
-
-		SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
-		systemObserver.getApplicationLogoChangeObserver().subscribe(new Consumer<Boolean>() {
-
-			@Override
-			public void accept(Boolean t) throws Exception {
-				updateApplicationLogo();
-			}
-		});
-
-		String state = navigator.getState();
-		if (StringUtils.isNotBlank(state)) {
-			try {
-				navigator.navigateTo(state);
-			} catch (IllegalArgumentException e) {
-				Notification notification = new Notification(
-						PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED,
-								UI.getCurrent().getLocale()),
-						Type.TRAY_NOTIFICATION);
-				notification.setDescription(PropertyResolver.getPropertyValueByLocale(
-						SystemProperty.SYSTEM_MENU_NOT_AUTHORIZED_MESSAGE, UI.getCurrent().getLocale()));
-				notification.show(UI.getCurrent().getPage());
-				VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
-				HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
-				String requestUrl = httpServletRequest.getServletContext().getContextPath();
-				Page.getCurrent().replaceState(requestUrl + "/app");
-			}
-		}
-
 	}
 
 	private void setUpMenus() throws FrameworkException {
@@ -359,14 +372,16 @@ public class TopMenuLayoutView extends VerticalLayout {
 						: PropertyResolver.getPropertyValueByLocale(child.getMenu().getKey(),
 								UI.getCurrent().getLocale());
 
-				if (child.getMenu().getView() != null) {
-					try {
-						String viewClassName = child.getMenu().getView().getViewClassName();
-						Class<? extends com.vaadin.navigator.View> forName = (Class<? extends com.vaadin.navigator.View>) Class
-								.forName(viewClassName);
-						navigator.addView(child.getMenu().getId().toString(), forName);
-					} catch (ClassNotFoundException e) {
-						logger.error(e.getMessage(), e);
+				if (useNavigator) {
+					if (child.getMenu().getView() != null) {
+						try {
+							String viewClassName = child.getMenu().getView().getViewClassName();
+							Class<? extends com.vaadin.navigator.View> forName = (Class<? extends com.vaadin.navigator.View>) Class
+									.forName(viewClassName);
+							navigator.addView(child.getMenu().getId().toString(), forName);
+						} catch (ClassNotFoundException e) {
+							logger.error(e.getMessage(), e);
+						}
 					}
 				}
 
@@ -401,9 +416,12 @@ public class TopMenuLayoutView extends VerticalLayout {
 			private static final long serialVersionUID = 4714225361223264974L;
 
 			public void menuSelected(MenuItem selectedItem) {
-				// handleMenuSelected(viewId, menu);
-				String uuid = UUID.randomUUID().toString();
-				navigator.navigateTo(menu.getId().toString() + "/uuid=" + uuid);
+				if (useNavigator) {
+					String uuid = UUID.randomUUID().toString();
+					navigator.navigateTo(menu.getId().toString() + "/uuid=" + uuid);
+				} else {
+					handleMenuSelected(viewId, menu);
+				}
 			}
 		};
 	}
@@ -884,7 +902,7 @@ public class TopMenuLayoutView extends VerticalLayout {
 
 							@Override
 							public void handleNegative() {
-								return;
+								// Does nothing
 							}
 						});
 					} else {

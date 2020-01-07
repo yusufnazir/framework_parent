@@ -24,6 +24,7 @@ public class DataMenu extends CustomDataTaskChange {
 	private String index;
 	private String type;
 	private String parentMenuId;
+	private String icon;
 
 	@Override
 	public String getConfirmationMessage() {
@@ -55,48 +56,50 @@ public class DataMenu extends CustomDataTaskChange {
 
 		try {
 			String query = "select id_ from menus_ where id_=?";
-			PreparedStatement prepareStatement = connection.prepareStatement(query);
-			setData(prepareStatement, 1, id);
-			ResultSet resultSet = prepareStatement.executeQuery();
-
 			boolean exists = false;
-			while (resultSet.next()) {
-				exists = true;
+			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+				setData(prepareStatement, 1, id);
+				try (ResultSet resultSet = prepareStatement.executeQuery()) {
+					while (resultSet.next()) {
+						exists = true;
+					}
+				}
 			}
-			resultSet.close();
-			prepareStatement.close();
 
 			if (exists) {
-				String update = "update menus_ set key_=?, code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=? where id_=?";
-				prepareStatement = connection.prepareStatement(update);
-				setData(prepareStatement, 1, key);
-				setData(prepareStatement, 2, code);
-				setData(prepareStatement, 3, description);
-				setData(prepareStatement, 4, name);
-				setData(prepareStatement, 5, viewId);
-				setData(prepareStatement, 6, index);
-				setData(prepareStatement, 7, parentMenuId);
-				setData(prepareStatement, 8, type);
-				setData(prepareStatement, 9, id);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String update = "update menus_ set key_=?, code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=?, icon_=? where id_=?";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+					setData(prepareStatement, 1, key);
+					setData(prepareStatement, 2, code);
+					setData(prepareStatement, 3, description);
+					setData(prepareStatement, 4, name);
+					setData(prepareStatement, 5, viewId);
+					setData(prepareStatement, 6, index);
+					setData(prepareStatement, 7, parentMenuId);
+					setData(prepareStatement, 8, type);
+					setData(prepareStatement, 9, icon);
+					setData(prepareStatement, 10, id);
+					prepareStatement.executeUpdate();
+				}
 			} else {
-				String insert = "insert into menus_(id_,active_,key_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_) "
-						+ "values(?,?,?,?,?,?,?,?,?,?)";
-				prepareStatement = connection.prepareStatement(insert);
-				setData(prepareStatement, 1, id);
-				prepareStatement.setBoolean(2, true);
-//				prepareStatement.setDate(3, new Date(Calendar.getInstance().getTime().getTime()));
-				setData(prepareStatement, 3, key);
-				setData(prepareStatement, 4, code);
-				setData(prepareStatement, 5, description);
-				setData(prepareStatement, 6, name);
-				setData(prepareStatement, 7, viewId);
-				setData(prepareStatement, 8, index);
-				setData(prepareStatement, 9, parentMenuId);
-				setData(prepareStatement, 10, type);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String insert = "insert into menus_(id_,active_,key_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_,icon_) "
+						+ "values(?,?,?,?,?,?,?,?,?,?,?)";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+					setData(prepareStatement, 1, id);
+					prepareStatement.setBoolean(2, true);
+					// prepareStatement.setDate(3, new
+					// Date(Calendar.getInstance().getTime().getTime()));
+					setData(prepareStatement, 3, key);
+					setData(prepareStatement, 4, code);
+					setData(prepareStatement, 5, description);
+					setData(prepareStatement, 6, name);
+					setData(prepareStatement, 7, viewId);
+					setData(prepareStatement, 8, index);
+					setData(prepareStatement, 9, parentMenuId);
+					setData(prepareStatement, 10, type);
+					setData(prepareStatement, 11, icon);
+					prepareStatement.executeUpdate();
+				}
 			}
 
 		} catch (DatabaseException | SQLException e) {
@@ -176,6 +179,14 @@ public class DataMenu extends CustomDataTaskChange {
 
 	public void setParentMenuId(String parentMenuId) {
 		this.parentMenuId = parentMenuId;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 }

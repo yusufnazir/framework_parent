@@ -60,8 +60,6 @@ public class LoginView extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		String parameters = event.getParameters();
-		System.out.println(parameters);
 	}
 
 	public LoginView() throws FrameworkException {
