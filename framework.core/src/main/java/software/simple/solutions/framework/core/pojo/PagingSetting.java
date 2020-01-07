@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.pojo;
 
+import java.util.List;
+
 public class PagingSetting {
 
 	private int startPosition;
@@ -7,6 +9,7 @@ public class PagingSetting {
 	private Long count;
 	private String query;
 	private boolean doCount = false;
+	private List<SortQuery> sort;
 
 	public PagingSetting() {
 		super();
@@ -16,6 +19,11 @@ public class PagingSetting {
 		super();
 		setStartPosition(startPosition);
 		setMaxResult(maxResult);
+	}
+
+	public PagingSetting(int startPosition, int maxResult, List<SortQuery> sort) {
+		this(startPosition, maxResult);
+		setSort(sort);
 	}
 
 	public int getStartPosition() {
@@ -71,6 +79,14 @@ public class PagingSetting {
 			doCount = true;
 		}
 		this.query = query;
+	}
+
+	public List<SortQuery> getSort() {
+		return sort;
+	}
+
+	public void setSort(List<SortQuery> sort) {
+		this.sort = sort;
 	}
 
 }

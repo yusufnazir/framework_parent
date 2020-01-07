@@ -13,4 +13,8 @@ public class PersonProperty {
 	public static final String IMAGE = "model.person.image";
 	public static final String GENDER = "model.person.gender";
 	public static final String AGE = "model.person.age";
+	
+	public static final String PERSONAL_INFORMATION_TAB = "tab.personal.information";
+	public static final String CONTACT_INFORMATION_TAB = "tab.person.contact.information";
+	public static final String EMERGENCY_CONTACT_INFORMATION_TAB = "tab.person.emergency.contact.information";
 }

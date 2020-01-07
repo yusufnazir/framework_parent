@@ -9,8 +9,13 @@ public class SystemProperty {
 	public static final String SYSTEM_ENTITY_NAME = "system.entity.name";
 	public static final String SYSTEM_BUTTON_SUBMIT = "system.button.submit";
 	public static final String SYSTEM_BUTTON_DELETE = "system.button.delete";
+	public static final String SYSTEM_BUTTON_SAVE = "system.button.save";
 	public static final String SYSTEM_BUTTON_EDIT = "system.button.edit";
 	public static final String SYSTEM_BUTTON_CLEAR = "system.button.clear";
+	public static final String SYSTEM_BUTTON_CANCEL = "system.button.cancel";
+	public static final String SYSTEM_BUTTON_ADD = "system.button.add";
+	public static final String SYSTEM_BUTTON_REPORTS = "system.button.reports";
+	public static final String SYSTEM_BUTTON_EXPORT= "system.button.export";
 	public static final String SYSTEM_RESET_PASSWORD = "system.reset.password";
 	public static final String SYSTEM_MANAGE_PASSWORD = "system.manage.password";
 	public static final String UPDATE_SUCCESSFULL = "system.action.update.successful";
@@ -23,6 +28,7 @@ public class SystemProperty {
 	public static final String RESTORE_CONFIRMATION_REQUEST = "system.action.restore.confirmation.request";
 	public static final String CONFIRM = "system.action.confirm";
 	public static final String CANCEL = "system.action.cancel";
+	public static final String SEARCH = "system.action.search";
 	public static final String SYSTEM_BUTTON_VALIDATE = "system.button.validate";
 	public static final String SEARCH_FILTER = "system.advanced.search";
 	public static final String INCOMPLETE_CONFIGURATION = "sytem.configuration.incomplete.configuration";

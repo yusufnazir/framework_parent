@@ -37,7 +37,7 @@ public class ActionState implements Serializable {
 	private Boolean insertEnabled = Boolean.valueOf(false);
 	private Boolean updateEnabled = Boolean.valueOf(false);
 	private Boolean deleteEnabled = Boolean.valueOf(false);
-	private Boolean printEnabled = Boolean.valueOf(false);
+	private Boolean reportsEnabled = Boolean.valueOf(false);
 	private Boolean docEnabled = Boolean.valueOf(false);
 	private Boolean financeEnabled = Boolean.valueOf(false);
 	private Boolean hasAuthorizedTabs = Boolean.valueOf(false);
@@ -84,12 +84,12 @@ public class ActionState implements Serializable {
 		}
 	}
 
-	public Boolean getPrintEnabled() {
-		return this.printEnabled;
+	public Boolean getReportsEnabled() {
+		return this.reportsEnabled;
 	}
 
-	public void setPrintEnabled(Boolean printEnabled) {
-		this.printEnabled = printEnabled;
+	public void setReportsEnabled(Boolean reportsEnabled) {
+		this.reportsEnabled = reportsEnabled;
 	}
 
 	public Boolean getSearchEnabled() {
