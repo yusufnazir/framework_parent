@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541811277148">
+		author="simplesolutions" id="1578341222099">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_information_" />
@@ -20,11 +20,17 @@
 			<column name="SECONDARY_EMAIL_" type="VARCHAR(1000)" />
 			<column name="PRIMARY_CONTACT_NUMBER_" type="VARCHAR(1000)" />
 			<column name="SECONDARY_CONTACT_NUMBER_" type="VARCHAR(1000)" />
+			<column name="STREET_ADDRESS_" type="VARCHAR(1000)" />
+			<column name="STREET_ADDRESS_NUMBER_" type="VARCHAR(10)" />
+			<column name="CITY_" type="VARCHAR(100)" />
+			<column name="STATE_" type="VARCHAR(100)" />
+			<column name="POSTAL_CODE_" type="VARCHAR(100)" />
+			<column name="COUNTRY_ID_" type="BIGINT" />
 
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541811293710">
+		author="simplesolutions" id="1578341224107">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_information_aud" />
@@ -45,8 +51,156 @@
 			<column name="SECONDARY_EMAIL_" type="VARCHAR(1000)" />
 			<column name="PRIMARY_CONTACT_NUMBER_" type="VARCHAR(1000)" />
 			<column name="SECONDARY_CONTACT_NUMBER_" type="VARCHAR(1000)" />
-
+			<column name="STREET_ADDRESS_" type="VARCHAR(1000)" />
+			<column name="STREET_ADDRESS_NUMBER_" type="VARCHAR(10)" />
+			<column name="CITY_" type="VARCHAR(100)" />
+			<column name="STATE_" type="VARCHAR(100)" />
+			<column name="POSTAL_CODE_" type="VARCHAR(100)" />
+			<column name="COUNTRY_ID_" type="BIGINT" />
 		</createTable>
 	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341393801">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="STREET_ADDRESS_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="STREET_ADDRESS_" type="VARCHAR(1000)"></column>
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341395808">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="STREET_ADDRESS_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="STREET_ADDRESS_" type="VARCHAR(1000)"></column>
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341401809">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="STREET_ADDRESS_NUMBER_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="STREET_ADDRESS_NUMBER_" type="VARCHAR(10)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341407811">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="STREET_ADDRESS_NUMBER_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="STREET_ADDRESS_NUMBER_" type="VARCHAR(10)" />
+		</addColumn>
+	</changeSet>
 
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341413813">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="CITY_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="CITY_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341417813">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="CITY_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="CITY_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341421814">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="STATE_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="STATE_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341425815">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="STATE_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="STATE_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578341435816">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="POSTAL_CODE_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="POSTAL_CODE_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578330659384">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="POSTAL_CODE_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="POSTAL_CODE_" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578330683388">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_" columnName="COUNTRY_ID_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_">
+			<column name="COUNTRY_ID_" type="BIGINT" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578330687389">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_information_aud" columnName="COUNTRY_ID_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_information_aud">
+			<column name="COUNTRY_ID_" type="BIGINT" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

@@ -58,7 +58,7 @@ public class Menu extends MappedSuperClass implements ILocalized {
 	private Long index;
 
 	@Column(name = CxodeTables.MENU.COLUMNS.ICON)
-	private Integer icon;
+	private String icon;
 
 	@FilterFieldProperty(fieldProperty = MenuProperty.TYPE)
 	@Column(name = CxodeTables.MENU.COLUMNS.TYPE)
@@ -100,11 +100,11 @@ public class Menu extends MappedSuperClass implements ILocalized {
 		this.index = index;
 	}
 
-	public Integer getIcon() {
+	public String getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Integer icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 

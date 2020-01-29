@@ -293,7 +293,7 @@ public class AppLayoutView extends VerticalLayout {
 			if (homeViewMenuId != null) {
 				homeMenu = menuServiceFacade.getById(Menu.class, homeViewMenuId);
 				if (homeMenu != null) {
-					Integer codePoint = homeMenu.getIcon();
+					Integer codePoint = NumberUtil.getInteger(homeMenu.getIcon());
 					FontAwesome fontAwesome = null;
 					if (codePoint != null) {
 						fontAwesome = FontAwesome.fromCodepoint(codePoint);
@@ -328,7 +328,7 @@ public class AppLayoutView extends VerticalLayout {
 						navigatorAppLayoutBuilder.add(submenuBuilder.build());
 					} else {
 						try {
-							Integer codePoint = menu.getIcon();
+							Integer codePoint = NumberUtil.getInteger(menu.getIcon());
 							FontAwesome fontAwesome = null;
 							if (codePoint != null) {
 								fontAwesome = FontAwesome.fromCodepoint(codePoint);
@@ -408,7 +408,7 @@ public class AppLayoutView extends VerticalLayout {
 					submenuBuilder.add(builder.build());
 				} else {
 					try {
-						Integer codePoint = menu.getIcon();
+						Integer codePoint = NumberUtil.getInteger(menu.getIcon());
 						FontAwesome fontAwesome = null;
 						if (codePoint != null) {
 							fontAwesome = FontAwesome.fromCodepoint(codePoint);

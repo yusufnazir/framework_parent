@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541813484398">
+		author="simplesolutions" id="1577565895596">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="menus_" />
@@ -19,7 +19,7 @@
 			<column name="CODE_" type="VARCHAR(255)" />
 			<column name="DESCRIPTION_" type="VARCHAR(255)" />
 			<column name="NAME_" type="VARCHAR(255)" />
-			<column name="ICON_" type="BIGINT" />
+			<column name="ICON_" type="VARCHAR(255)" />
 			<column name="VIEW_ID_" type="BIGINT" />
 			<column name="INDEX_" type="BIGINT" />
 			<column name="TYPE_" type="BIGINT" />
@@ -28,7 +28,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541813490735">
+		author="simplesolutions" id="1577565923910">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="menus_aud" />
@@ -48,13 +48,53 @@
 			<column name="CODE_" type="VARCHAR(255)" />
 			<column name="DESCRIPTION_" type="VARCHAR(255)" />
 			<column name="NAME_" type="VARCHAR(255)" />
-			<column name="ICON_" type="BIGINT" />
+			<column name="ICON_" type="VARCHAR(255)" />
 			<column name="VIEW_ID_" type="BIGINT" />
 			<column name="INDEX_" type="BIGINT" />
 			<column name="TYPE_" type="BIGINT" />
 			<column name="PARENT_MENU_ID_" type="BIGINT" />
 
 		</createTable>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333251838">
+		<preConditions>
+			<columnExists tableName="menus_" columnName="ICON_" />
+		</preConditions>
+		<dropColumn tableName="menus_" columnName="ICON_" />
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333253845">
+		<preConditions>
+			<columnExists tableName="menus_aud" columnName="ICON_" />
+		</preConditions>
+		<dropColumn tableName="menus_aud" columnName="ICON_" />
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333265848">
+		<preConditions>
+			<not>
+				<columnExists tableName="menus_" columnName="ICON_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="menus_">
+			<column name="ICON_" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1578333273849">
+		<preConditions>
+			<not>
+				<columnExists tableName="menus_aud" columnName="ICON_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="menus_aud">
+			<column name="ICON_" type="VARCHAR(255)" />
+		</addColumn>
 	</changeSet>
 
 </databaseChangeLog>

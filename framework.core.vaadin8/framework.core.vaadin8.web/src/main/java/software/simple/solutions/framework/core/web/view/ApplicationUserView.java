@@ -210,6 +210,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		public void executeBuild() throws FrameworkException {
 
 			HorizontalLayout userMainLayout = new HorizontalLayout();
+			userMainLayout.setWidth("100%");
 			addComponent(userMainLayout);
 
 			userInfoLayout = createUserInfoLayout();
