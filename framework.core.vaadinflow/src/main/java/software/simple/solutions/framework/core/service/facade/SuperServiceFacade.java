@@ -31,17 +31,21 @@ public class SuperServiceFacade<S extends ISuperService> implements ISuperServic
 		if (ui != null) {
 			if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
 				SessionHolder sessionHolder = (SessionHolder) ui.getSession().getAttribute(Constants.SESSION_HOLDER);
-				ApplicationUser applicationUser = sessionHolder.getApplicationUser();
-				if (applicationUser != null) {
-					UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(
-							applicationUser.getUsername(), sessionHolder.getPassword());
-					AuthenticationManager authenticationManager = ContextProvider.getBean(AuthenticationManager.class);
-					Authentication auth = authenticationManager.authenticate(authReq);
-					SecurityContext sc = SecurityContextHolder.getContext();
-					sc.setAuthentication(auth);
+				if (sessionHolder != null) {
+					ApplicationUser applicationUser = sessionHolder.getApplicationUser();
+					if (applicationUser != null) {
+						UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(
+								applicationUser.getUsername(), sessionHolder.getPassword());
+						AuthenticationManager authenticationManager = ContextProvider
+								.getBean(AuthenticationManager.class);
+						Authentication auth = authenticationManager.authenticate(authReq);
+						SecurityContext sc = SecurityContextHolder.getContext();
+						sc.setAuthentication(auth);
+					}
 				}
 			}
 		}
+		System.out.println(serviceClass);
 		service = ContextProvider.getBean(serviceClass);
 	}
 

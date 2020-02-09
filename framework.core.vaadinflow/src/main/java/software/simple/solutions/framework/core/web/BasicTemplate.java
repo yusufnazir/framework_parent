@@ -55,6 +55,7 @@ import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.Role;
+import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PagingInfo;
 import software.simple.solutions.framework.core.pojo.PagingResult;
@@ -159,12 +160,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	public void executeBuild() throws FrameworkException {
 		Route route = this.getClass().getAnnotation(Route.class);
 		String path = route.value();
-
-		Long menuId = getSessionHolder().getRouteMenu(path);
-		MenuServiceFacade menuServiceFacade = MenuServiceFacade.get(UI.getCurrent());
-		Menu menu = menuServiceFacade.getById(Menu.class, menuId);
-		getViewDetail().setMenu(menu);
-
+		if (getViewDetail().getMenu() == null) {
+			Long menuId = getSessionHolder().getRouteMenu(path);
+			MenuServiceFacade menuServiceFacade = MenuServiceFacade.get(UI.getCurrent());
+			Menu menu = menuServiceFacade.getById(Menu.class, menuId);
+			getViewDetail().setMenu(menu);
+		}
 		executePreBuild();
 
 		setUpTemplateLayout();
@@ -298,8 +299,15 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndUserId(
 					getViewDetail().getMenu().getView().getId(), getSessionHolder().getApplicationUser().getId());
 		} else {
-			privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).getPrivilegesByViewIdAndRoleId(
-					getViewDetail().getMenu().getView().getId(), getSessionHolder().getSelectedRole().getId());
+			System.out.println(UI.getCurrent());
+			RoleViewPrivilegeServiceFacade roleViewPrivilegeServiceFacade = RoleViewPrivilegeServiceFacade
+					.get(UI.getCurrent());
+			ViewDetail viewDetail = getViewDetail();
+			Menu menu = viewDetail.getMenu();
+			View view = menu.getView();
+			Long id = view.getId();
+			privileges = roleViewPrivilegeServiceFacade.getPrivilegesByViewIdAndRoleId(id,
+					getSessionHolder().getSelectedRole().getId());
 		}
 
 		// ActionState actionState =
@@ -486,13 +494,13 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				// formBtn.addStyleName(Style.RESIZED_ICON);
 //				formBtn.addClickListener(new BasicTemplate.FormSetup(source));
 				formBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-					
+
 					@Override
 					public void onComponentEvent(ClickEvent<Button> event) {
 						Map<String, String> parameters = new ConcurrentHashMap<String, String>();
 						parameters.put("edit", "true");
 //						RouteConfiguration.forSessionScope().getUrl(navigationTarget);
-						UI.getCurrent().navigate(editRoute,QueryParameters.simple(parameters));
+						UI.getCurrent().navigate(editRoute, QueryParameters.simple(parameters));
 					}
 				});
 				return formBtn;
@@ -569,6 +577,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 		contentGrid = setUpGrid();
 		filterAndResultLayout.add(contentGrid);
+		System.out.println(filterAndResultLayout.isVisible());
 		// filterAndResultLayout.setExpandRatio(contentGrid, 1f);
 
 	}
@@ -1018,9 +1027,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				}
 			}
 		});
-		
+
 		actionBar.setActionDelete(new ComponentEventListener<ClickEvent<Button>>() {
-			
+
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
 //				resetErrorContent();
@@ -1067,7 +1076,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 //				});
 			}
 		});
-
 
 		// actionBar.setActionRestore(new Command() {
 		//
