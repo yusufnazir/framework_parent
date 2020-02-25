@@ -70,7 +70,7 @@ public class SuperServiceFacade<S extends ISuperService> implements ISuperServic
 
 	@Override
 	public <T, R> List<R> getForListing(Class<T> cl, List<Long> ids, Boolean active) throws FrameworkException {
-		return service.getForListing(cl);
+		return service.getForListing(cl, ids, active);
 	}
 
 	@Override
