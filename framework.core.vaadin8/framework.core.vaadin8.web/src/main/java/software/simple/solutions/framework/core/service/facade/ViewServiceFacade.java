@@ -2,7 +2,8 @@ package software.simple.solutions.framework.core.service.facade;
 
 import com.vaadin.ui.UI;
 
-import software.simple.solutions.framework.core.service.ISuperService;
+import software.simple.solutions.framework.core.entities.View;
+import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.IViewService;
 
 public class ViewServiceFacade extends SuperServiceFacade<IViewService> implements IViewService {
@@ -15,5 +16,10 @@ public class ViewServiceFacade extends SuperServiceFacade<IViewService> implemen
 
 	public static ViewServiceFacade get(UI ui) {
 		return new ViewServiceFacade(ui, IViewService.class);
+	}
+
+	@Override
+	public View getByClassName(String name) throws FrameworkException {
+		return service.getByClassName(name);
 	}
 }

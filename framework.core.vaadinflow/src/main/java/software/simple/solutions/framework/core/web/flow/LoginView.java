@@ -39,11 +39,12 @@ import software.simple.solutions.framework.core.service.IUserRoleService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
+import software.simple.solutions.framework.core.web.routing.Routes;
 
 /**
  * The main view contains a button and a click listener.
  */
-@Route(value = "login", layout = MainView.class)
+@Route(value = Routes.LOGIN, layout = MainView.class)
 @CssImport(value = "./styles/shared-styles.css")
 public class LoginView extends FlexLayout implements BeforeEnterObserver {
 
@@ -211,7 +212,12 @@ public class LoginView extends FlexLayout implements BeforeEnterObserver {
 					if (loginSuccessfullObserver != null) {
 						loginSuccessfullObserver.onNext(true);
 					}
-					ui.navigate("");
+					if (sessionHolder.getForwardTo() != null) {
+						ui.navigate(sessionHolder.getForwardTo());
+						sessionHolder.setForwardTo(null);
+					} else {
+						ui.navigate("");
+					}
 				} catch (FrameworkException e) {
 					e.printStackTrace();
 					// logger.error(e.getMessage(), e);
@@ -220,7 +226,37 @@ public class LoginView extends FlexLayout implements BeforeEnterObserver {
 		});
 
 		// @formatter:off
-		String styles = "."+CENTER_LOGIN_LAYOUT+" { "
+		String styles = "html {"
+				+ "--lumo-border-radius: 0.125em;"
+				+ "--lumo-size-xl: 2.5rem;"
+				+ "--lumo-size-l: 2rem;"
+				+ "--lumo-size-m: 1.75rem;"
+				+ "--lumo-size-s: 1.5rem;"
+				+ "--lumo-space-xl: 1.75rem;"
+				+ "--lumo-space-l: 1.125rem;"
+				+ "--lumo-space-m: 0.5rem;"
+				+ "--lumo-space-s: 0.25rem;"
+				+ "--lumo-space-xs: 0.125rem;"
+				+ "--lumo-font-size: 1rem;"
+				+ "--lumo-font-size-xxxl: 1.375rem;"
+				+ "--lumo-font-size-xxl: 1.125rem;"
+				+ "--lumo-font-size-xl: 1rem;"
+				+ "--lumo-font-size-l: 0.875rem;"
+				+ "--lumo-font-size-m: 0.75rem;"
+				+ "--lumo-font-size-s: 0.6875rem;"
+				+ "--lumo-font-size-xs: 0.625rem;"
+				+ "--lumo-font-size-xxs: 0.625rem;"
+				+ "--lumo-line-height-m: 1.4;"
+				+ "--lumo-line-height-s: 1.2;"
+				+ "--lumo-line-height-xs: 1.1;"
+				+ "--lumo-size-xs: 1.25rem;"
+				+ "--lumo-primary-text-color: rgb(243, 156, 18);"
+				+ "--lumo-primary-color-50pct: rgba(243, 156, 18, 0.5);"
+				+ "--lumo-primary-color-10pct: rgba(243, 156, 18, 0.1);"
+				+ "--lumo-primary-color: #f39c12;"
+				+ "}"
+				+ ""
+				+ "."+CENTER_LOGIN_LAYOUT+" { "
 		        + "position: absolute;"
 		        + "left: 50%;"
 		        + "top: 50%;"

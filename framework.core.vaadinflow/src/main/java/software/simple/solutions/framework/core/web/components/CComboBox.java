@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.data.provider.Query;
 
 import software.simple.solutions.framework.core.pojo.ComboItem;
@@ -14,6 +15,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortUtils;
 import software.simple.solutions.framework.core.web.IField;
 
+@CssImport(value = "styles/paging-combobox.css", themeFor = "vaadin-combo-box")
 public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable<CComboBox> {
 	private static final long serialVersionUID = -6297946915884259838L;
 	private boolean isThisRequired = false;

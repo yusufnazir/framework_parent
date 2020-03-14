@@ -12,6 +12,7 @@ import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.util.SessionHolder;
+import software.simple.solutions.framework.core.web.components.CDialog;
 
 public abstract class AbstractBaseView extends VerticalLayout implements BaseView {
 
@@ -23,7 +24,7 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	private String entityReferenceKey;
 	private Object selectedEntity;
 	private Object parentEntity;
-	// private Window popUpWindow;
+	private CDialog popUpWindow;
 	private Object popUpEntity;
 	private boolean popUpMode = false;
 	private boolean forwardToSearch = false;
@@ -115,16 +116,16 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		this.parentEntity = parentEntity;
 	}
 
-	// public Window getPopUpWindow() {
-	// return popUpWindow;
-	// }
-	//
-	// public void setPopUpWindow(Window popUpWindow) {
-	// this.popUpWindow = popUpWindow;
-	// }
+	public CDialog getPopUpWindow() {
+		return popUpWindow;
+	}
 
-	public Object getPopUpEntity() {
-		return popUpEntity;
+	public void setPopUpWindow(CDialog popUpWindow) {
+		this.popUpWindow = popUpWindow;
+	}
+
+	public <T> T getPopUpEntity() {
+		return (T) popUpEntity;
 	}
 
 	public void setPopUpEntity(Object popUpEntity) {

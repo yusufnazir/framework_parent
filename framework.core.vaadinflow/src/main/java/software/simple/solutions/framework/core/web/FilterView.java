@@ -7,16 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.appreciated.css.grid.GridLayoutComponent;
-import com.github.appreciated.css.grid.GridLayoutComponent.ColumnAlign;
 import com.github.appreciated.css.grid.GridLayoutComponent.RowAlign;
-import com.github.appreciated.css.grid.sizes.Auto;
-import com.github.appreciated.css.grid.sizes.FitContent;
 import com.github.appreciated.css.grid.sizes.Flex;
 import com.github.appreciated.css.grid.sizes.Length;
 import com.github.appreciated.css.grid.sizes.MinMax;
 import com.github.appreciated.css.grid.sizes.Repeat.RepeatMode;
 import com.github.appreciated.layout.FlexibleGridLayout;
-import com.github.appreciated.layout.FluentGridLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -57,18 +53,18 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		referenceKeys = new HashMap<String, Object>();
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
 		setSpacing(true);
-//		layout = new FluentGridLayout()
-//				.withTemplateColumns(new Flex(1),new Flex(1),new Flex(1))
-//				.withPadding(true).withSpacing(true)
-//				.withOverflow(GridLayoutComponent.Overflow.AUTO);
-		
+		// layout = new FluentGridLayout()
+		// .withTemplateColumns(new Flex(1),new Flex(1),new Flex(1))
+		// .withPadding(true).withSpacing(true)
+		// .withOverflow(GridLayoutComponent.Overflow.AUTO);
+
 		layout = new FlexibleGridLayout()
-				.withColumns(RepeatMode.AUTO_FILL,new MinMax(new Length("190px"),new Flex(1)))
-				.withAutoRows(new Length("-1px"))
-				.withPadding(true).withSpacing(true).withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE)
-				.withOverflow(GridLayoutComponent.Overflow.AUTO);
-		
+				.withColumns(RepeatMode.AUTO_FILL, new MinMax(new Length("250px"), new Flex(1)))
+				.withAutoRows(new Length("-1px")).withPadding(true).withSpacing(true)
+				.withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE).withOverflow(GridLayoutComponent.Overflow.AUTO);
+
 		layout.setSizeFull();
+		layout.setSpacing(true);
 		setSizeFull();
 		add(layout);
 	}
@@ -190,7 +186,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 			}
 			setUpComponent(component, key);
 			layout.add(component);
-//			layout.setColumnAlign(component, ColumnAlign.START);
+			// layout.setColumnAlign(component, ColumnAlign.START);
 			layout.setRowAlign(component, RowAlign.STRETCH);
 
 			// add((Component) component, newColumn + 1, row);
@@ -204,7 +200,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 
 	private void setUpComponent(Component component, String key) {
 		if (component instanceof LookUpField) {
-			((HasSize) component).setWidth("300px");
+			((HasSize) component).setWidth("-1px");
+			((LookUpField) component).setCaptionByKey(key);
 		} else if (component instanceof CTextField) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CTextArea) {
@@ -214,15 +211,15 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		} else if (component instanceof CDiscreetNumberField) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CComboBox) {
-//			((HasSize) component).setWidth("300px");
+			// ((HasSize) component).setWidth("300px");
 			((CComboBox) component)
-			.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 		} else if (component instanceof CPopupDateField || component instanceof CDateIntervalLayout
 				|| component instanceof CDateTimeIntervalLayout || component instanceof CDecimalNumberIntervalLayout
 				|| component instanceof CDiscreetNumberIntervalLayout) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
-//			((HasSize) component).setWidth("300px");
+			// ((HasSize) component).setWidth("300px");
 			((CStringIntervalLayout) component)
 					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 		} else if (component instanceof ActiveSelect) {
@@ -245,9 +242,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 
 	public class FlexibleGridLayoutExample extends HorizontalLayout {
 		public FlexibleGridLayoutExample() {
-			FlexibleGridLayout layout = new FlexibleGridLayout()
-					.withColumns(RepeatMode.AUTO_FILL, new Flex(1))
-//					.withAutoRows(new Flex(1))
+			FlexibleGridLayout layout = new FlexibleGridLayout().withColumns(RepeatMode.AUTO_FILL, new Flex(1))
+					// .withAutoRows(new Flex(1))
 					// .withItems(
 					// new ExampleCard(), new ExampleCard(), new ExampleCard(),
 					// new ExampleCard(), new ExampleCard(),

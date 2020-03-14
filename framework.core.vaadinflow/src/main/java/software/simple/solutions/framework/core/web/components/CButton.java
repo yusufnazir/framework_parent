@@ -6,7 +6,7 @@ import com.vaadin.flow.component.PropertyDescriptor;
 import com.vaadin.flow.component.PropertyDescriptors;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.icon.Icon;
 
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
@@ -23,6 +23,10 @@ public class CButton extends Button {
 	public CButton(String caption) {
 		this();
 		super.setText(caption);
+	}
+
+	public CButton(Icon icon) {
+		super(icon);
 	}
 
 	public void setCaptionByKey(String key) {

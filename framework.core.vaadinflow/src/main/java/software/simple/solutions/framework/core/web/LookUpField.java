@@ -3,18 +3,23 @@ package software.simple.solutions.framework.core.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.dialog.GeneratedVaadinDialog;
+import com.vaadin.flow.component.dialog.GeneratedVaadinDialog.OpenedChangeEvent;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.internal.AbstractFieldSupport;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.Registration;
 
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
@@ -22,156 +27,145 @@ import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.util.ContextProvider;
-import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
-import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
-import software.simple.solutions.framework.core.web.ViewUtil;
 import software.simple.solutions.framework.core.web.components.CButton;
+import software.simple.solutions.framework.core.web.components.CDialog;
 import software.simple.solutions.framework.core.web.components.CTextField;
 
-public class LookUpField extends CustomField<Object> implements IField, IParentEntity {
+public class LookUpField<C extends LookUpField<C, T>, T> extends HorizontalLayout
+		implements IParentEntity<T>, HasValueAndElement<ComponentValueChangeEvent<C, T>, T> {
 
 	private static final long serialVersionUID = -6953072556831688132L;
 
 	private static final Logger logger = LogManager.getLogger(LookUpField.class);
 
-	private Dialog window;
+	private CDialog window;
 	private VerticalLayout layout;
 	private Menu menu;
 	private CButton lookUpBtn;
 	private CButton clearUpBtn;
-	private CTextField valueFld;
 	private AbstractBaseView view;
 	private Object entity;
-//	private CssLayout cssLayout;
 	private Class<?> viewClass;
 	private SessionHolder sessionHolder;
 	private Object parentEntity;
 	private Class<?> entityClass;
+	private Button closeBtn;
+	private CTextField textField;
+	private final AbstractFieldSupport<C, T> fieldSupport;
 
 	public LookUpField() {
 		super();
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
+		getElement().getStyle().set("--lumo-text-field-size", "var(--lumo-size-s)");
+		fieldSupport = createFieldSupport(null);
+
+		setSpacing(false);
+
+		textField = new CTextField();
+		textField.setReadOnly(true);
+		textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+		textField.getStyle().set("--lumo-text-field-size", "1.4rem");
+		add(textField);
+		textField.setWidth("100%");
+
 		lookUpBtn = new CButton();
-		lookUpBtn.setIcon(FontAwesome.Solid.SEARCH.create());
+		lookUpBtn.setIcon(new Icon(VaadinIcon.ELLIPSIS_DOTS_H));
 		lookUpBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+		lookUpBtn.getStyle().set("border", "1px solid");
 		add(lookUpBtn);
 		lookUpBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-			
+
+			private static final long serialVersionUID = 6165251315142630780L;
+
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
-				window = new Dialog();
+				window = new CDialog();
+
+				try {
+					IMenuService menuService = ContextProvider.getBean(IMenuService.class);
+					menu = menuService.getLookUpByViewClass(sessionHolder.getSelectedRole().getId(),
+							viewClass.getName());
+					window.setHeight("calc(90vh - (2*var(--lumo-space-m)))");
+					window.setWidth("calc(90vw - (4*var(--lumo-space-m)))");
+					window.setCloseOnEsc(true);
+					window.setCloseOnOutsideClick(false);
+					layout = new VerticalLayout();
+					layout.setHeight("100%");
+					// layout.setMargin(true);
+					HorizontalLayout headerLayout = new HorizontalLayout();
+					headerLayout.setWidth("100%");
+					closeBtn = new Button("X");
+					closeBtn.getStyle().set("background", "red").set("color", "white");
+					headerLayout.add(closeBtn);
+					headerLayout.setJustifyContentMode(JustifyContentMode.END);
+					layout.add(headerLayout);
+					window.add(layout);
+
+					createContent();
+					window.open();
+					closeBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+						private static final long serialVersionUID = 2163189088978233369L;
+
+						@Override
+						public void onComponentEvent(ClickEvent<Button> event) {
+							window.close();
+						}
+					});
+
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					// new MessageWindowHandler(e);
+				}
+
 			}
 		});
-		
-		Anchor anchor = new Anchor();
-		anchor.setText("test anchor");
-		add(anchor);
-		
-//		initContent();
+
+		clearUpBtn = new CButton();
+		clearUpBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+		clearUpBtn.setIcon(new Icon(VaadinIcon.CLOSE));
+		clearUpBtn.getStyle().set("border", "1px solid");
+		add(clearUpBtn);
+		clearUpBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = 7585289128374363839L;
+
+			@Override
+			public void onComponentEvent(ClickEvent<Button> event) {
+				textField.clear();
+				entity = null;
+				window.setData(false);
+			}
+		});
+		setVerticalComponentAlignment(Alignment.END, textField, lookUpBtn, clearUpBtn);
 	}
 
-//	private Component initContent() {
-//		if (cssLayout == null) {
-//			cssLayout = new CssLayout();
-//			cssLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-//			cssLayout.addStyleName(Style.LOOKUP_VALUE_FIELD);
-//			cssLayout.setWidth("100%");
-//			lookUpBtn = new CButton();
-//			lookUpBtn.setCaption("...");
-//			lookUpBtn.setWidth("30px");
-//			lookUpBtn.addClickListener(new ClickListener() {
-//
-//				private static final long serialVersionUID = -279867470227678611L;
-//
-//				@Override
-//				public void buttonClick(ClickEvent event) {
-//					try {
-//						IMenuService menuService = ContextProvider.getBean(IMenuService.class);
-//						menu = menuService.getLookUpByViewClass(sessionHolder.getSelectedRole().getId(),
-//								viewClass.getName());
-//						// SimpleSolutionsEventBus.post(new
-//						// SimpleSolutionsEvent.LookupMenuSelectedEvent(menu));
-//						window = new Window();
-//						window.setWidth("90%");
-//						window.setHeight("90%");
-//						window.setClosable(true);
-//						window.setModal(true);
-//						window.center();
-//						layout = new VerticalLayout();
-//						layout.setHeight("100%");
-//						layout.setMargin(true);
-//						window.setContent(layout);
-//
-//						createContent();
-//						UI.getCurrent().addWindow(window);
-//						window.focus();
-//					} catch (Exception e) {
-//						logger.error(e.getMessage(), e);
-//						new MessageWindowHandler(e);
-//					}
-//				}
-//			});
-//			valueFld = new CTextField();
-//			valueFld.setWidth("100%");
-//			valueFld.setReadOnly(true);
-//			clearUpBtn = new CButton();
-//			clearUpBtn.setWidth("-1px");
-//			clearUpBtn.setIcon(VaadinIcons.CLOSE);
-//			clearUpBtn.setVisible(false);
-//			clearUpBtn.addClickListener(new ClickListener() {
-//
-//				private static final long serialVersionUID = 4909404114126188608L;
-//
-//				@Override
-//				public void buttonClick(ClickEvent event) {
-//					valueFld.setValue(null);
-//					setValue(null);
-//					clearUpBtn.setVisible(false);
-//					if (view != null) {
-//						view.setPopUpEntity(null);
-//					}
-//				}
-//			});
-//
-//			cssLayout.addComponent(valueFld);
-//			cssLayout.addComponent(clearUpBtn);
-//			cssLayout.addComponent(lookUpBtn);
-//		}
-//
-//		return cssLayout;
-//	}
+	private void createContent() throws FrameworkException {
+		if (viewClass != null) {
 
-//	private void createContent() throws FrameworkException {
-//		if (viewClass != null) {
-//
-//			SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
-//			simpleSolutionsMenuItem.setParentEntity(getParentEntity());
-//			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId(),
-//					sessionHolder.getApplicationUser().getId());
-//			view.setPopUpWindow(window);
-//			view.setPopUpEntity(entity);
-//			layout.addComponent(view);
-//			window.setCaption(view.getViewDetail().getMenu().getName());
-//			window.addCloseListener(new CloseListener() {
-//
-//				private static final long serialVersionUID = -6641666551842097904L;
-//
-//				@Override
-//				public void windowClose(CloseEvent e) {
-//					setValue(view.getPopUpEntity());
-//				}
-//			});
-//		}
-//	}
+			SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
+			simpleSolutionsMenuItem.setParentEntity(getParentEntity());
+			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId(),
+					sessionHolder.getApplicationUser().getId());
+			view.setPopUpEntity(entity);
+			layout.add(view);
+			view.executeBuild();
+			view.setPopUpWindow(window);
+			window.addOpenedChangeListener(
+					new ComponentEventListener<GeneratedVaadinDialog.OpenedChangeEvent<Dialog>>() {
 
-	public void setSelectedValue() {
-		if (entity == null) {
-			valueFld.setValue(null);
-			clearUpBtn.setVisible(false);
-		} else {
-			valueFld.setValue(((IMappedSuperClass) entity).getCaption());
-			clearUpBtn.setVisible(true);
+						private static final long serialVersionUID = 5633661963692930563L;
+
+						@Override
+						public void onComponentEvent(OpenedChangeEvent<Dialog> event) {
+							boolean opened = event.isOpened();
+							Boolean data = window.getData();
+							if (!opened && data != null && data) {
+								setValue(view.getPopUpEntity());
+							}
+						}
+					});
 		}
 	}
 
@@ -179,25 +173,14 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 		this.viewClass = viewClass;
 	}
 
-	@Override
-	public Object getValue() {
-		return entity;
-	}
-
-//	@Override
-//	protected void doSetValue(Object value) {
-//		this.entity = value;
-//		setSelectedValue();
-//	}
-
-	public <T> T getItemId() {
+	public <E> E getItemId() {
 		if (entity == null) {
 			return null;
 		}
-		return (T) ((IMappedSuperClass) entity).getId();
+		return (E) ((IMappedSuperClass) entity).getId();
 	}
 
-	public <T> T getParentEntity() {
+	public T getParentEntity() {
 		return (T) parentEntity;
 	}
 
@@ -205,7 +188,7 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 		this.parentEntity = parentEntity;
 	}
 
-	public void handleForParentEntity(Object parentEntity) {
+	public void handleForParentEntity(T parentEntity) {
 		if (parentEntity != null && parentEntity.getClass().isAssignableFrom(entityClass)) {
 			setValue(parentEntity);
 			setEnabled(false);
@@ -216,27 +199,8 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 		this.entityClass = entityClass;
 	}
 
-	@Override
-	public boolean isThisRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setRequired() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setDefault() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void setCaptionByKey(String key) {
-		super.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+		textField.setCaptionByKey(key);
 	}
 
 	@Override
@@ -252,16 +216,50 @@ public class LookUpField extends CustomField<Object> implements IField, IParentE
 		lookUpBtn.setEnabled(enabled);
 	}
 
-	@Override
-	protected Object generateModelValue() {
+	public void setValue(T entity) {
+		if (entity == null) {
+			textField.setValue("...");
+			clearUpBtn.setVisible(false);
+		} else {
+			textField.setValue(((IMappedSuperClass) entity).getCaption());
+			clearUpBtn.setVisible(true);
+		}
+		fieldSupport.setValue(entity);
+	}
+
+	public void setReadOnly(boolean b) {
 		// TODO Auto-generated method stub
-		return null;
+
 	}
 
 	@Override
-	protected void setPresentationValue(Object newPresentationValue) {
+	public boolean isReadOnly() {
 		// TODO Auto-generated method stub
-		
+		return false;
+	}
+
+	private AbstractFieldSupport<C, T> createFieldSupport(T defaultValue) {
+		@SuppressWarnings("unchecked")
+		C thisC = (C) this;
+		return new AbstractFieldSupport<>(thisC, defaultValue, this::valueEquals, this::setPresentationValue);
+	}
+
+	protected boolean valueEquals(T value1, T value2) {
+		return fieldSupport.valueEquals(value1, value2);
+	}
+
+	protected void setPresentationValue(T newPresentationValue) {
+		textField.setValue(((IMappedSuperClass) newPresentationValue).getCaption());
+	}
+
+	@Override
+	public Registration addValueChangeListener(ValueChangeListener<? super ComponentValueChangeEvent<C, T>> listener) {
+		return fieldSupport.addValueChangeListener(listener);
+	}
+
+	@Override
+	public T getValue() {
+		return (T) entity;
 	}
 
 }

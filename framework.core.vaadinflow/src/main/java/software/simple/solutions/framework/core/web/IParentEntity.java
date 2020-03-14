@@ -1,6 +1,6 @@
 package software.simple.solutions.framework.core.web;
 
-public interface IParentEntity {
+public interface IParentEntity<T> {
 
-	public void handleForParentEntity(Object parentEntity);
+	public void handleForParentEntity(T parentEntity);
 }

@@ -54,6 +54,7 @@ import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
 import software.simple.solutions.framework.core.web.routing.Routes;
+import software.simple.solutions.framework.core.web.view.forms.ApplicationUserForm;
 
 @Route(value = Routes.APPLICATION_USER, layout = MainView.class)
 public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
@@ -66,7 +67,7 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 		setEntityClass(ApplicationUser.class);
 		setServiceClass(ApplicationUserServiceFacade.class);
 		setFilterClass(Filter.class);
-		setFormClass(Form.class);
+		setFormClass(ApplicationUserForm.class);
 		setParentReferenceKey(ReferenceKey.APPLICATION_USER);
 		setEditRoute(Routes.APPLICATION_USER_EDIT);
 	}
@@ -324,13 +325,21 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 		private void createPersonLookUpListener() {
 			personInfoLayout.setVisible(false);
-			personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Object>>() {
+			personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
+
+				@Override
+				public void valueChanged(ValueChangeEvent<Person> event) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+			personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
 
 				private static final long serialVersionUID = 3798217052004909083L;
 
 				@Override
-				public void valueChanged(ValueChangeEvent<Object> event) {
-					person = (Person) event.getValue();
+				public void valueChanged(ValueChangeEvent<Person> event) {
+					person = event.getValue();
 					personInfoLayout.setVisible(false);
 					if (person != null) {
 						personInfoLayout.setVisible(true);

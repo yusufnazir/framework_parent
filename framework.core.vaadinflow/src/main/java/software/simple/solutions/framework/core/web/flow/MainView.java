@@ -25,7 +25,6 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
@@ -69,7 +68,6 @@ import software.simple.solutions.framework.core.web.flow.applayout.CustomLeftSub
 
 @Push
 @PreserveOnRefresh
-@CssImport(value = "styles/paging-combobox.css", themeFor = "vaadin-combo-box")
 public class MainView extends AppLayoutRouterLayout
 // implements BeforeEnterObserver
 {
@@ -538,16 +536,4 @@ public class MainView extends AppLayoutRouterLayout
 		}
 	}
 
-	// @Override
-	// public void beforeEnter(BeforeEnterEvent event) {
-	// SessionHolder sessionHolder = (SessionHolder)
-	// VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
-	// if (sessionHolder == null || sessionHolder.getApplicationUser() == null)
-	// {
-	// sessionHolder = new SessionHolder();
-	// VaadinSession.getCurrent().setAttribute(Constants.SESSION_HOLDER,
-	// sessionHolder);
-	// event.forwardTo("login");
-	// }
-	// }
 }

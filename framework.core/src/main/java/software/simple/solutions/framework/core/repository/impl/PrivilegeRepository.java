@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -17,7 +18,7 @@ public class PrivilegeRepository extends GenericRepository implements IPrivilege
 	@Override
 	public List<Privilege> getPrivileges(List<String> privilegeCodes) throws FrameworkException {
 		if (privilegeCodes == null || privilegeCodes.isEmpty()) {
-			return null;
+			return new ArrayList<Privilege>();
 		}
 		String query = "from Privilege where code in (:codes)";
 		ConcurrentMap<String, Object> paramMap = createParamMap();

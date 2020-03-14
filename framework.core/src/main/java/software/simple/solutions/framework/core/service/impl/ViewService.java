@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.repository.IUserRoleRepository;
 import software.simple.solutions.framework.core.repository.IViewRepository;
 import software.simple.solutions.framework.core.service.IViewService;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
@@ -16,6 +18,9 @@ import software.simple.solutions.framework.core.valueobjects.ViewVO;
 @Service
 @ServiceRepository(claz = IViewRepository.class)
 public class ViewService extends SuperService implements IViewService {
+	
+	@Autowired
+	private IViewRepository viewRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -33,6 +38,11 @@ public class ViewService extends SuperService implements IViewService {
 		view.setActive(vo.getActive());
 
 		return (T) saveOrUpdate(view, vo.isNew());
+	}
+
+	@Override
+	public View getByClassName(String className) throws FrameworkException {
+		return viewRepository.getByClassName(className);
 	}
 
 }

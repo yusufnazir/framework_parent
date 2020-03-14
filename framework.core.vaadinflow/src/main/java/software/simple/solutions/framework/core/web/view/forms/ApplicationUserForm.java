@@ -8,21 +8,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.appreciated.card.Card;
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 
@@ -95,15 +89,13 @@ public class ApplicationUserForm extends FormView {
 	private ApplicationUser applicationUser;
 	private Person person;
 
-	
-
 	public ApplicationUserForm() {
 		super();
 	}
 
 	@Override
 	public void executeBuild() throws FrameworkException {
-		
+
 		HorizontalLayout mainLayout = new HorizontalLayout();
 		mainLayout.setWidthFull();
 		add(mainLayout);
@@ -116,18 +108,21 @@ public class ApplicationUserForm extends FormView {
 		profileImageFld.setWidth("150px");
 		navigationLayout.add(profileImageFld);
 
-//		Tabs tabs = new Tabs();
-//		tabs.setOrientation(Orientation.VERTICAL);
-//		navigationLayout.add(tabs);
-//		Tab personalInformationTab = new Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.PERSONAL_INFORMATION_TAB,
-//				UI.getCurrent().getLocale()));
-//		tabs.add(personalInformationTab);
-//		Tab contactInformationTab = new Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.CONTACT_INFORMATION_TAB,
-//				UI.getCurrent().getLocale()));
-//		tabs.add(contactInformationTab);
-//		Tab emergencyContactInformationTab = new Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.EMERGENCY_CONTACT_INFORMATION_TAB,
-//				UI.getCurrent().getLocale()));
-//		tabs.add(emergencyContactInformationTab);
+		// Tabs tabs = new Tabs();
+		// tabs.setOrientation(Orientation.VERTICAL);
+		// navigationLayout.add(tabs);
+		// Tab personalInformationTab = new
+		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.PERSONAL_INFORMATION_TAB,
+		// UI.getCurrent().getLocale()));
+		// tabs.add(personalInformationTab);
+		// Tab contactInformationTab = new
+		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.CONTACT_INFORMATION_TAB,
+		// UI.getCurrent().getLocale()));
+		// tabs.add(contactInformationTab);
+		// Tab emergencyContactInformationTab = new
+		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.EMERGENCY_CONTACT_INFORMATION_TAB,
+		// UI.getCurrent().getLocale()));
+		// tabs.add(emergencyContactInformationTab);
 
 		VerticalLayout userMainLayout = new VerticalLayout();
 		userMainLayout.setWidthFull();
@@ -137,7 +132,7 @@ public class ApplicationUserForm extends FormView {
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setWidthFull();
 		userMainLayout.add(horizontalLayout);
-		
+
 		userInfoCard = createUserInfoLayout();
 		// userInfoLayout.setCaption(PropertyResolver.getPropertyValueByLocale(
 		// ApplicationUserProperty.APPLICATION_USER_INFO,
@@ -148,7 +143,7 @@ public class ApplicationUserForm extends FormView {
 		// passwordLayout.setCaption(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.PASSWORD_LAYOUT,
 		// UI.getCurrent().getLocale()));
 		horizontalLayout.add(passwordCard);
-		horizontalLayout.setFlexGrow(1, userInfoCard,passwordCard);
+		horizontalLayout.setFlexGrow(1, userInfoCard, passwordCard);
 
 		ldapCard = createLdapLayout();
 		// ldapLayout.addStyleName(ValoTheme.LAYOUT_CARD);
@@ -169,7 +164,7 @@ public class ApplicationUserForm extends FormView {
 		// UI.getCurrent().getLocale()));
 		userMainLayout.add(personInfoCard);
 
-//		createPersonLookUpListener();
+		// createPersonLookUpListener();
 	}
 
 	private Panel createUserInfoLayout() {
@@ -200,14 +195,14 @@ public class ApplicationUserForm extends FormView {
 	private Panel createPasswordLayout() {
 		passwordCard = new Panel();
 		passwordCard.setHeaderKey(ApplicationUserProperty.PASSWORD_LAYOUT);
-		
-//		passwordCard.setMaxWidth("400px");
+
+		// passwordCard.setMaxWidth("400px");
 		passwordLayout = new CFormLayout();
 		passwordLayout.setMaxWidth("400px");
 		passwordCard.add(passwordLayout);
 
 		forceChangePasswordFld = passwordLayout.add(CCheckBox.class, ApplicationUserProperty.FORCE_CHANGE_PASSWORD);
-		
+
 		changePasswordFld = passwordLayout.add(CCheckBox.class, SystemProperty.SYSTEM_RESET_PASSWORD);
 
 		passwordFld = passwordLayout.add(CPasswordField.class, ApplicationUserProperty.PASSWORD);
@@ -266,12 +261,12 @@ public class ApplicationUserForm extends FormView {
 
 	private void createPersonLookUpListener() {
 		personInfoCard.setVisible(false);
-		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Object>>() {
+		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
 
 			private static final long serialVersionUID = 3798217052004909083L;
 
 			@Override
-			public void valueChanged(ValueChangeEvent<Object> event) {
+			public void valueChanged(ValueChangeEvent<Person> event) {
 				person = (Person) event.getValue();
 				personInfoCard.setVisible(false);
 				if (person != null) {
@@ -391,7 +386,7 @@ public class ApplicationUserForm extends FormView {
 		if (entityFile != null) {
 			StreamResource resource = new StreamResource("profile-image.jpg",
 					() -> new ByteArrayInputStream(entityFile.getFileObject()));
-//			imageField.setSrc(resource);
+			// imageField.setSrc(resource);
 		}
 	}
 

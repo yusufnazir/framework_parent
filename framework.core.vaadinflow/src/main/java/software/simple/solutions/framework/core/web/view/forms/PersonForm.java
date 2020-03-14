@@ -34,7 +34,6 @@ import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.provider.SortOrder;
 import com.vaadin.flow.function.ValueProvider;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 
@@ -70,10 +69,7 @@ import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.GridFormCard;
 import software.simple.solutions.framework.core.web.components.Panel;
-import software.simple.solutions.framework.core.web.flow.MainView;
-import software.simple.solutions.framework.core.web.routing.Routes;
 
-@Route(value = Routes.PERSON_EDIT, layout = MainView.class)
 public class PersonForm extends FormView {
 
 	private static final long serialVersionUID = 6109727427163734676L;

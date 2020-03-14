@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
@@ -28,33 +28,33 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.server.Command;
+import com.vaadin.flow.server.VaadinSession;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.constants.Columns;
+import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.Role;
+import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PagingInfo;
 import software.simple.solutions.framework.core.pojo.PagingResult;
@@ -67,10 +67,14 @@ import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
+import software.simple.solutions.framework.core.service.facade.ViewServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
+import software.simple.solutions.framework.core.web.routing.Routes;
 
 public abstract class BasicTemplate<T> extends AbstractBaseView implements GridTable, Build, BeforeEnterObserver {
 
@@ -118,6 +122,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private PagingResult<Object> pagingResult;
 	private String updateObserverReferenceKey;
 	private String editRoute;
+	private Location location;
 
 	// Action action_ok = new ShortcutAction("Default key",
 	// ShortcutAction.KeyCode.ENTER, null);
@@ -147,8 +152,48 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
+		System.out.println("navigationtarget [" + event.getNavigationTarget().getName() + "]");
+		SessionHolder sessionHolder = getSessionHolder();
+		if (sessionHolder == null) {
+			sessionHolder = new SessionHolder();
+			VaadinSession.getCurrent().setAttribute(Constants.SESSION_HOLDER, sessionHolder);
+		}
+		if (sessionHolder.getApplicationUser() == null) {
+			String pathWithQueryParameters = event.getLocation().getPathWithQueryParameters();
+			sessionHolder.setForwardTo(pathWithQueryParameters);
+			event.forwardTo(Routes.LOGIN);
+			return;
+		}
+
+		try {
+			View view = ViewServiceFacade.get(UI.getCurrent()).getByClassName(event.getNavigationTarget().getName());
+			List<String> privilegesByViewIdAndUserId = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+					.getPrivilegesByViewIdAndUserId(view.getId(), sessionHolder.getApplicationUser().getId());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			updateErrorContent(e);
+			// new MessageWindowHandler(e);
+		}
+
+		location = event.getLocation();
 		System.out.println(event.getLocation().getPath());
 		initialize();
+		QueryParameters queryParameters = event.getLocation().getQueryParameters();
+		System.out.println("queryParameters [" + queryParameters.getParameters() + "]");
+		List<String> idList = queryParameters.getParameters().get("id");
+		if (idList != null && !idList.isEmpty()) {
+			String id = idList.get(0);
+
+			try {
+				Object entity = superService.get(entityClass, NumberUtil.getLong(id));
+				setSelectedEntity(entity);
+				switchToForm(entity, false);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+				updateErrorContent(e);
+				// new MessageWindowHandler(e);
+			}
+		}
 	}
 
 	public void executePreBuild() throws FrameworkException {
@@ -157,6 +202,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	@SuppressWarnings("unchecked")
 	public void executeBuild() throws FrameworkException {
+		removeAll();
 		Route route = this.getClass().getAnnotation(Route.class);
 		String path = route.value();
 
@@ -414,26 +460,25 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		// contentGrid.addStyleName("backgroundimage");
 
 		if (isPopUpMode()) {
-			Column<T> lookUpColum = contentGrid.addColumn(new ValueProvider<T, Button>() {
+			Column<T> lookUpColum = contentGrid.addComponentColumn(new ValueProvider<T, Button>() {
 
 				@Override
 				public Button apply(T source) {
 
 					Button popUpBtn = new Button();
-					// popUpBtn.setIcon(CxodeIcons.OK);
-					// popUpBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-					// popUpBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-					// popUpBtn.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-					// popUpBtn.addStyleName(Style.RESIZED_ICON);
+					popUpBtn.setIcon(FontAwesome.Solid.CHECK_CIRCLE.create());
 					// popUpBtn.setDescription(
 					// PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SELECT_LOOKUP,
 					// UI.getCurrent().getLocale()));
-					// popUpBtn.addClickListener(new PopUpModeEvent(source));
+					popUpBtn.addClickListener(new PopUpModeEvent(source));
 					return popUpBtn;
 				}
 			});
-			lookUpColum.setWidth("30px");
+			lookUpColum.setFlexGrow(0).setWidth("40px");
 			lookUpColum.setId(Columns.POPUP_ITEM_SELECTED);
+			Icon icon = FontAwesome.Solid.CHECK_CIRCLE.create();
+			icon.setSize("20px");
+			lookUpColum.setHeader(icon);
 
 			// HeaderRow defaultHeaderRow = contentGrid.getDefaultHeaderRow();
 			// Button popUpHeaderBtn = new Button();
@@ -484,17 +529,21 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				// formBtn.addStyleName(ValoTheme.BUTTON_SMALL);
 				// formBtn.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
 				// formBtn.addStyleName(Style.RESIZED_ICON);
-//				formBtn.addClickListener(new BasicTemplate.FormSetup(source));
-				formBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-					
-					@Override
-					public void onComponentEvent(ClickEvent<Button> event) {
-						Map<String, String> parameters = new ConcurrentHashMap<String, String>();
-						parameters.put("edit", "true");
-//						RouteConfiguration.forSessionScope().getUrl(navigationTarget);
-						UI.getCurrent().navigate(editRoute,QueryParameters.simple(parameters));
-					}
-				});
+				formBtn.addClickListener(new BasicTemplate.FormSetup(source));
+				// formBtn.addClickListener(new
+				// ComponentEventListener<ClickEvent<Button>>() {
+				//
+				// @Override
+				// public void onComponentEvent(ClickEvent<Button> event) {
+				// Map<String, String> parameters = new
+				// ConcurrentHashMap<String, String>();
+				// parameters.put("edit", "true");
+				// //
+				// RouteConfiguration.forSessionScope().getUrl(navigationTarget);
+				// UI.getCurrent().navigate(editRoute,
+				// QueryParameters.simple(parameters));
+				// }
+				// });
 				return formBtn;
 			}
 		});
@@ -579,9 +628,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		try {
-			formView = formClass.getConstructor(new Class[] { this.getClass() }).newInstance(new Object[] { this });
-		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
-				| IllegalAccessException | InvocationTargetException e) {
+			// formView = formClass.getConstructor(new Class[] { this.getClass()
+			// }).newInstance(new Object[] { this });
+			formView = formClass.newInstance();
+		} catch (SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException e) {
 			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 		formView.setReferenceKeys(getReferenceKeys());
@@ -858,6 +908,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	public void handleBackFromForm() {
 		Boolean viewContentUpdated = getViewContentUpdated();
 		doForBack();
+
+		Map<String, List<String>> parameters = location.getQueryParameters().getParameters();
+		QueryParameters queryParameters = new QueryParameters(parameters);
+		location = new Location(location.getPath());
+		UI.getCurrent().getPage().getHistory().replaceState(null, location);
+
 		// if (viewContentUpdated) {
 		// ConfirmWindow confirmWindow = new
 		// ConfirmWindow(SystemProperty.UNSAVED_CHANGES_HEADER,
@@ -883,7 +939,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	}
 
 	private void doForBack() {
-		// formLayout.removeAllComponents();
+		formLayout.removeAll();
 		formLayout.setVisible(false);
 		// viewContentPanel.setVisible(false);
 		filterAndResultLayout.setVisible(true);
@@ -1018,56 +1074,61 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				}
 			}
 		});
-		
+
 		actionBar.setActionDelete(new ComponentEventListener<ClickEvent<Button>>() {
-			
+
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
-//				resetErrorContent();
-//				ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.DELETE_HEADER,
-//						SystemProperty.DELETE_CONFIRMATION_REQUEST, SystemProperty.CONFIRM, SystemProperty.CANCEL);
-//				confirmWindow.execute(new ConfirmationHandler() {
-//
-//					@SuppressWarnings({ "unchecked", "rawtypes" })
-//					@Override
-//					public void handlePositive() {
-//						if (toDeleteEntities != null && !toDeleteEntities.isEmpty()) {
-//							try {
-//								try {
-//									int deleted = superService.delete(new ArrayList(toDeleteEntities));
-//									handleReactiveUpdate(toDeleteEntities);
-//								} catch (DataIntegrityViolationException e) {
-//									throw new FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
-//								}
-//							} catch (FrameworkException e) {
-//								// logger.error(e.getMessage(), e);
-//								updateErrorContent(e);
-//							}
-//						} else {
-//							NotificationWindow.notificationNormalWindow(SystemProperty.NO_RECORD_SELECTED);
-//						}
-//
-//						if (formMode) {
-//							setViewContentUpdated(false);
-//							handleBackFromForm();
-//						}
-//						try {
-//							handleResetSearch();
-//						} catch (FrameworkException e) {
-//							logger.error(e.getMessage(), e);
-//							updateErrorContent(e);
-//						}
-//					}
-//
-//					@Override
-//					public void handleNegative() {
-//						// TODO Auto-generated method stub
-//
-//					}
-//				});
+				// resetErrorContent();
+				// ConfirmWindow confirmWindow = new
+				// ConfirmWindow(SystemProperty.DELETE_HEADER,
+				// SystemProperty.DELETE_CONFIRMATION_REQUEST,
+				// SystemProperty.CONFIRM, SystemProperty.CANCEL);
+				// confirmWindow.execute(new ConfirmationHandler() {
+				//
+				// @SuppressWarnings({ "unchecked", "rawtypes" })
+				// @Override
+				// public void handlePositive() {
+				// if (toDeleteEntities != null && !toDeleteEntities.isEmpty())
+				// {
+				// try {
+				// try {
+				// int deleted = superService.delete(new
+				// ArrayList(toDeleteEntities));
+				// handleReactiveUpdate(toDeleteEntities);
+				// } catch (DataIntegrityViolationException e) {
+				// throw new
+				// FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT,
+				// e);
+				// }
+				// } catch (FrameworkException e) {
+				// // logger.error(e.getMessage(), e);
+				// updateErrorContent(e);
+				// }
+				// } else {
+				// NotificationWindow.notificationNormalWindow(SystemProperty.NO_RECORD_SELECTED);
+				// }
+				//
+				// if (formMode) {
+				// setViewContentUpdated(false);
+				// handleBackFromForm();
+				// }
+				// try {
+				// handleResetSearch();
+				// } catch (FrameworkException e) {
+				// logger.error(e.getMessage(), e);
+				// updateErrorContent(e);
+				// }
+				// }
+				//
+				// @Override
+				// public void handleNegative() {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				// });
 			}
 		});
-
 
 		// actionBar.setActionRestore(new Command() {
 		//
@@ -1342,22 +1403,23 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		return;
 	}
 
-	// private class PopUpModeEvent implements ClickListener {
-	//
-	// private static final long serialVersionUID = -5165198948151324581L;
-	// private Object source;
-	//
-	// public PopUpModeEvent(Object source) {
-	// this.source = source;
-	// }
-	//
-	// @Override
-	// public void buttonClick(ClickEvent event) {
-	// setPopUpEntity(source);
-	// getPopUpWindow().setData(true);
-	// getPopUpWindow().close();
-	// }
-	// }
+	private class PopUpModeEvent implements ComponentEventListener<ClickEvent<Button>> {
+
+		private static final long serialVersionUID = -5165198948151324581L;
+		private Object source;
+
+		public PopUpModeEvent(Object source) {
+			this.source = source;
+		}
+
+		@Override
+		public void onComponentEvent(ClickEvent<Button> event) {
+			setPopUpEntity(source);
+			getPopUpWindow().setData(true);
+			getPopUpWindow().close();
+
+		}
+	}
 
 	public class FormSetup implements ComponentEventListener<ComponentEvent<Button>> {
 
@@ -1409,6 +1471,14 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			}
 		} else {
 			actionBar.authorizeEdit();
+		}
+
+		Map<String, String> qpm = new HashMap<String, String>();
+		qpm.put("id", ((MappedSuperClass) entity).getId().toString());
+		QueryParameters simple = QueryParameters.simple(qpm);
+		if (location != null) {
+			location = new Location(location.getPath(), simple);
+			UI.getCurrent().getPage().getHistory().pushState(null, location);
 		}
 
 		// createSubTabs(editable);

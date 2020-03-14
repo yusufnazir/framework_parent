@@ -24,6 +24,7 @@ public class SessionHolder implements Serializable {
 	private ConcurrentMap<String, Object> referenceKeys;
 	private String password;
 	private ConcurrentMap<String, Long> routesMenus;
+	private String forwardTo;
 
 	public SessionHolder() {
 		super();
@@ -117,6 +118,14 @@ public class SessionHolder implements Serializable {
 
 	public Long getRouteMenu(String path) {
 		return routesMenus.get(path);
+	}
+
+	public String getForwardTo() {
+		return forwardTo;
+	}
+
+	public void setForwardTo(String forwardTo) {
+		this.forwardTo = forwardTo;
 	}
 
 }

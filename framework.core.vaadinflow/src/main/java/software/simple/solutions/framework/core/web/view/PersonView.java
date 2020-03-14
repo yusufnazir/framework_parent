@@ -46,6 +46,7 @@ public class PersonView extends BasicTemplate<Person> {
 		setFilterClass(Filter.class);
 		// setFormClass(Form.class);
 //		setGridRowHeight(75);
+		setEditRoute(Routes.PERSON_EDIT);
 	}
 
 	@Override
