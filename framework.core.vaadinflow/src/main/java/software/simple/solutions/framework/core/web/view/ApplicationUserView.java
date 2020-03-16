@@ -329,16 +329,6 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 
 				@Override
 				public void valueChanged(ValueChangeEvent<Person> event) {
-					// TODO Auto-generated method stub
-
-				}
-			});
-			personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
-
-				private static final long serialVersionUID = 3798217052004909083L;
-
-				@Override
-				public void valueChanged(ValueChangeEvent<Person> event) {
 					person = event.getValue();
 					personInfoLayout.setVisible(false);
 					if (person != null) {

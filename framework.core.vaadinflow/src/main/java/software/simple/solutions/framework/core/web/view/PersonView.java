@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
+import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.FileReference;
 import software.simple.solutions.framework.core.constants.Privileges;
@@ -28,7 +29,6 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 import software.simple.solutions.framework.core.web.FilterView;
-import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.routing.Routes;
 import software.simple.solutions.framework.core.web.view.forms.PersonForm;
@@ -122,16 +122,16 @@ public class PersonView extends BasicTemplate<Person> {
 
 		private static final long serialVersionUID = 117780868467918033L;
 
-		private CTextField lastNameFld;
-		private CTextField firstNameFld;
+		private CStringIntervalLayout lastNameFld;
+		private CStringIntervalLayout firstNameFld;
 		private GenderSelect genderFld;
 
 		@Override
 		public void executeBuild() {
 
-			firstNameFld = addField(CTextField.class, PersonProperty.FIRST_NAME, 0, 0);
+			firstNameFld = addField(CStringIntervalLayout.class, PersonProperty.FIRST_NAME, 0, 0);
 
-			lastNameFld = addField(CTextField.class, PersonProperty.LAST_NAME, 1, 0);
+			lastNameFld = addField(CStringIntervalLayout.class, PersonProperty.LAST_NAME, 1, 0);
 
 			genderFld = addField(GenderSelect.class, PersonProperty.GENDER, 2, 0);
 			genderFld.setVisible(false);
@@ -144,8 +144,8 @@ public class PersonView extends BasicTemplate<Person> {
 		@Override
 		public Object getCriteria() {
 			PersonVO vo = new PersonVO();
-			vo.setFirstName(firstNameFld.getValue());
-			vo.setLastName(lastNameFld.getValue());
+			vo.setFirstNameInterval(firstNameFld.getValue());
+			vo.setLastNameInterval(lastNameFld.getValue());
 			vo.setGenderId(genderFld.getItemId());
 			return vo;
 		}

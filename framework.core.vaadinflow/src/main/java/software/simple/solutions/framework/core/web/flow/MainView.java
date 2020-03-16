@@ -211,6 +211,10 @@ public class MainView extends AppLayoutRouterLayout
 	        + "text-decoration: none;"
 	        + "color: #00A1E5;"
 	        + "}"
+	        + ""
+	        + "vaadin-custom-field::before {"
+	        + "content: none;"
+	        + "}"
 	        ;
 	// @formatter:on
 

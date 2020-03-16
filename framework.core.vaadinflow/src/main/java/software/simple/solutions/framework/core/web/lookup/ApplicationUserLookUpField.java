@@ -4,7 +4,7 @@ import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.web.LookUpField;
 import software.simple.solutions.framework.core.web.view.ApplicationUserView;
 
-public class ApplicationUserLookUpField extends LookUpField<ApplicationUserLookUpField, ApplicationUser> {
+public class ApplicationUserLookUpField extends LookUpField<Long, ApplicationUser> {
 
 	private static final long serialVersionUID = 994848491488378790L;
 

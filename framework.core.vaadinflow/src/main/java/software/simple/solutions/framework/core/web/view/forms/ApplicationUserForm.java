@@ -263,6 +263,14 @@ public class ApplicationUserForm extends FormView {
 		personInfoCard.setVisible(false);
 		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
 
+			@Override
+			public void valueChanged(ValueChangeEvent<Person> event) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
+
 			private static final long serialVersionUID = 3798217052004909083L;
 
 			@Override

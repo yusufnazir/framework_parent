@@ -67,15 +67,15 @@ public class CStringIntervalLayout extends CustomField<StringInterval> implement
 	}
 
 	private HorizontalLayout buildMainLayout() {
+		getElement().getStyle().set("display", "inline");
+		getElement().getStyle().set("--lumo-text-field-size", "var(--lumo-size-s)");
+
 		mainLayout = new HorizontalLayout();
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("-1px");
 		mainLayout.setMargin(false);
 		mainLayout.setSpacing(true);
 		mainLayout.setPadding(false);
-
-		setWidth("100%");
-		// setHeight("-1px");
 
 		operatorSelect = new CComboBox();
 		operatorSelect.setWidth("50px");
@@ -90,7 +90,7 @@ public class CStringIntervalLayout extends CustomField<StringInterval> implement
 		textFld.addThemeVariants(TextFieldVariant.LUMO_SMALL);
 		// mainLayout.setComponentAlignment(textFld, Alignment.MIDDLE_LEFT);
 		// mainLayout.setExpandRatio(textFld, 1);
-		
+
 		mainLayout.setAlignItems(Alignment.CENTER);
 
 		return this.mainLayout;

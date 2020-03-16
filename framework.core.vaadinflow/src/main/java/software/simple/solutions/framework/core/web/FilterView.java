@@ -219,9 +219,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 				|| component instanceof CDiscreetNumberIntervalLayout) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
-			((HasSize) component).setWidth("300px");
-			((CStringIntervalLayout) component)
-					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+//			((HasSize) component).setWidth("300px");
+			((CStringIntervalLayout) component).setCaptionByKey(key);
 		} else if (component instanceof ActiveSelect) {
 			((HasSize) component).setWidth("150px");
 		} else if (component instanceof CCheckBox) {
