@@ -77,12 +77,12 @@ public class UserRoleView extends BasicTemplate<UserRole> {
 			if (parentEntity instanceof ApplicationUser) {
 				ApplicationUser applicationUser = (ApplicationUser) parentEntity;
 				applicationUserFld.setValue(applicationUser);
-				applicationUserFld.setReadOnly(true);
+				applicationUserFld.setEnabled(false);
 			}
 			if (parentEntity instanceof Role) {
 				Role role = (Role) parentEntity;
 				roleFld.setValue(role);
-				roleFld.setReadOnly(true);
+				roleFld.setEnabled(false);
 			}
 		}
 

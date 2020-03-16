@@ -17,6 +17,7 @@ public class SystemProperty {
 	public static final String SYSTEM_BUTTON_REPORTS = "system.button.reports";
 	public static final String SYSTEM_BUTTON_EXPORT= "system.button.export";
 	public static final String SYSTEM_RESET_PASSWORD = "system.reset.password";
+	public static final String SYSTEM_BACK_TO_RESULTS = "system.back.to.results";
 	public static final String SYSTEM_MANAGE_PASSWORD = "system.manage.password";
 	public static final String UPDATE_SUCCESSFULL = "system.action.update.successful";
 	public static final String TOTAL_RECORDS_FOUND = "system.search.count.found";

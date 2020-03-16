@@ -58,6 +58,13 @@ public class UserRoleForm extends FormView {
 		userFld.setValue(userRole.getApplicationUser());
 		roleFld.setValue(userRole.getRole());
 
+		Object parentEntity = getParentEntity();
+		if (parentEntity instanceof ApplicationUser) {
+			userFld.setEnabled(false);
+		} else if (parentEntity instanceof Role) {
+			roleFld.setEnabled(false);
+		}
+
 		return userRole;
 	}
 

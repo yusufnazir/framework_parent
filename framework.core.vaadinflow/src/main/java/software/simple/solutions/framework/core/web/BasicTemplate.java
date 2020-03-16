@@ -27,13 +27,17 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
@@ -74,6 +78,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
+import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.routing.Routes;
 
 public abstract class BasicTemplate<T> extends AbstractBaseView implements GridTable, Build, BeforeEnterObserver {
@@ -95,6 +100,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private VerticalLayout formLayout;
 	private Tabs subTabSheet;
 	private VerticalLayout preFilterLayout;
+	private HorizontalLayout tabBar;
+	private VerticalLayout subMenuLayout;
+	private Tab homeTab;
 
 	private Class<? extends ISuperService> serviceClass;
 	private Class<? extends FilterView> filterClass;
@@ -116,13 +124,14 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private boolean formMode = false;
 	private boolean skipActiveColumn = false;
 	private PagingSearchEvent pagingSearchEvent;
-	private Set<AbstractBaseView> selectedTabs;
 	private Object entity;
 	private PagingSetting pagingSetting;
 	private PagingResult<Object> pagingResult;
 	private String updateObserverReferenceKey;
 	private String editRoute;
 	private Location location;
+	private Map<Tab, SimpleSolutionsMenuItem> subMenusTabMap;
+	private Map<Tab, AbstractBaseView> createdSubMenusTabs;
 
 	// Action action_ok = new ShortcutAction("Default key",
 	// ShortcutAction.KeyCode.ENTER, null);
@@ -134,11 +143,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		sortingHelper = new SortingHelper();
 		toDeleteEntities = new HashSet<Object>();
 		toDeleteItemIds = new HashSet<Object>();
-		selectedTabs = new HashSet<AbstractBaseView>();
 		pagingSetting = new PagingSetting();
 		gridHeaderItems = new ArrayList<GridItem>();
 		hiddenColumnIds = new HashSet<String>();
 		dataProvider = DataProvider.ofItems();
+		subMenusTabMap = new HashMap<Tab, SimpleSolutionsMenuItem>();
+		createdSubMenusTabs = new HashMap<Tab, AbstractBaseView>();
 	}
 
 	public void initialize() {
@@ -159,8 +169,13 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			VaadinSession.getCurrent().setAttribute(Constants.SESSION_HOLDER, sessionHolder);
 		}
 		if (sessionHolder.getApplicationUser() == null) {
-			String pathWithQueryParameters = event.getLocation().getPathWithQueryParameters();
-			sessionHolder.setForwardTo(pathWithQueryParameters);
+			String path = event.getLocation().getPath();
+			sessionHolder.setForwardToPath(path);
+			QueryParameters queryParameters = event.getLocation().getQueryParameters();
+			if (queryParameters != null) {
+				Map<String, List<String>> parameters = queryParameters.getParameters();
+				sessionHolder.setQueryParameters(SessionHolder.convertListsToArrays(parameters));
+			}
 			event.forwardTo(Routes.LOGIN);
 			return;
 		}
@@ -256,6 +271,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void setUpTemplateLayout() {
 		setSpacing(false);
 		setMargin(false);
+		setPadding(false);
+
+		setUpTabBar();
+
 		topBarLayout = new HorizontalLayout();
 		topBarLayout.setWidth("100%");
 		topBarLayout.setHeight("-1px");
@@ -296,6 +315,11 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formLayout.setMargin(false);
 		formLayout.setWidth("100%");
 		add(formLayout);
+
+		subMenuLayout = new VerticalLayout();
+		subMenuLayout.setVisible(false);
+		subMenuLayout.setSizeFull();
+		add(subMenuLayout);
 		// viewContentPanel.addToPrimary(formLayout);
 
 		// secondContentPanel = new Card();
@@ -326,6 +350,30 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	// viewContentPanel.setSplitterPosition(100);
 	// // viewContentPanel.setLocked(true);
 	// }
+
+	private void setUpTabBar() {
+		tabBar = new HorizontalLayout();
+		CButton returnToSearchBtn = new CButton();
+		returnToSearchBtn.getStyle().set("border", "1px solid");
+		returnToSearchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		returnToSearchBtn.setCaptionByKey(SystemProperty.SYSTEM_BACK_TO_RESULTS);
+		returnToSearchBtn.setIcon(VaadinIcon.LIST.create());
+		tabBar.add(returnToSearchBtn);
+		returnToSearchBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = -687791699840661882L;
+
+			@Override
+			public void onComponentEvent(ClickEvent<Button> event) {
+				handleBackFromForm();
+			}
+		});
+
+		subTabSheet = new Tabs();
+		tabBar.add(subTabSheet);
+		tabBar.setVisible(false);
+		add(tabBar);
+	}
 
 	private void setUpActionBar() throws FrameworkException {
 		actionBar = new ActionBar();
@@ -455,7 +503,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private Grid<T> setUpGrid() {
 		gridHeaderItems.clear();
 		Grid<T> contentGrid = new Grid<T>();
-		contentGrid.setSizeFull();
+		// contentGrid.setSizeFull();
+		contentGrid.setWidth("100%");
 		contentGrid.setSelectionMode(SelectionMode.NONE);
 		// contentGrid.addStyleName("backgroundimage");
 
@@ -642,13 +691,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formView.setSelectedEntity(getSelectedEntity());
 		formView.setViewDetail(getViewDetail());
 		formView.executeBuild();
-		// formPanel = new Card();
-		// formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-		// formPanel.setWidth("100%");
-		// formPanel.setHeight("-1px");
-		// formView.setWidth("-1px");
-		// formPanel.add(formView);
-		// formLayout.removeAllComponents();
+		formLayout.removeAll();
 		formLayout.add(formView);
 	}
 
@@ -682,69 +725,96 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formLayout.add(readonlyFormView);
 	}
 
-	// private void createSubTabs(boolean editable) throws FrameworkException {
-	// subTabSheet = new Tabs();
-	// subTabSheet.setVisible(false);
-	// subTabSheet.setSizeFull();
-	// formLayout.add(subTabSheet);
-	// formLayout.setExpandRatio(subTabSheet, 1);
-	//
-	// AuthorizedViewListHelper authorizedViewListHelper = new
-	// AuthorizedViewListHelper();
-	// List<SimpleSolutionsMenuItem> tabMenus = authorizedViewListHelper
-	// .getTabMenus(getViewDetail().getMenu().getId());
-	//
-	// if (tabMenus != null && !tabMenus.isEmpty()) {
-	// subTabSheet.setVisible(true);
-	// for (int i = 0; i < tabMenus.size(); i++) {
-	// SimpleSolutionsMenuItem viewItem = tabMenus.get(i);
-	// AbstractBaseView subView = initSubView(viewItem);
-	// if (editable) {
-	// subView.setReferenceKeys(formView.getReferenceKeys());
-	// } else {
-	// if (readonlyFormClass != null) {
-	// subView.setReferenceKeys(readonlyFormView.getReferenceKeys());
-	// } else {
-	// subView.setReferenceKeys(formView.getReferenceKeys());
-	// }
-	// }
-	//
-	// boolean isSubmenuValid = subView.isSubMenuValid();
-	// if (isSubmenuValid) {
-	//
-	// subView.getViewDetail().setView(viewItem.getMenu().getView());
-	// subTabSheet.addTab(subView);
-	// subTabSheet.getTab(subView).setCaption(viewItem.getMenu().getName());
-	// if (i == 0) {
-	// selectTab(subView);
-	// subTabSheet.setSelectedTab(subView);
-	// }
-	// }
-	// }
-	// }
-	//
-	// subTabSheet.addSelectedTabChangeListener(new SelectedTabChangeListener()
-	// {
-	//
-	// private static final long serialVersionUID = -2864427288443080549L;
-	//
-	// @Override
-	// public void selectedTabChange(SelectedTabChangeEvent event) {
-	// Component component = event.getTabSheet().getSelectedTab();
-	// selectTab(component);
-	// }
-	// });
-	//
-	// }
+	private void createSubTabs(boolean editable) throws FrameworkException {
+		AuthorizedViewListHelper authorizedViewListHelper = new AuthorizedViewListHelper();
+		List<SimpleSolutionsMenuItem> tabMenus = authorizedViewListHelper
+				.getTabMenus(getViewDetail().getMenu().getId());
 
-	private void selectTab(Component component) {
-		if (!BasicTemplate.this.selectedTabs.contains((AbstractBaseView) component)) {
-			try {
-				executeSubMenuBuild((AbstractBaseView) component);
-				selectedTabs.add((AbstractBaseView) component);
-			} catch (FrameworkException e) {
-				logger.error(e.getMessage(), e);
+		if (tabMenus != null && !tabMenus.isEmpty()) {
+			tabBar.setVisible(true);
+			for (int i = 0; i < tabMenus.size(); i++) {
+				SimpleSolutionsMenuItem viewItem = tabMenus.get(i);
+				// AbstractBaseView subView = ViewUtil.initView(viewItem, false,
+				// getSessionHolder().getSelectedRole().getId(),
+				// getSessionHolder().getApplicationUser().getId());
+				// if (editable) {
+				// subView.setReferenceKeys(formView.getReferenceKeys());
+				// } else {
+				// if (readonlyFormClass != null) {
+				// subView.setReferenceKeys(readonlyFormView.getReferenceKeys());
+				// } else {
+				// subView.setReferenceKeys(formView.getReferenceKeys());
+				// }
+				// }
+
+				Tab tab = new Tab(viewItem.getMenuName());
+				subTabSheet.add(tab);
+				subMenusTabMap.put(tab, viewItem);
 			}
+
+			subTabSheet.addSelectedChangeListener(new ComponentEventListener<Tabs.SelectedChangeEvent>() {
+
+				private static final long serialVersionUID = -7201114375011146454L;
+
+				@Override
+				public void onComponentEvent(SelectedChangeEvent event) {
+					Tab selectedTab = event.getSelectedTab();
+					if (selectedTab != null) {
+						if (selectedTab.equals(homeTab)) {
+							topBarLayout.setVisible(true);
+							formLayout.setVisible(true);
+							subMenuLayout.setVisible(false);
+						} else {
+							subMenuLayout.getChildren().forEach(p -> p.setVisible(false));
+							if (createdSubMenusTabs.containsKey(selectedTab)) {
+								subMenuLayout.setVisible(true);
+								AbstractBaseView abstractBaseView = createdSubMenusTabs.get(selectedTab);
+								Optional<Component> optional = subMenuLayout.getChildren()
+										.filter(p -> ((AbstractBaseView) p).getViewDetail().getMenu().getId()
+												.compareTo(abstractBaseView.getViewDetail().getMenu().getId()) == 0)
+										.findFirst();
+								if (optional.isPresent()) {
+									optional.get().setVisible(true);
+								}
+								topBarLayout.setVisible(false);
+								formLayout.setVisible(false);
+							} else {
+								SimpleSolutionsMenuItem simpleSolutionsMenuItem = subMenusTabMap
+										.get(event.getSelectedTab());
+								try {
+									AbstractBaseView abstractBaseView = ViewUtil.initView(simpleSolutionsMenuItem,
+											getSessionHolder().getSelectedRole() == null ? null
+													: getSessionHolder().getSelectedRole().getId(),
+											getSessionHolder().getApplicationUser().getId());
+									executeSubMenuBuild(abstractBaseView);
+									abstractBaseView.setSizeFull();
+									subMenuLayout.setVisible(true);
+									subMenuLayout.add(abstractBaseView);
+
+									topBarLayout.setVisible(false);
+									formLayout.setVisible(false);
+									createdSubMenusTabs.put(selectedTab, abstractBaseView);
+								} catch (FrameworkException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			});
+
+			// subTabSheet.addSelectedTabChangeListener(new
+			// SelectedTabChangeListener() {
+			//
+			// private static final long serialVersionUID =
+			// -2864427288443080549L;
+			//
+			// @Override
+			// public void selectedTabChange(SelectedTabChangeEvent event) {
+			// Component component = event.getTabSheet().getSelectedTab();
+			// selectTab(component);
+			// }
+			// });
 		}
 	}
 
@@ -941,7 +1011,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private void doForBack() {
 		formLayout.removeAll();
 		formLayout.setVisible(false);
-		// viewContentPanel.setVisible(false);
 		filterAndResultLayout.setVisible(true);
 		if (preFilterLayout.getComponentCount() > 0) {
 			preFilterLayout.setVisible(true);
@@ -949,6 +1018,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		setUpActionButtons();
 		formMode = false;
 		setSelectedEntity(null);
+		resetSubMenuItems();
 	}
 
 	private void setUpActionBarListeners() {
@@ -1284,14 +1354,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			if (!valid) {
 				return false;
 			}
-			if (selectedTabs != null && !selectedTabs.isEmpty()) {
-				for (AbstractBaseView abstractBaseView : selectedTabs) {
-					valid = abstractBaseView.validate();
-					if (!valid) {
-						return false;
-					}
-				}
-			}
 		}
 		return true;
 	}
@@ -1310,7 +1372,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				entity = superService.updateSingle(formValues);
 				handleReactiveUpdate(entity);
 				// updateExistingResultSet();
-				updateTabs();
 				setSelectedEntity(entity);
 				switchToForm(entity, true);
 				return entity;
@@ -1335,14 +1396,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		return;
 	}
 
-	public void updateTabs() throws FrameworkException {
-		if (selectedTabs != null && !selectedTabs.isEmpty()) {
-			for (AbstractBaseView abstractBaseView : selectedTabs) {
-				abstractBaseView.formUpdate();
-			}
-		}
-	}
-
 	protected void initNewForm() {
 		try {
 			// hideSecondComponent();
@@ -1358,11 +1411,23 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			formMode = true;
 			resetAllSelectCheckBoxes();
 			clearToDeleteIds();
+			resetSubMenuItems();
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
 			// updateErrorContent(e);
 			// new MessageWindowHandler(e);
 		}
+	}
+
+	private void resetSubMenuItems() {
+		topBarLayout.setVisible(true);
+		subMenuLayout.removeAll();
+		subMenuLayout.setVisible(false);
+		tabBar.setVisible(false);
+		subTabSheet.removeAll();
+		subMenusTabMap.clear();
+		createdSubMenusTabs.clear();
+		actionBar.setVisible(true);
 	}
 
 	protected void activateAdvanceSearchLayout() {
@@ -1481,7 +1546,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			UI.getCurrent().getPage().getHistory().pushState(null, location);
 		}
 
-		// createSubTabs(editable);
+		homeTab = new Tab("[" + getViewDetail().getMenu().getName() + "] " + ((MappedSuperClass) entity).getCaption());
+		subTabSheet.removeAll();
+		subTabSheet.add(homeTab);
+		createSubTabs(editable);
 	}
 
 	private void resetAllSelectCheckBoxes() {
@@ -1510,11 +1578,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		Role role = getSessionHolder().getSelectedRole();
-		if (role != null) {
-			if (role.getId().compareTo(1L) == 0) {
-				actionBar.authorizeInfo();
-				actionBar.authorizeAudit();
-			}
+		if (role != null && role.getId().compareTo(1L) == 0) {
+			actionBar.authorizeInfo();
+			actionBar.authorizeAudit();
 		}
 
 		pagingBar.setVisible(false);
@@ -1624,7 +1690,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	@Override
 	public void executeSearch() {
-		actionBar.handleSearchClick();
+		try {
+			handleResetSearch();
+		} catch (FrameworkException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -3,8 +3,10 @@ package software.simple.solutions.framework.core.util;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import com.google.common.eventbus.EventBus;
 
@@ -24,12 +26,14 @@ public class SessionHolder implements Serializable {
 	private ConcurrentMap<String, Object> referenceKeys;
 	private String password;
 	private ConcurrentMap<String, Long> routesMenus;
-	private String forwardTo;
+	private String forwardToPath;
+	private Map<String, String[]> queryParameters;
 
 	public SessionHolder() {
 		super();
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		routesMenus = new ConcurrentHashMap<String, Long>();
+		queryParameters = new ConcurrentHashMap<String, String[]>();
 	}
 
 	public ApplicationUser getApplicationUser() {
@@ -120,12 +124,30 @@ public class SessionHolder implements Serializable {
 		return routesMenus.get(path);
 	}
 
-	public String getForwardTo() {
-		return forwardTo;
+	public String getForwardToPath() {
+		return forwardToPath;
 	}
 
-	public void setForwardTo(String forwardTo) {
-		this.forwardTo = forwardTo;
+	public void setForwardToPath(String forwardTo) {
+		this.forwardToPath = forwardTo;
+	}
+
+	public Map<String, String[]> getQueryParameters() {
+		return queryParameters;
+	}
+
+	public void setQueryParameters(Map<String, String[]> queryParameters) {
+		this.queryParameters = queryParameters;
+	}
+
+	public static Map<String, String[]> convertListsToArrays(Map<String, List<String>> fullParameters) {
+		return fullParameters.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> convertListToArray(entry.getValue())));
+	}
+
+	private static String[] convertListToArray(List<String> list) {
+		String[] myArray = new String[list.size()];
+		return list.toArray(myArray);
 	}
 
 }

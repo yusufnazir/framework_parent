@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
@@ -212,9 +213,11 @@ public class LoginView extends FlexLayout implements BeforeEnterObserver {
 					if (loginSuccessfullObserver != null) {
 						loginSuccessfullObserver.onNext(true);
 					}
-					if (sessionHolder.getForwardTo() != null) {
-						ui.navigate(sessionHolder.getForwardTo());
-						sessionHolder.setForwardTo(null);
+					if (sessionHolder.getForwardToPath() != null) {
+						// ui.navigate(sessionHolder.getForwardTo());
+						ui.navigate(sessionHolder.getForwardToPath(),
+								QueryParameters.full(sessionHolder.getQueryParameters()));
+						sessionHolder.setForwardToPath(null);
 					} else {
 						ui.navigate("");
 					}
@@ -300,5 +303,4 @@ public class LoginView extends FlexLayout implements BeforeEnterObserver {
 			// UI.getCurrent().getPage().setLocation("");
 		}
 	}
-
 }

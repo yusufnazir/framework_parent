@@ -82,6 +82,7 @@ public class MainView extends AppLayoutRouterLayout
 	private Left leftResponsive;
 	private SessionHolder sessionHolder;
 	private List<Menu> menus;
+	private ContentView contentView;
 
 	// @formatter:off
 	private String styles = ".applayout-profile-image { "
@@ -341,6 +342,8 @@ public class MainView extends AppLayoutRouterLayout
 				}
 			}
 		});
+
+		contentView = new ContentView();
 	}
 
 	private CustomLeftSubmenu createSubMenus(Menu parent, CustomLeftSubmenu customLeftSubmenu) {
@@ -532,7 +535,8 @@ public class MainView extends AppLayoutRouterLayout
 			leftResponsive.setVisible(false);
 		} else {
 			leftResponsive.setVisible(true);
-			super.showRouterLayoutContent(content);
+			contentView.setContent(content);
+			super.showRouterLayoutContent(contentView);
 		}
 	}
 

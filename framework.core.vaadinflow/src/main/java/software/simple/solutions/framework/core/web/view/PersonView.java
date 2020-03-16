@@ -31,6 +31,7 @@ import software.simple.solutions.framework.core.web.FilterView;
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.routing.Routes;
+import software.simple.solutions.framework.core.web.view.forms.PersonForm;
 
 @Route(value = Routes.PERSON, layout = MainView.class)
 @SupportedPrivileges(extraPrivileges = { Privileges.PERSON_SHOW_GENDER, Privileges.PERSON_SHOW_DOB })
@@ -44,8 +45,8 @@ public class PersonView extends BasicTemplate<Person> {
 		setEntityClass(Person.class);
 		setServiceClass(PersonServiceFacade.class);
 		setFilterClass(Filter.class);
-		// setFormClass(Form.class);
-//		setGridRowHeight(75);
+		setFormClass(PersonForm.class);
+		// setGridRowHeight(75);
 		setEditRoute(Routes.PERSON_EDIT);
 	}
 
