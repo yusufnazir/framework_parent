@@ -21,12 +21,11 @@ public class GenderSelect extends CComboBox {
 		List<ComboItem> items;
 		try {
 			items = genderService.getForListing(Gender.class, true);
-			items.stream().forEach(p -> p.setName(PropertyResolver.getPropertyValueByLocale(p.getName(), UI.getCurrent().getLocale())));
+			items.stream().forEach(p -> p
+					.setName(PropertyResolver.getPropertyValueByLocale(p.getName(), UI.getCurrent().getLocale())));
 			setItems(items);
 		} catch (FrameworkException e) {
-//			new MessageWindowHandler(e);
+			// new MessageWindowHandler(e);
 		}
-
 	}
-
 }

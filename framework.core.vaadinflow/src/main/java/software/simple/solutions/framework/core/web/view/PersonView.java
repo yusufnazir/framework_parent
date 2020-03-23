@@ -138,6 +138,16 @@ public class PersonView extends BasicTemplate<Person> {
 			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_GENDER)) {
 				genderFld.setVisible(true);
 			}
+			
+			Person person = getIfParentEntity(Person.class);
+			if(person!=null){
+				firstNameFld.setValue(person.getFirstName());
+				firstNameFld.setEnabled(false);
+				lastNameFld.setValue(person.getLastName());
+				lastNameFld.setEnabled(false);
+				genderFld.setValue(person.getGender());
+				genderFld.setEnabled(false);
+			}
 
 		}
 

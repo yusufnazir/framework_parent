@@ -23,6 +23,7 @@ import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.event.ApplicationUserEvent;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.exceptions.ValidationException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
@@ -46,7 +47,7 @@ import software.simple.solutions.framework.core.valueobjects.PasswordChangeVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IApplicationUserRepository.class)
 public class ApplicationUserService extends SuperService implements IApplicationUserService {
 
@@ -69,7 +70,7 @@ public class ApplicationUserService extends SuperService implements IApplication
 
 	@Autowired
 	private IConfigurationService configurationService;
-	
+
 	@Autowired
 	private IUserRoleService userRoleService;
 
@@ -78,18 +79,19 @@ public class ApplicationUserService extends SuperService implements IApplication
 		ApplicationUserVO vo = (ApplicationUserVO) entityVO;
 
 		if (vo.getPersonId() == null) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(PersonProperty.PERSON));
+			throw new ValidationException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(PersonProperty.PERSON),
+					vo.getLocale());
 		}
 		if (StringUtils.isBlank(vo.getUsername())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(ApplicationUserProperty.USERNAME));
+			throw new ValidationException(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(ApplicationUserProperty.USERNAME), vo.getLocale());
 		}
 
 		if (vo.isNew() && !vo.getUseLdap()) {
 			SecurityValidation securityValidation = validatePasswords(vo.getPassword(), vo.getPasswordConfirm());
 			if (!securityValidation.isSuccess()) {
-				throw new FrameworkException(SystemMessageProperty.PASSWORD_VALIDATION,
-						new Arg().key(securityValidation.getMessageKey()));
+				throw new ValidationException(SystemMessageProperty.PASSWORD_VALIDATION,
+						new Arg().key(securityValidation.getMessageKey()), vo.getLocale());
 			}
 		}
 
@@ -220,26 +222,26 @@ public class ApplicationUserService extends SuperService implements IApplication
 		}
 
 		String applicationUserName = null;
-		
-		Configuration configuration = configurationService
-				.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
+
+		Configuration configuration = configurationService.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
 		if (configuration != null && configuration.getBoolean()) {
-			//via ldap
-			
+			// via ldap
+
 			if (username.contains("@")) {
 				applicationUserName = username.substring(0, username.indexOf('@'));
 			} else if (username.contains("\\")) {
 				applicationUserName = username.substring(username.indexOf('\\') + 1, username.length());
 			}
-			
-			ApplicationUser applicationUser = getByUsername(applicationUserName == null ? username : applicationUserName);
+
+			ApplicationUser applicationUser = getByUsername(
+					applicationUserName == null ? username : applicationUserName);
 			if (applicationUser == null) {
 				/**
 				 * Invalid username.
 				 */
 				return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
 			}
-			
+
 			Boolean useLdap = applicationUser.getUseLdap();
 			if (applicationUser.getId().compareTo(1L) != 0 && useLdap) {
 				Configuration hostConfig = configurationService
@@ -262,12 +264,12 @@ public class ApplicationUserService extends SuperService implements IApplication
 			 */
 			return SecurityValidation.build(ApplicationUserProperty.LOGIN_INVALID_CREDENTIALS);
 		}
-		
+
 		List<Role> rolesByUser = userRoleService.findRolesByUser(applicationUser.getId());
-		if(rolesByUser==null || rolesByUser.isEmpty()){
+		if (rolesByUser == null || rolesByUser.isEmpty()) {
 			return SecurityValidation.build(ApplicationUserProperty.LOGIN_USER_NO_ROLES);
 		}
-		
+
 		PasswordUtil passwordUtil = new PasswordUtil();
 		Boolean correctPassword = passwordUtil.isCorrectPassword(password, applicationUser.getPassword());
 		if (!correctPassword) {
@@ -544,9 +546,10 @@ public class ApplicationUserService extends SuperService implements IApplication
 			return securityValidation;
 		}
 
-//		if (vo.getTermsAccepted() == null || !vo.getTermsAccepted()) {
-//			return SecurityValidation.build(RegistrationProperty.TERMS_AND_CONDITIONS_REQUIRED);
-//		}
+		// if (vo.getTermsAccepted() == null || !vo.getTermsAccepted()) {
+		// return
+		// SecurityValidation.build(RegistrationProperty.TERMS_AND_CONDITIONS_REQUIRED);
+		// }
 
 		ApplicationUser applicationUser = getByUsername(vo.getEmail());
 		if (applicationUser != null) {

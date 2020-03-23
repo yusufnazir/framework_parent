@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.web;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,10 +22,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.server.VaadinSession;
 
+import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.PopUpMode;
 import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -31,8 +36,9 @@ import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.components.CDialog;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.lookup.LookUpHolder;
 
-public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> implements IParentEntity<T> {
+public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> {
 
 	private static final long serialVersionUID = -6953072556831688132L;
 
@@ -42,15 +48,18 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 	private VerticalLayout layout;
 	private Menu menu;
 	private CButton lookUpBtn;
+	private CButton anchorBtn;
 	private CButton clearUpBtn;
 	private AbstractBaseView view;
-	private Object entity;
+	private T entity;
 	private Class<?> viewClass;
 	private SessionHolder sessionHolder;
-	private Object parentEntity;
+	// private Object parentEntity;
 	private Class<?> entityClass;
 	private Button closeBtn;
 	private CTextField textField;
+	private Map<String, Object> referenceKeys;
+	private boolean popUpMode = false;
 
 	public LookUpField() {
 		super();
@@ -79,45 +88,82 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
-				window = new CDialog();
-
 				try {
 					IMenuService menuService = ContextProvider.getBean(IMenuService.class);
 					menu = menuService.getLookUpByViewClass(sessionHolder.getSelectedRole().getId(),
 							viewClass.getName());
-					window.setHeight("calc(90vh - (2*var(--lumo-space-m)))");
-					window.setWidth("calc(90vw - (4*var(--lumo-space-m)))");
-					window.setCloseOnEsc(true);
-					window.setCloseOnOutsideClick(false);
-					layout = new VerticalLayout();
-					layout.setHeight("100%");
-					// layout.setMargin(true);
-					HorizontalLayout headerLayout = new HorizontalLayout();
-					headerLayout.setWidth("100%");
-					closeBtn = new Button("X");
-					closeBtn.getStyle().set("background", "red").set("color", "white");
-					headerLayout.add(closeBtn);
-					headerLayout.setJustifyContentMode(JustifyContentMode.END);
-					layout.add(headerLayout);
-					window.add(layout);
+					if (popUpMode) {
+						window = new CDialog();
 
-					createContent();
-					window.open();
-					closeBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+						window.setHeight("calc(90vh - (2*var(--lumo-space-m)))");
+						window.setWidth("calc(90vw - (4*var(--lumo-space-m)))");
+						window.setCloseOnEsc(true);
+						window.setCloseOnOutsideClick(false);
+						layout = new VerticalLayout();
+						layout.setHeight("100%");
+						// layout.setMargin(true);
+						HorizontalLayout headerLayout = new HorizontalLayout();
+						headerLayout.setWidth("100%");
+						closeBtn = new Button("X");
+						closeBtn.getStyle().set("background", "red").set("color", "white");
+						headerLayout.add(closeBtn);
+						headerLayout.setJustifyContentMode(JustifyContentMode.END);
+						layout.add(headerLayout);
+						window.add(layout);
 
-						private static final long serialVersionUID = 2163189088978233369L;
+						createContent();
+						window.open();
+						closeBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
-						@Override
-						public void onComponentEvent(ClickEvent<Button> event) {
-							window.close();
-						}
-					});
+							private static final long serialVersionUID = 2163189088978233369L;
 
+							@Override
+							public void onComponentEvent(ClickEvent<Button> event) {
+								window.close();
+							}
+						});
+
+					} else {
+						BehaviorSubject<LookUpHolder> behaviorSubject = sessionHolder
+								.getReferenceKey(ReferenceKey.LOOKUP_FIELD_SELECT_OBSERVEABLE);
+						LookUpHolder lookUpHolder = new LookUpHolder();
+						lookUpHolder.setViewClass(viewClass);
+						lookUpHolder.setLookUpField(LookUpField.this);
+						behaviorSubject.onNext(lookUpHolder);
+					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					// new MessageWindowHandler(e);
 				}
+			}
+		});
 
+		anchorBtn = new CButton();
+		anchorBtn.setIcon(new Icon(VaadinIcon.LINK));
+		anchorBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+		anchorBtn.getStyle().set("border", "1px solid");
+		anchorBtn.setVisible(false);
+		horizontalLayout.add(anchorBtn);
+		anchorBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = 7585289128374363839L;
+
+			@Override
+			public void onComponentEvent(ClickEvent<Button> event) {
+				try {
+					IMenuService menuService = ContextProvider.getBean(IMenuService.class);
+					menu = menuService.getLookUpByViewClass(sessionHolder.getSelectedRole().getId(),
+							viewClass.getName());
+					BehaviorSubject<LookUpHolder> behaviorSubject = sessionHolder
+							.getReferenceKey(ReferenceKey.LOOKUP_FIELD_LINK_OBSERVEABLE);
+					LookUpHolder lookUpHolder = new LookUpHolder();
+					lookUpHolder.setMenu(menu);
+					lookUpHolder.setParentEntity(entity);
+					behaviorSubject.onNext(lookUpHolder);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					// new MessageWindowHandler(e);
+				}
 			}
 		});
 
@@ -133,6 +179,7 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
 				textField.clear();
+				anchorBtn.setVisible(false);
 				entity = null;
 				window.setData(false);
 			}
@@ -143,8 +190,9 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		if (viewClass != null) {
 
 			SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
-			simpleSolutionsMenuItem.setParentEntity(getParentEntity());
-			view = ViewUtil.initView(simpleSolutionsMenuItem, true, sessionHolder.getSelectedRole().getId(),
+			simpleSolutionsMenuItem.setReferenceKeys(referenceKeys);
+			// simpleSolutionsMenuItem.setParentEntity(getParentEntity());
+			view = ViewUtil.initView(simpleSolutionsMenuItem, PopUpMode.POPUP, sessionHolder.getSelectedRole().getId(),
 					sessionHolder.getApplicationUser().getId());
 			view.setPopUpEntity(entity);
 			layout.add(view);
@@ -160,7 +208,8 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 							boolean opened = event.isOpened();
 							Boolean data = window.getData();
 							if (!opened && data != null && data) {
-								setValue(view.getPopUpEntity());
+								entity = view.getPopUpEntity();
+								setValue(entity);
 							}
 						}
 					});
@@ -178,20 +227,21 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		return (E) ((IMappedSuperClass) entity).getId();
 	}
 
-	public T getParentEntity() {
-		return (T) parentEntity;
-	}
+	// public T getParentEntity() {
+	// return (T) parentEntity;
+	// }
 
-	public void setParentEntity(Object parentEntity) {
-		this.parentEntity = parentEntity;
-	}
+	// public void setParentEntity(Object parentEntity) {
+	// this.parentEntity = parentEntity;
+	// }
 
-	public void handleForParentEntity(T parentEntity) {
-		if (parentEntity != null && parentEntity.getClass().isAssignableFrom(entityClass)) {
-			setValue(parentEntity);
-			setEnabled(false);
-		}
-	}
+	// public void handleForParentEntity(T parentEntity) {
+	// if (parentEntity != null &&
+	// parentEntity.getClass().isAssignableFrom(entityClass)) {
+	// setValue(parentEntity);
+	// setEnabled(false);
+	// }
+	// }
 
 	public void setEntityClass(Class<?> entityClass) {
 		this.entityClass = entityClass;
@@ -213,37 +263,44 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		clearUpBtn.setEnabled(enabled);
 		lookUpBtn.setEnabled(enabled);
 	}
-
-	public void setReadOnly(boolean b) {
-		// TODO Auto-generated method stub
-
+	
+	public void disableForParent() {
+		setEnabled(false);
+		anchorBtn.setEnabled(false);
 	}
 
-	@Override
-	public boolean isReadOnly() {
-		// TODO Auto-generated method stub
-		return false;
+	public Map<String, Object> getReferenceKeys() {
+		return referenceKeys;
 	}
 
-	@Override
-	public T getValue() {
-		return (T) entity;
+	public void setReferenceKeys(Map<String, Object> referenceKeys) {
+		this.referenceKeys = referenceKeys;
+	}
+
+	public boolean isPopUpMode() {
+		return popUpMode;
+	}
+
+	public void setPopUpMode(boolean popUpMode) {
+		this.popUpMode = popUpMode;
 	}
 
 	@Override
 	protected T generateModelValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return (T) entity;
 	}
 
 	@Override
 	protected void setPresentationValue(T value) {
+		entity = value;
 		if (value == null) {
 			textField.setValue("...");
 			clearUpBtn.setVisible(false);
+			anchorBtn.setVisible(false);
 		} else {
 			textField.setValue(((IMappedSuperClass) value).getCaption());
 			clearUpBtn.setVisible(true);
+			anchorBtn.setVisible(true);
 		}
 	}
 

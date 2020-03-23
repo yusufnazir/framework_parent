@@ -21,5 +21,6 @@ public class SystemMessageProperty {
 	public static final String FILE_IO_EXCEPTION = SYSTEM_EXCEPTION + "file.io.exception";
 	public static final String NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE = "notification.date.cannot.be.in.the.future";
 	public static final String DATA_FOREIGN_KEY_CONSTRAINT = SYSTEM_EXCEPTION + "data.foreign.key.constraint";
+	public static final String APPLICATION_ERROR = SYSTEM_EXCEPTION + "application.error";
 
 }

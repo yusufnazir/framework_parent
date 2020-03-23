@@ -54,4 +54,12 @@ public class FrameworkException extends Exception {
 		return new ExceptionHolder(messageKey, args, getCause());
 	}
 
+	public void setMessageKey(String messageKey) {
+		this.messageKey = messageKey;
+	}
+
+	public void setArgs(Arg args) {
+		this.args = args;
+	}
+
 }

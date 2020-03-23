@@ -73,16 +73,15 @@ public class UserRoleView extends BasicTemplate<UserRole> {
 			roleFld = addField(RoleLookUpField.class, UserRoleProperty.ROLE, 0, 1);
 			activeFld = addField(ActiveSelect.class, UserRoleProperty.ACTIVE, 1, 0);
 
-			Object parentEntity = getParentEntity();
-			if (parentEntity instanceof ApplicationUser) {
-				ApplicationUser applicationUser = (ApplicationUser) parentEntity;
+			ApplicationUser applicationUser = getIfParentEntity(ApplicationUser.class);
+			if (applicationUser != null) {
 				applicationUserFld.setValue(applicationUser);
-				applicationUserFld.setEnabled(false);
+				applicationUserFld.disableForParent();
 			}
-			if (parentEntity instanceof Role) {
-				Role role = (Role) parentEntity;
+			Role role = getIfParentEntity(Role.class);
+			if (role != null) {
 				roleFld.setValue(role);
-				roleFld.setEnabled(false);
+				roleFld.disableForParent();
 			}
 		}
 

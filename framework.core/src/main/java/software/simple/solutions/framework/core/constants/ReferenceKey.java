@@ -3,6 +3,9 @@ package software.simple.solutions.framework.core.constants;
 public class ReferenceKey {
 
 	public static final String UPDATE_OBSERVEABLE = "UPDATE_OBSERVEABLE";
+	public static final String LOOKUP_FIELD_SELECT_OBSERVEABLE = "LOOKUP_FIELD_SELECT_OBSERVEABLE";
+	public static final String LOOKUP_FIELD_LINK_OBSERVEABLE = "LOOKUP_FIELD_LINK_OBSERVEABLE";
+	public static final String MENU_SELECTED_OBSERVEABLE = "MENU_SELECTED_OBSERVEABLE";
 
 	public static final String APPLICATION_USER = CxodeTables.APPLICATION_USER.NAME;
 	public static final String APPLICATION_USER_REGISTERED = "APPLICATION_USER_REGISTERED";

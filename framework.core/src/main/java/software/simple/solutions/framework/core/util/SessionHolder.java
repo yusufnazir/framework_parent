@@ -88,8 +88,9 @@ public class SessionHolder implements Serializable {
 		return referenceKeys;
 	}
 
-	public Object getReferenceKey(String key) {
-		return referenceKeys.getOrDefault(key, null);
+	@SuppressWarnings("unchecked")
+	public <T> T getReferenceKey(String key) {
+		return (T) referenceKeys.getOrDefault(key, null);
 	}
 
 	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {

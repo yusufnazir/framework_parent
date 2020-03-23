@@ -175,22 +175,9 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		Component component = null;
 		try {
 			component = (Component) componentClass.newInstance();
-
-			int newColumn = column * 2;
-
-			if (key != null) {
-				// CaptionLabel label = addCaptionLabel(key, newColumn, row);
-				// if (component instanceof Captionable) {
-				// ((Captionable) component).setLabel(label);
-				// }
-			}
 			setUpComponent(component, key);
 			layout.add(component);
-			// layout.setColumnAlign(component, ColumnAlign.START);
 			layout.setRowAlign(component, RowAlign.STRETCH);
-
-			// add((Component) component, newColumn + 1, row);
-			// setComponentAlignment(component, Alignment.MIDDLE_LEFT);
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -202,6 +189,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		if (component instanceof LookUpField) {
 			((HasSize) component).setWidth("-1px");
 			((LookUpField) component).setCaptionByKey(key);
+			((LookUpField) component).setReferenceKeys(referenceKeys);
 		} else if (component instanceof CTextField) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CTextArea) {
@@ -219,7 +207,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 				|| component instanceof CDiscreetNumberIntervalLayout) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
-//			((HasSize) component).setWidth("300px");
+			// ((HasSize) component).setWidth("300px");
 			((CStringIntervalLayout) component).setCaptionByKey(key);
 		} else if (component instanceof ActiveSelect) {
 			((HasSize) component).setWidth("150px");
@@ -233,6 +221,15 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 	@SuppressWarnings("unchecked")
 	public <T> T getParentEntity() {
 		return (T) parentEntity;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getIfParentEntity(Class<?> cl) {
+		if (parentEntity != null && cl.isAssignableFrom(parentEntity.getClass())) {
+			return (T) parentEntity;
+		} else {
+			return null;
+		}
 	}
 
 	public void setParentEntity(Object parentEntity) {

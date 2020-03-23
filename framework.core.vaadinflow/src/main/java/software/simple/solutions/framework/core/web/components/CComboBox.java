@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.data.provider.Query;
 
+import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -119,6 +120,12 @@ public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable
 			return null;
 		}
 		return comboItem.getId().toString();
+	}
+
+	public void setValue(IMappedSuperClass entity) {
+		if (entity != null) {
+			setLongValue(entity.getId());
+		}
 	}
 
 	@Override

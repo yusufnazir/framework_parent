@@ -1,7 +1,7 @@
 package software.simple.solutions.framework.core.web;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	private static final Logger logger = LogManager.getLogger(FormView.class);
 
 	private ViewDetail viewDetail;
-	private ConcurrentMap<String, Object> referenceKeys;
+	private Map<String, Object> referenceKeys;
 	protected SessionHolder sessionHolder;
 	private String validationMessage;
 	private Object parentEntity;
@@ -41,7 +41,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
 		validationMessage = "system.notif.validation.error";
 	}
-	
+
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
@@ -124,7 +124,17 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	public <T> T getParentEntity() {
 		return (T) parentEntity;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getIfParentEntity(Class<?> cl) {
+		if (parentEntity != null && cl.isAssignableFrom(parentEntity.getClass())) {
+			return (T) parentEntity;
+		} else {
+			return null;
+		}
+	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getSelectedEntity() {
 		return (T) selectedEntity;
 	}
@@ -143,11 +153,11 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 		return (T) referenceKeys.get(key);
 	}
 
-	public ConcurrentMap<String, Object> getReferenceKeys() {
+	public Map<String, Object> getReferenceKeys() {
 		return referenceKeys;
 	}
 
-	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
+	public void setReferenceKeys(Map<String, Object> referenceKeys) {
 		this.referenceKeys = referenceKeys;
 	}
 }

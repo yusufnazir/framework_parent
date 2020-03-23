@@ -1,16 +1,14 @@
 package software.simple.solutions.framework.core.web;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.flow.component.icon.Icon;
+import org.apache.commons.lang3.StringUtils;
 
 import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
-import software.simple.solutions.framework.core.util.NumberUtil;
 
 public class SimpleSolutionsMenuItem {
 
@@ -18,7 +16,9 @@ public class SimpleSolutionsMenuItem {
 	private boolean divider = false;
 	private boolean returnToMain = false;
 	private Object searchedEntity;
+	private Map<String, Object> referenceKeys;
 	private Object parentEntity;
+	private boolean isSubTab = false;
 
 	public SimpleSolutionsMenuItem() {
 		super();
@@ -50,26 +50,28 @@ public class SimpleSolutionsMenuItem {
 		this.menu = menu;
 	}
 
-//	@SuppressWarnings("deprecation")
-//	public Icon getIcon() {
-//		if (menu.getIcon() == null) {
-//			return null;
-//		}
-//		Resource icon = FontAwesome.fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
-//		if (icon == null) {
-//			icon = fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
-//		}
-//		return icon;
-//	}
-//
-//	public static VaadinIcons fromCodepoint(final int codepoint) {
-//		for (VaadinIcons f : VaadinIcons.values()) {
-//			if (f.getCodepoint() == codepoint) {
-//				return f;
-//			}
-//		}
-//		throw new IllegalArgumentException("Codepoint " + codepoint + " not found in FontAwesome");
-//	}
+	// @SuppressWarnings("deprecation")
+	// public Icon getIcon() {
+	// if (menu.getIcon() == null) {
+	// return null;
+	// }
+	// Resource icon =
+	// FontAwesome.fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
+	// if (icon == null) {
+	// icon = fromCodepoint(NumberUtil.getInteger(menu.getIcon()));
+	// }
+	// return icon;
+	// }
+	//
+	// public static VaadinIcons fromCodepoint(final int codepoint) {
+	// for (VaadinIcons f : VaadinIcons.values()) {
+	// if (f.getCodepoint() == codepoint) {
+	// return f;
+	// }
+	// }
+	// throw new IllegalArgumentException("Codepoint " + codepoint + " not found
+	// in FontAwesome");
+	// }
 
 	public String getMenuName() {
 		return menu.getName();
@@ -120,8 +122,25 @@ public class SimpleSolutionsMenuItem {
 		this.searchedEntity = searchedEntity;
 	}
 
-	public Object getParentEntity() {
-		return parentEntity;
+	public Map<String, Object> getReferenceKeys() {
+		return referenceKeys;
+	}
+
+	public void setReferenceKeys(Map<String, Object> referenceKeys) {
+		this.referenceKeys = referenceKeys;
+	}
+
+	public boolean isSubTab() {
+		return isSubTab;
+	}
+
+	public void setSubTab(boolean isSubTab) {
+		this.isSubTab = isSubTab;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getParentEntity() {
+		return (T) parentEntity;
 	}
 
 	public void setParentEntity(Object parentEntity) {

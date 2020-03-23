@@ -108,22 +108,6 @@ public class ApplicationUserForm extends FormView {
 		profileImageFld.setWidth("150px");
 		navigationLayout.add(profileImageFld);
 
-		// Tabs tabs = new Tabs();
-		// tabs.setOrientation(Orientation.VERTICAL);
-		// navigationLayout.add(tabs);
-		// Tab personalInformationTab = new
-		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.PERSONAL_INFORMATION_TAB,
-		// UI.getCurrent().getLocale()));
-		// tabs.add(personalInformationTab);
-		// Tab contactInformationTab = new
-		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.CONTACT_INFORMATION_TAB,
-		// UI.getCurrent().getLocale()));
-		// tabs.add(contactInformationTab);
-		// Tab emergencyContactInformationTab = new
-		// Tab(PropertyResolver.getPropertyValueByLocale(PersonProperty.EMERGENCY_CONTACT_INFORMATION_TAB,
-		// UI.getCurrent().getLocale()));
-		// tabs.add(emergencyContactInformationTab);
-
 		VerticalLayout userMainLayout = new VerticalLayout();
 		userMainLayout.setWidthFull();
 		mainLayout.add(userMainLayout);
@@ -164,7 +148,7 @@ public class ApplicationUserForm extends FormView {
 		// UI.getCurrent().getLocale()));
 		userMainLayout.add(personInfoCard);
 
-		// createPersonLookUpListener();
+		createPersonLookUpListener();
 	}
 
 	private Panel createUserInfoLayout() {
@@ -263,19 +247,11 @@ public class ApplicationUserForm extends FormView {
 		personInfoCard.setVisible(false);
 		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
 
-			@Override
-			public void valueChanged(ValueChangeEvent<Person> event) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-		personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
-
 			private static final long serialVersionUID = 3798217052004909083L;
 
 			@Override
 			public void valueChanged(ValueChangeEvent<Person> event) {
-				person = (Person) event.getValue();
+				person = event.getValue();
 				personInfoCard.setVisible(false);
 				if (person != null) {
 					personInfoCard.setVisible(true);

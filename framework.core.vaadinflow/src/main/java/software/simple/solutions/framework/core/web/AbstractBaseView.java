@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.web;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -11,6 +12,7 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.PopUpMode;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.web.components.CDialog;
 
@@ -20,16 +22,16 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 
 	private ViewDetail viewDetail;
 	private SessionHolder sessionHolder;
-	private ConcurrentMap<String, Object> referenceKeys;
-	private String entityReferenceKey;
+	private Map<String, Object> referenceKeys;
 	private Object selectedEntity;
 	private Object parentEntity;
 	private CDialog popUpWindow;
 	private Object popUpEntity;
-	private boolean popUpMode = false;
+	private PopUpMode popUpMode = PopUpMode.NONE;
 	private boolean forwardToSearch = false;
 	private Object forwardToSearchEntity;
-	private BehaviorSubject<Object> updateObserver;
+	private final BehaviorSubject<Object> updateObserver;
+	private final BehaviorSubject<EntitySelect> entitySelectedObserver;
 	private Boolean viewContentUpdated = false;
 	private String parentReferenceKey;
 	private String uuid;
@@ -40,6 +42,7 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		updateObserver = BehaviorSubject.create();
+		entitySelectedObserver = BehaviorSubject.create();
 	}
 
 	@Override
@@ -80,11 +83,11 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		return null;
 	}
 
-	public ConcurrentMap<String, Object> getReferenceKeys() {
+	public Map<String, Object> getReferenceKeys() {
 		return referenceKeys;
 	}
 
-	public void setReferenceKeys(ConcurrentMap<String, Object> referenceKeys) {
+	public void setReferenceKeys(Map<String, Object> referenceKeys) {
 		this.referenceKeys = referenceKeys;
 	}
 
@@ -100,20 +103,12 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		referenceKeys.put(key, BehaviorSubject.create());
 	}
 
-	public boolean isPopUpMode() {
+	public PopUpMode getPopUpMode() {
 		return popUpMode;
 	}
 
-	public void setPopUpMode(boolean popUpMode) {
+	public void setPopUpMode(PopUpMode popUpMode) {
 		this.popUpMode = popUpMode;
-	}
-
-	public void setToPopUpMode() {
-		popUpMode = true;
-	}
-
-	public void setParentEntity(Object parentEntity) {
-		this.parentEntity = parentEntity;
 	}
 
 	public CDialog getPopUpWindow() {
@@ -135,6 +130,10 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	@SuppressWarnings("unchecked")
 	public <T> T getParentEntity() {
 		return (T) parentEntity;
+	}
+
+	public void setParentEntity(Object parentEntity) {
+		this.parentEntity = parentEntity;
 	}
 
 	public void executePreBuild() throws FrameworkException {
@@ -180,15 +179,15 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 		this.selectedEntity = selectedEntity;
 	}
 
-	public String getEntityReferenceKey() {
-		return entityReferenceKey;
-	}
+	// public String getEntityReferenceKey() {
+	// return entityReferenceKey;
+	// }
 
-	public void setEntityReferenceKey(String entityReferenceKey) {
-		this.entityReferenceKey = entityReferenceKey;
-	}
+	// public void setEntityReferenceKey(String entityReferenceKey) {
+	// this.entityReferenceKey = entityReferenceKey;
+	// }
 
-	public ConcurrentMap<String, Object> addUpdateObserverReferenceKey(String referenceKey) {
+	public Map<String, Object> addUpdateObserverReferenceKey(String referenceKey) {
 		addReferenceKey(ReferenceKey.UPDATE_OBSERVEABLE + "_" + referenceKey, updateObserver);
 		return getReferenceKeys();
 	}
@@ -213,6 +212,10 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	// public void addReferenceKey(String key, Object value) {
 	// referenceKeys.put(key, value);
 	// }
+
+	public BehaviorSubject<EntitySelect> getEntitySelectedObserver() {
+		return entitySelectedObserver;
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T getReferenceKey(String key) {

@@ -93,7 +93,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 				| IllegalAccessException | InvocationTargetException e) {
 			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
-		formView.setParentEntity(getParentEntity());
+//		formView.setParentEntity(getParentEntity());
 		formView.executeBuild();
 		formPanel = new Card();
 //		formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);

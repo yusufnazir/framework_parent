@@ -13,6 +13,7 @@ import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.PopUpMode;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
@@ -48,10 +49,10 @@ public class ViewUtil {
 
 	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, Long roleId, Long applicationUserId)
 			throws FrameworkException {
-		return initView(menuItem, false, roleId, applicationUserId);
+		return initView(menuItem, PopUpMode.NONE, roleId, applicationUserId);
 	}
 
-	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, boolean popUpMode, Long roleId,
+	public static AbstractBaseView initView(SimpleSolutionsMenuItem menuItem, PopUpMode popUpMode, Long roleId,
 			Long applicationUserId) throws FrameworkException {
 		String viewClassName = menuItem.getMenu().getView().getViewClassName();
 		AbstractBaseView view = initView(viewClassName);
@@ -81,7 +82,8 @@ public class ViewUtil {
 			viewDetail.setMenu(menuItem.getMenu());
 			viewDetail.setView(menuItem.getMenu().getView());
 
-			SessionHolder sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
+			SessionHolder sessionHolder = (SessionHolder) VaadinSession.getCurrent()
+					.getAttribute(Constants.SESSION_HOLDER);
 			ActionState actionState = ViewActionStateUtil.createActionState(viewDetail.getPrivileges(),
 					menuItem.getMenu().getView().getId(), sessionHolder.getApplicationUser().getId());
 			viewDetail.setActionState(actionState);
@@ -92,6 +94,9 @@ public class ViewUtil {
 			view.setViewDetail(viewDetail);
 			if (menuItem.getParentEntity() != null) {
 				view.setParentEntity(menuItem.getParentEntity());
+			}
+			if(menuItem.getReferenceKeys()!=null){
+				view.setReferenceKeys(menuItem.getReferenceKeys());
 			}
 			view.executeBuild();
 			if (view instanceof BasicTemplate) {

@@ -58,11 +58,13 @@ public class UserRoleForm extends FormView {
 		userFld.setValue(userRole.getApplicationUser());
 		roleFld.setValue(userRole.getRole());
 
-		Object parentEntity = getParentEntity();
-		if (parentEntity instanceof ApplicationUser) {
-			userFld.setEnabled(false);
-		} else if (parentEntity instanceof Role) {
-			roleFld.setEnabled(false);
+		ApplicationUser applicationUser = getIfParentEntity(ApplicationUser.class);
+		if (applicationUser != null) {
+			userFld.disableForParent();
+		}
+		Role role = getIfParentEntity(Role.class);
+		if (role != null) {
+			roleFld.disableForParent();
 		}
 
 		return userRole;
@@ -72,16 +74,15 @@ public class UserRoleForm extends FormView {
 	public void handleNewForm() throws FrameworkException {
 		activeFld.setValue(true);
 
-		Object parentEntity = getParentEntity();
-		if (parentEntity instanceof ApplicationUser) {
-			ApplicationUser applicationUser = (ApplicationUser) parentEntity;
+		ApplicationUser applicationUser = getIfParentEntity(ApplicationUser.class);
+		if (applicationUser != null) {
 			userFld.setValue(applicationUser);
-			userFld.setEnabled(false);
+			userFld.disableForParent();
 		}
-		if (parentEntity instanceof Role) {
-			Role role = (Role) parentEntity;
+		Role role = getIfParentEntity(Role.class);
+		if (role != null) {
 			roleFld.setValue(role);
-			roleFld.setEnabled(false);
+			roleFld.disableForParent();
 		}
 
 	}

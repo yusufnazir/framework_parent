@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.entities.Menu;
@@ -25,6 +26,19 @@ public class ViewDetail implements Serializable {
 	private boolean isEditing = false;
 	private List<Menu> subMenus;
 	private List<String> privileges;
+	private String uuid;
+
+	public ViewDetail() {
+		uuid = UUID.randomUUID().toString();
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
 	public Menu getMenu() {
 		return menu;
