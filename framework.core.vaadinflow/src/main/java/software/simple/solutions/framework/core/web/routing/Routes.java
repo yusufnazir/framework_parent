@@ -17,4 +17,10 @@ public class Routes {
 	
 	public static final String USER_ROLE = "user_role";
 	public static final String USER_ROLE_EDIT = "user_role_edit";
+	
+	public static final String VIEW = "view";
+	public static final String VIEW_EDIT = "view_edit";
+	
+	public static final String ROLE_VIEW = "role_view";
+	public static final String ROLE_VIEW_EDIT = "role_view_edit";
 }

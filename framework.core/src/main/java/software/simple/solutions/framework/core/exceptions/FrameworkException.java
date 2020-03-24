@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.exceptions;
 
+import java.util.Locale;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,51 +17,27 @@ public class FrameworkException extends Exception {
 
 	protected static final Logger serviceLogger = LogManager.getLogger(FrameworkException.class);
 
-	private String messageKey;
-	private Arg args;
+	private final String messageKey;
+	private final Locale locale;
+	private final Arg arg;
 
-	public FrameworkException() {
-		super();
-	}
-
-	public FrameworkException(String messageKey) {
-		super(messageKey);
+	public FrameworkException(String messageKey, Locale locale, Arg arg, Throwable throwable) {
+		super(throwable);
 		this.messageKey = messageKey;
-	}
-
-	public FrameworkException(String messageKey, Throwable throwable) {
-		super(messageKey, throwable);
-		this.messageKey = messageKey;
-	}
-	
-	public FrameworkException(String messageKey, Arg args) {
-		this(messageKey);
-		this.args = args;
-	}
-
-	public FrameworkException(String messageKey, Arg args, Throwable throwable) {
-		this(messageKey, throwable);
-		this.args = args;
+		this.locale = locale;
+		this.arg = arg;
 	}
 
 	public String getMessageKey() {
 		return messageKey;
 	}
 
-	public Arg getArgs() {
-		return args;
+	public Locale getLocale() {
+		return locale;
 	}
 
-	public ExceptionHolder getExceptionHolder() {
-		return new ExceptionHolder(messageKey, args, getCause());
-	}
-
-	public void setMessageKey(String messageKey) {
-		this.messageKey = messageKey;
-	}
-
-	public void setArgs(Arg args) {
-		this.args = args;
+	public Arg getArg() {
+		return arg;
 	}
 
 }

@@ -14,6 +14,7 @@ import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
@@ -26,7 +27,7 @@ import software.simple.solutions.framework.core.valueobjects.PersonInformationVO
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IPersonRepository.class)
 public class PersonService extends SuperService implements IPersonService {
@@ -44,20 +45,21 @@ public class PersonService extends SuperService implements IPersonService {
 		PersonVO vo = (PersonVO) valueObject;
 
 		if (StringUtils.isBlank(vo.getFirstName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(PersonProperty.FIRST_NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(PersonProperty.FIRST_NAME));
 		}
 		if (StringUtils.isBlank(vo.getLastName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(PersonProperty.LAST_NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(PersonProperty.LAST_NAME));
 		}
 		// if (vo.getDateOfBirth() == null) {
 		// throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
 		// new Arg().key(PersonProperty.DATE_OF_BIRTH));
 		// }
 		if (vo.getDateOfBirth() != null && vo.getDateOfBirth().compareTo(LocalDate.now()) > 0) {
-			throw new FrameworkException(SystemMessageProperty.NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE,
-					new Arg().key(PersonProperty.DATE_OF_BIRTH));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(
+					SystemMessageProperty.NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE,
+					Arg.build().key(PersonProperty.DATE_OF_BIRTH));
 		}
 		// if (vo.getGenderId() == null) {
 		// throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,

@@ -27,7 +27,6 @@ import software.simple.solutions.framework.core.entities.MessagePerLocale;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.Arg.Key;
 import software.simple.solutions.framework.core.exceptions.Arg.Value;
-import software.simple.solutions.framework.core.exceptions.ExceptionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.IMessagePerLocaleService;
 import software.simple.solutions.framework.core.util.ContextProvider;
@@ -64,17 +63,6 @@ public class ErrorLayout extends VerticalLayout {
 	private void initLayout() {
 		addStyleName(Style.ERROR_BACKGROUND_REDDISH);
 		setWidth(500, Unit.PIXELS);
-		if (cause != null) {
-			ExceptionHolder exceptionHolder = null;
-			if (cause instanceof FrameworkException) {
-				exceptionHolder = ((FrameworkException) cause).getExceptionHolder();
-			}
-
-			if (exceptionHolder != null) {
-				messageProperty = exceptionHolder.getMessageKey();
-				args = exceptionHolder.getArgs();
-			}
-		}
 
 		if (StringUtils.isNotBlank(messageProperty)) {
 			IMessagePerLocaleService messagePerLocaleService = ContextProvider.getBean(IMessagePerLocaleService.class);

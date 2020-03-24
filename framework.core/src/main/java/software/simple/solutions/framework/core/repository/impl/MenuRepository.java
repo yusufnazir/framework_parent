@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IMenuRepository;
@@ -150,8 +151,8 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		paramMap.put("className", name);
 		List<Menu> menus = createListQuery(query, paramMap);
 		if (menus == null || menus.isEmpty() || menus.size() > 1) {
-			throw new FrameworkException(SystemMessageProperty.INVALID_LOOKUP_FIELD_SETUP,
-					new Arg().norm(roleId).norm(name));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FAILED_TO_PERSIST,
+					Arg.build().norm(roleId).norm(name));
 		}
 
 		return menus.get(0);
@@ -189,8 +190,8 @@ public class MenuRepository extends GenericRepository implements IMenuRepository
 		String query = "select m from Menu m left join RoleView rv on rv.view.id=m.view.id "
 				+ "left join RoleViewPrivilege rvp on rvp.roleView.id=rv.id " + "where rvp.privilege is not null "
 				+ "and m.id=:menuId";
-		if(roleId!=null){
-			query +=" and rv.role.id=:roleId ";
+		if (roleId != null) {
+			query += " and rv.role.id=:roleId ";
 			paramMap.put("roleId", roleId);
 		}
 		paramMap.put("menuId", menuId);

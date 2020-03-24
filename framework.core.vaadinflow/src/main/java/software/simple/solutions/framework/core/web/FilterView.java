@@ -26,6 +26,7 @@ import software.simple.solutions.framework.core.components.filter.CDiscreetNumbe
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -134,7 +135,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 			return filterView;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
 	}
 

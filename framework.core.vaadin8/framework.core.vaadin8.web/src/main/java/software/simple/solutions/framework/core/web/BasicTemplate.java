@@ -87,6 +87,7 @@ import software.simple.solutions.framework.core.excelexporter.configuration.buil
 import software.simple.solutions.framework.core.excelexporter.configuration.builder.ExportExcelConfigurationBuilder;
 import software.simple.solutions.framework.core.excelexporter.configuration.builder.ExportExcelSheetConfigurationBuilder;
 import software.simple.solutions.framework.core.excelexporter.model.ExportType;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.paging.PagingBar;
@@ -576,7 +577,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			formView = formClass.getConstructor(new Class[] { this.getClass() }).newInstance(new Object[] { this });
 		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 		formView.setReferenceKeys(getReferenceKeys());
 		formView.setParentEntity(getParentEntity());
@@ -606,7 +607,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 					.newInstance(new Object[] { this });
 		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 
 		readonlyFormView.setParentEntity(getParentEntity());
@@ -725,7 +726,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			view.setSessionHolder(getSessionHolder());
 			return view;
 		} catch (NullPointerException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -794,7 +795,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			filterView = filterClass.getConstructor(new Class[] { this.getClass() }).newInstance(new Object[] { this });
 		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
 		filterView.setViewDetail(getViewDetail());
 		filterView.setParentEntity(getParentEntity());
@@ -1019,7 +1020,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 									int deleted = superService.delete(new ArrayList(toDeleteEntities));
 									handleReactiveUpdate(toDeleteEntities);
 								} catch (DataIntegrityViolationException e) {
-									throw new FrameworkException(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
+									throw ExceptionBuilder.FRAMEWORK_EXCEPTION
+											.build(SystemMessageProperty.DATA_FOREIGN_KEY_CONSTRAINT, e);
 								}
 							} catch (FrameworkException e) {
 								// logger.error(e.getMessage(), e);
@@ -1071,7 +1073,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 								switchToForm(entity, false);
 								NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 							} catch (InvalidDataAccessApiUsageException e) {
-								throw new FrameworkException(SystemMessageProperty.FAILED_TO_PERSIST, e);
+								throw ExceptionBuilder.FRAMEWORK_EXCEPTION
+										.build(SystemMessageProperty.FAILED_TO_PERSIST, e);
 							}
 							actionBar.authorizeSave();
 						} catch (FrameworkException e) {
@@ -1220,7 +1223,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				switchToForm(entity, true);
 				return entity;
 			} catch (InvalidDataAccessApiUsageException | NullPointerException e) {
-				throw new FrameworkException(SystemMessageProperty.FAILED_TO_PERSIST, e);
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FAILED_TO_PERSIST, e);
 			}
 		}
 		return null;
@@ -1503,7 +1506,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			return basicTemplate;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
 	}
 

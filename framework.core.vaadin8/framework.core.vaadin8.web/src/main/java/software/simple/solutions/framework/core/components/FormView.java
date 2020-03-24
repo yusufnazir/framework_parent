@@ -13,10 +13,10 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.framework.core.constants.Style;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
-import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 
 public abstract class FormView extends VerticalLayout implements IView, IForm, IDetail,
 		// Referenceable,
@@ -108,7 +108,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 			return formView;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -130,7 +130,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	}
 
 	public void addToReferenceKey(String key, Object value) {
-		if(value!=null){
+		if (value != null) {
 			referenceKeys.put(key, value);
 		}
 	}

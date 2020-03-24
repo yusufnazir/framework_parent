@@ -30,6 +30,7 @@ import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.paging.PagingBar;
 import software.simple.solutions.framework.core.paging.PagingSearchEvent;
@@ -317,7 +318,7 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 			return basicTemplate;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
 	}
 

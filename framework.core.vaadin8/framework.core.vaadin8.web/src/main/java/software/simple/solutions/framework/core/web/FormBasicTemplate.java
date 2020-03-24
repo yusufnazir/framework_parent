@@ -27,6 +27,7 @@ import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.ViewDetail;
 import software.simple.solutions.framework.core.constants.ActionState;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.service.ISuperService;
@@ -102,7 +103,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			formView = formClass.getConstructor(new Class[] { this.getClass() }).newInstance(new Object[] { this });
 		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 		formView.setParentEntity(getParentEntity());
 		formView.executeBuild();
@@ -178,7 +179,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			view.setSessionHolder(getSessionHolder());
 			return view;
 		} catch (NullPointerException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -268,7 +269,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			return basicTemplate;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 

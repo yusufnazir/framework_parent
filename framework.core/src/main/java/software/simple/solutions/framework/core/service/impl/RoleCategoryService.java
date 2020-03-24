@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.RoleCategory;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleCategoryProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
@@ -18,7 +19,7 @@ import software.simple.solutions.framework.core.valueobjects.RoleCategoryVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IRoleCategoryRepository.class)
 public class RoleCategoryService extends SuperService implements IRoleCategoryService {
 
@@ -30,22 +31,22 @@ public class RoleCategoryService extends SuperService implements IRoleCategorySe
 		RoleCategoryVO vo = (RoleCategoryVO) valueObject;
 
 		if (StringUtils.isBlank(vo.getName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(RoleCategoryProperty.NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleCategoryProperty.NAME));
 		}
 
 		RoleCategory roleCategory = new RoleCategory();
 		if (vo.isNew()) {
 			Boolean nameUnique = roleCategoryRepository.isNameUnique(RoleCategory.class, vo.getName());
 			if (!nameUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleCategoryProperty.NAME));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleCategoryProperty.NAME));
 			}
 		} else {
 			Boolean nameUnique = roleCategoryRepository.isNameUnique(RoleCategory.class, vo.getName(), vo.getId());
 			if (!nameUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleCategoryProperty.NAME));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleCategoryProperty.NAME));
 			}
 			roleCategory = get(RoleCategory.class, vo.getId());
 		}

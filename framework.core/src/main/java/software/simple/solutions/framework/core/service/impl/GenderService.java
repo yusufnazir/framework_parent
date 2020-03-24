@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
@@ -17,7 +18,7 @@ import software.simple.solutions.framework.core.service.IGenderService;
 import software.simple.solutions.framework.core.valueobjects.GenderVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IGenderRepository.class)
 public class GenderService extends SuperService implements IGenderService {
@@ -28,34 +29,34 @@ public class GenderService extends SuperService implements IGenderService {
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
 		GenderVO vo = (GenderVO) valueObject;
-		// ThreadAttributes.add(vo.getUpdatedBy());
 
 		if (StringUtils.isBlank(vo.getName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(GenderProperty.NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(GenderProperty.NAME));
 		}
 
 		Gender gender = new Gender();
 		if (vo.isNew()) {
 			Boolean isNameUnique = genderRepository.isNameUnique(null, vo.getName());
 			if (!isNameUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(GenderProperty.NAME));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(GenderProperty.NAME));
 			}
 			Boolean isKeyUnique = genderRepository.isKeyUnique(null, vo.getName());
 			if (!isKeyUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(GenderProperty.PROPERTY_KEY));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(GenderProperty.PROPERTY_KEY));
 			}
 		} else {
 			Boolean isNameUnique = genderRepository.isNameUnique(vo.getId(), vo.getName());
 			if (!isNameUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(GenderProperty.NAME));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(GenderProperty.NAME));
 			}
 			Boolean isKeyUnique = genderRepository.isKeyUnique(vo.getId(), vo.getName());
 			if (!isKeyUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(GenderProperty.PROPERTY_KEY));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(GenderProperty.PROPERTY_KEY));
 			}
 			gender = get(Gender.class, vo.getId());
 		}

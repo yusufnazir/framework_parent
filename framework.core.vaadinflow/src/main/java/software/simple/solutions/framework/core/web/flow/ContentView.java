@@ -39,6 +39,7 @@ import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.web.AbstractBaseView;
 import software.simple.solutions.framework.core.web.BasicTemplate;
+import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.EntitySelect;
 import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 import software.simple.solutions.framework.core.web.ViewUtil;
@@ -193,7 +194,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 							contentLayout.add(view);
 							createdSubMenusTabs.put(selectedTab, view);
 						} catch (FrameworkException e) {
-							e.printStackTrace();
+							DetailsWindow.build(e);
 						}
 					}
 				}

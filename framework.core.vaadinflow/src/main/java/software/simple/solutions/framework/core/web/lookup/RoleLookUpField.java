@@ -1,6 +1,5 @@
 package software.simple.solutions.framework.core.web.lookup;
 
-import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.web.LookUpField;
 import software.simple.solutions.framework.core.web.view.RoleView;

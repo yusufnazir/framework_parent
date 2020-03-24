@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 
 import software.simple.solutions.framework.core.constants.ActionState;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.service.ISuperService;
@@ -41,7 +42,8 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 	private boolean isNew = false;
 	private Set<AbstractBaseView> selectedTab;
 
-//	Action action_ok = new ShortcutAction("Default key", ShortcutAction.KeyCode.ENTER, null);
+	// Action action_ok = new ShortcutAction("Default key",
+	// ShortcutAction.KeyCode.ENTER, null);
 
 	public FormBasicTemplate() {
 		selectedTab = new HashSet<AbstractBaseView>();
@@ -91,19 +93,19 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			formView = formClass.getConstructor(new Class[] { this.getClass() }).newInstance(new Object[] { this });
 		} catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
-//		formView.setParentEntity(getParentEntity());
+		// formView.setParentEntity(getParentEntity());
 		formView.executeBuild();
 		formPanel = new Card();
-//		formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+		// formPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
 		formPanel.setWidth("100%");
 		formPanel.setHeight("-1px");
 		formView.setWidth("-1px");
 		formPanel.add(formView);
-//		formLayout.removeAllComponents();
+		// formLayout.removeAllComponents();
 		formLayout.addComponentAsFirst(formPanel);
-//		setExpandRatio(formLayout, 1);
+		// setExpandRatio(formLayout, 1);
 	}
 
 	private void createSubTabs() throws FrameworkException {
@@ -111,42 +113,44 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 		subTabSheet.setVisible(false);
 		subTabSheet.setSizeFull();
 		formLayout.add(subTabSheet);
-//		formLayout.setExpandRatio(subTabSheet, 1);
+		// formLayout.setExpandRatio(subTabSheet, 1);
 
 		AuthorizedViewListHelper authorizedViewListHelper = new AuthorizedViewListHelper();
 		List<SimpleSolutionsMenuItem> subMenus = authorizedViewListHelper
 				.getTabMenus(getViewDetail().getMenu().getId());
 
-//		subTabSheet.addSelectedTabChangeListener(new SelectedTabChangeListener() {
-//
-//			private static final long serialVersionUID = -2864427288443080549L;
-//
-//			@Override
-//			public void selectedTabChange(SelectedTabChangeEvent event) {
-//				Component component = event.getTabSheet().getSelectedTab();
-//				if (!FormBasicTemplate.this.selectedTab.contains((AbstractBaseView) component)) {
-//					try {
-//						executeSubMenuBuild((AbstractBaseView) component);
-//						selectedTab.add((AbstractBaseView) component);
-//					} catch (FrameworkException e) {
-//						logger.error(e.getMessage(), e);
-//					}
-//				}
-//			}
-//		});
+		// subTabSheet.addSelectedTabChangeListener(new
+		// SelectedTabChangeListener() {
+		//
+		// private static final long serialVersionUID = -2864427288443080549L;
+		//
+		// @Override
+		// public void selectedTabChange(SelectedTabChangeEvent event) {
+		// Component component = event.getTabSheet().getSelectedTab();
+		// if (!FormBasicTemplate.this.selectedTab.contains((AbstractBaseView)
+		// component)) {
+		// try {
+		// executeSubMenuBuild((AbstractBaseView) component);
+		// selectedTab.add((AbstractBaseView) component);
+		// } catch (FrameworkException e) {
+		// logger.error(e.getMessage(), e);
+		// }
+		// }
+		// }
+		// });
 
-//		if (subMenus != null && !subMenus.isEmpty()) {
-//			subTabSheet.setVisible(true);
-//			for (int i = 0; i < subMenus.size(); i++) {
-//				SimpleSolutionsMenuItem viewItem = subMenus.get(i);
-//				AbstractBaseView subView = initSubView(viewItem);
-//				subTabSheet.addTab(subView);
-//				subTabSheet.getTab(subView).setCaption(viewItem.getMenu().getName());
-//				if (i == 0) {
-//					subTabSheet.setSelectedTab(subView);
-//				}
-//			}
-//		}
+		// if (subMenus != null && !subMenus.isEmpty()) {
+		// subTabSheet.setVisible(true);
+		// for (int i = 0; i < subMenus.size(); i++) {
+		// SimpleSolutionsMenuItem viewItem = subMenus.get(i);
+		// AbstractBaseView subView = initSubView(viewItem);
+		// subTabSheet.addTab(subView);
+		// subTabSheet.getTab(subView).setCaption(viewItem.getMenu().getName());
+		// if (i == 0) {
+		// subTabSheet.setSelectedTab(subView);
+		// }
+		// }
+		// }
 	}
 
 	private AbstractBaseView initSubView(SimpleSolutionsMenuItem viewItem) throws FrameworkException {
@@ -167,7 +171,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			view.setSessionHolder(getSessionHolder());
 			return view;
 		} catch (NullPointerException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -220,7 +224,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			switchToForm(updateSingle);
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
-//			new MessageWindowHandler(e);
+			// new MessageWindowHandler(e);
 		}
 		return updateSingle;
 	}
@@ -233,7 +237,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			isNew = true;
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
-//			new MessageWindowHandler(e);
+			// new MessageWindowHandler(e);
 		}
 	}
 
@@ -257,7 +261,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			return basicTemplate;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -267,7 +271,7 @@ public abstract class FormBasicTemplate extends AbstractBaseView implements Buil
 			switchToForm(null);
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
-//			new MessageWindowHandler(e);
+			// new MessageWindowHandler(e);
 		}
 	}
 

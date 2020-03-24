@@ -1,10 +1,12 @@
 package software.simple.solutions.framework.core.exceptions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Arg {
+public class Arg implements Serializable {
 
+	private static final long serialVersionUID = -6052501458232434270L;
 	private List<Value> values;
 	private List<Value> keyValues;
 	private List<Value> normValues;
@@ -13,6 +15,10 @@ public class Arg {
 		values = new ArrayList<Arg.Value>();
 		keyValues = new ArrayList<Arg.Value>();
 		normValues = new ArrayList<Arg.Value>();
+	}
+
+	public static Arg build() {
+		return new Arg();
 	}
 
 	public void addValue(Value value) {

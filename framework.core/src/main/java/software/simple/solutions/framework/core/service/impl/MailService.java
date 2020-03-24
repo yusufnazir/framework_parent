@@ -35,6 +35,7 @@ import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.GeneratedMail;
 import software.simple.solutions.framework.core.entities.MailTemplate;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.mailing.Mail;
 import software.simple.solutions.framework.core.mailing.MailSettings;
@@ -49,7 +50,7 @@ import software.simple.solutions.framework.core.service.IPersonInformationServic
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.valueobjects.GeneratedMailVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 public class MailService extends SuperService implements IMailService {
 
@@ -241,7 +242,7 @@ public class MailService extends SuperService implements IMailService {
 			mailSender.send(simpleMailMessage);
 			return true;
 		} catch (MailException e) {
-			throw new FrameworkException(SystemMessageProperty.UNABLE_TO_SEND_MAIL, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.UNABLE_TO_SEND_MAIL, e);
 		}
 	}
 

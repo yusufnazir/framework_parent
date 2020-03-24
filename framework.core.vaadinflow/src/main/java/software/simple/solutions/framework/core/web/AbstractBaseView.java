@@ -135,6 +135,15 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	public void setParentEntity(Object parentEntity) {
 		this.parentEntity = parentEntity;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getIfParentEntity(Class<?> cl) {
+		if (parentEntity != null && cl.isAssignableFrom(parentEntity.getClass())) {
+			return (T) parentEntity;
+		} else {
+			return null;
+		}
+	}
 
 	public void executePreBuild() throws FrameworkException {
 		return;

@@ -9,6 +9,7 @@ import com.vaadin.server.Resource;
 import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.View;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.util.NumberUtil;
@@ -93,7 +94,7 @@ public class SimpleSolutionsMenuItem {
 		try {
 			return Class.forName(viewClassName);
 		} catch (ClassNotFoundException e) {
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 

@@ -22,5 +22,10 @@ public class SystemMessageProperty {
 	public static final String NOTIFICATION_DATE_CANNOT_BE_IN_THE_FUTURE = "notification.date.cannot.be.in.the.future";
 	public static final String DATA_FOREIGN_KEY_CONSTRAINT = SYSTEM_EXCEPTION + "data.foreign.key.constraint";
 	public static final String APPLICATION_ERROR = SYSTEM_EXCEPTION + "application.error";
+	
+	/**
+	 * 0: route
+	 */
+	public static final String NO_MENU_FOUND_FOR_ROUTE = SYSTEM_EXCEPTION + "no.menu.found.for.route";
 
 }

@@ -14,6 +14,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.server.VaadinSession;
 
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.util.SessionHolder;
@@ -112,7 +113,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 			return formView;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
 	}
 
@@ -124,7 +125,7 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	public <T> T getParentEntity() {
 		return (T) parentEntity;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T getIfParentEntity(Class<?> cl) {
 		if (parentEntity != null && cl.isAssignableFrom(parentEntity.getClass())) {

@@ -22,8 +22,8 @@ import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.event.ApplicationUserEvent;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.exceptions.ValidationException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 import software.simple.solutions.framework.core.properties.ConfigurationProperty;
@@ -79,19 +79,19 @@ public class ApplicationUserService extends SuperService implements IApplication
 		ApplicationUserVO vo = (ApplicationUserVO) entityVO;
 
 		if (vo.getPersonId() == null) {
-			throw new ValidationException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(PersonProperty.PERSON),
-					vo.getLocale());
+			throw ExceptionBuilder.VALIDATION_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED, vo.getLocale(),
+					Arg.build().key(PersonProperty.PERSON));
 		}
 		if (StringUtils.isBlank(vo.getUsername())) {
-			throw new ValidationException(SystemMessageProperty.FIELD_IS_REQUIRED,
-					new Arg().key(ApplicationUserProperty.USERNAME), vo.getLocale());
+			throw ExceptionBuilder.VALIDATION_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED, vo.getLocale(),
+					Arg.build().key(ApplicationUserProperty.USERNAME));
 		}
 
 		if (vo.isNew() && !vo.getUseLdap()) {
 			SecurityValidation securityValidation = validatePasswords(vo.getPassword(), vo.getPasswordConfirm());
 			if (!securityValidation.isSuccess()) {
-				throw new ValidationException(SystemMessageProperty.PASSWORD_VALIDATION,
-						new Arg().key(securityValidation.getMessageKey()), vo.getLocale());
+				throw ExceptionBuilder.VALIDATION_EXCEPTION.build(SystemMessageProperty.PASSWORD_VALIDATION,
+						vo.getLocale(), Arg.build().key(securityValidation.getMessageKey()));
 			}
 		}
 

@@ -13,6 +13,7 @@ import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.entities.RoleCategory;
 import software.simple.solutions.framework.core.entities.UserRole;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
@@ -22,7 +23,7 @@ import software.simple.solutions.framework.core.valueobjects.RoleVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IRoleRepository.class)
 public class RoleService extends SuperService implements IRoleService {
 
@@ -39,24 +40,26 @@ public class RoleService extends SuperService implements IRoleService {
 		RoleVO vo = (RoleVO) valueObject;
 
 		if (StringUtils.isBlank(vo.getCode())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(RoleProperty.CODE));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleProperty.CODE));
 		}
 		if (StringUtils.isBlank(vo.getName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(RoleProperty.NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleProperty.NAME));
 		}
 
 		Role role = new Role();
 		if (vo.isNew()) {
 			Boolean codeUnique = isCodeUnique(Role.class, vo.getCode());
 			if (!codeUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleProperty.CODE));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleProperty.CODE));
 			}
 		} else {
 			Boolean codeUnique = isCodeUnique(Role.class, vo.getCode(), vo.getId());
 			if (!codeUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleProperty.CODE));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleProperty.CODE));
 			}
 			role = get(Role.class, vo.getId());
 		}

@@ -33,6 +33,7 @@ import org.springframework.stereotype.Repository;
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.Property;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.DateInterval;
 import software.simple.solutions.framework.core.pojo.LongInterval;
@@ -202,7 +203,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -228,7 +229,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -258,7 +259,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.info("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -281,7 +282,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -307,7 +308,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -338,7 +339,7 @@ public class GenericRepository implements IGenericRepository {
 		} catch (NoResultException e) {
 			logger.error("No results found. [" + e.getMessage() + "] for query [" + queryString + "]");
 		} catch (NonUniqueResultException e) {
-			throw new FrameworkException(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NON_UNIQUE_RESULT_FOUND, e);
 		}
 		return null;
 	}
@@ -832,7 +833,7 @@ public class GenericRepository implements IGenericRepository {
 			}
 
 		} catch (EntityExistsException e) {
-			throw new FrameworkException(SystemMessageProperty.FAILED_TO_PERSIST, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FAILED_TO_PERSIST, e);
 		}
 
 		return entity;

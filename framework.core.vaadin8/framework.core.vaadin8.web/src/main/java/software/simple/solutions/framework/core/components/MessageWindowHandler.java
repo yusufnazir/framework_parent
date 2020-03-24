@@ -102,7 +102,7 @@ public class MessageWindowHandler {
 			if (cause != null) {
 				ExceptionHolder exceptionHolder = null;
 				if (cause instanceof FrameworkException) {
-					exceptionHolder = ((FrameworkException) cause).getExceptionHolder();
+//					exceptionHolder = ((FrameworkException) cause).getExceptionHolder();
 				}
 
 				if (exceptionHolder != null) {

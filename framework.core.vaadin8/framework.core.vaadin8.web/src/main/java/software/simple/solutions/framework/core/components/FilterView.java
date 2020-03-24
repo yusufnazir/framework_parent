@@ -13,6 +13,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.constants.Style;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 
@@ -106,7 +107,7 @@ public abstract class FilterView extends CGridLayout implements Filterable, Eras
 			return filterView;
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
-			throw new FrameworkException(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_FILTER, e);
 		}
 	}
 

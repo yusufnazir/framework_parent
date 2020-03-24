@@ -9,6 +9,7 @@ import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.RelationType;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleProperty;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
@@ -18,7 +19,7 @@ import software.simple.solutions.framework.core.valueobjects.RelationTypeVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Service
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @ServiceRepository(claz = IRelationTypeRepository.class)
 public class RelationTypeService extends SuperService implements IRelationTypeService {
 
@@ -29,24 +30,26 @@ public class RelationTypeService extends SuperService implements IRelationTypeSe
 		RelationTypeVO vo = (RelationTypeVO) valueObject;
 
 		if (StringUtils.isBlank(vo.getCode())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(RoleProperty.CODE));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleProperty.CODE));
 		}
 		if (StringUtils.isBlank(vo.getName())) {
-			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED, new Arg().key(RoleProperty.NAME));
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleProperty.NAME));
 		}
 
 		RelationType relationType = new RelationType();
 		if (vo.isNew()) {
 			Boolean codeUnique = isCodeUnique(Role.class, vo.getCode());
 			if (!codeUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleProperty.CODE));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleProperty.CODE));
 			}
 		} else {
 			Boolean codeUnique = isCodeUnique(Role.class, vo.getCode(), vo.getId());
 			if (!codeUnique) {
-				throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						new Arg().key(RoleProperty.CODE));
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+						Arg.build().key(RoleProperty.CODE));
 			}
 			relationType = get(RelationType.class, vo.getId());
 		}

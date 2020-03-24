@@ -12,6 +12,8 @@ public class ReferenceKey {
 	public static final String PERSON = CxodeTables.PERSON.NAME;
 	public static final String ROLE = CxodeTables.ROLE.NAME;
 	public static final String USER_ROLE = CxodeTables.USER_ROLE.NAME;
+	public static final String VIEW = CxodeTables.VIEW.NAME;
+	public static final String ROLE_VIEW = CxodeTables.ROLE_VIEW.NAME;
 
 	public static final String LOGIN_SUCCESSFULL = "LOGIN_SUCCESSFULL";
 }
