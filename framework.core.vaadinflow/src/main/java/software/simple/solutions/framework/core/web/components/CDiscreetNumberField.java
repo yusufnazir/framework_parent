@@ -1,6 +1,5 @@
 package software.simple.solutions.framework.core.web.components;
 
-
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.textfield.IntegerField;
 
@@ -16,8 +15,8 @@ public class CDiscreetNumberField extends IntegerField implements IField, Compar
 	private boolean isThisRequired = false;
 
 	public CDiscreetNumberField() {
-//		setErrorText(PropertyResolver.getPropertyValueByLocale(SystemProperty.INVALID_NUMBER_FORMAT,
-//				UI.getCurrent().getLocale()));
+		// setErrorText(PropertyResolver.getPropertyValueByLocale(SystemProperty.INVALID_NUMBER_FORMAT,
+		// UI.getCurrent().getLocale()));
 	}
 
 	public void setRequired() {
@@ -43,6 +42,11 @@ public class CDiscreetNumberField extends IntegerField implements IField, Compar
 	// }
 	// }
 
+	public void setLongValue(Long value) {
+		if (value != null) {
+			setValue(value.intValue());
+		}
+	}
 
 	public Long getLongValue() {
 		return NumberUtil.getLong(getValue());

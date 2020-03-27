@@ -125,6 +125,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 								subMenusTabMap.remove(tab);
 							}
 							lookUpMenusTabMap.clear();
+							subMenusTabMap.keySet().stream().forEach(p -> createdSubMenusTabs.remove(p));
 						} else {
 							subMenusTabMap.keySet().stream().forEach(p -> p.setVisible(true));
 						}
@@ -183,6 +184,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 						}
 					} else {
 						SimpleSolutionsMenuItem simpleSolutionsMenuItem = subMenusTabMap.get(event.getSelectedTab());
+						simpleSolutionsMenuItem.setReferenceKeys(abstractBaseView.getReferenceKeys());
 						simpleSolutionsMenuItem.setParentEntity(selectedEntity);
 						simpleSolutionsMenuItem.setSubTab(true);
 						try {
@@ -195,6 +197,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 							createdSubMenusTabs.put(selectedTab, view);
 						} catch (FrameworkException e) {
 							DetailsWindow.build(e);
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}

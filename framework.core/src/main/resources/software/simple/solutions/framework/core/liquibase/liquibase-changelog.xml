@@ -9,12 +9,4 @@
 	<!-- Insert data -->
 	<include file="data/create-data.xml" relativeToChangelogFile="true" />
 
-	<include file="properties/create-data.xml"
-		relativeToChangelogFile="true" />
-
-	<include file="messages/create-data.xml"
-		relativeToChangelogFile="true" />
-
-	<include file="mailtemplates/create-data-mail-templates.xml"
-		relativeToChangelogFile="true" />
 </databaseChangeLog>

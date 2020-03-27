@@ -320,7 +320,9 @@ public class CxodeTables {
 			public static final String CODE = "CODE_";
 			public static final String ACTIVE = "ACTIVE_";
 			public static final String LOCALE_ID = "LOCALE_ID_";
-			public static final String PROPERTY_ID = "PROPERTY_ID_";
+//			public static final String PROPERTY_ID = "PROPERTY_ID_";
+			public static final String REFERENCE_KEY = "REFERENCE_KEY_";
+			public static final String REFERENCE_ID = "REFERENCE_ID_";
 			public static final String VALUE = "VALUE_";
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}

@@ -33,7 +33,7 @@ public class RoleViewPrivilegeView extends AbstractBaseView {
 	public void executeBuild() throws FrameworkException {
 		privilegesFld.setWidth("400px");
 		privilegesFld.setHeight("300px");
-		privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
+		privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES, UI.getCurrent().getLocale()));
 		addComponent(privilegesFld);
 
 		initializePrivileges();

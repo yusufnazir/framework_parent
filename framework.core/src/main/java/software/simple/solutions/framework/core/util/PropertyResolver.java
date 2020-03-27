@@ -21,30 +21,10 @@ public class PropertyResolver {
 		super();
 	}
 
-//	public static String getPropertyValueByLocale(String key, Locale locale, Object[] args) {
-//		String message = null;
-//		try {
-//			Properties properties = PropertyHolder.propertyLocalized.get(locale.getISO3Language());
-//			message = properties.getProperty(key);
-//			if (args != null) {
-//				MessageFormat messageFormat = new MessageFormat(message);
-//				message = messageFormat.format(args);
-//			}
-//			if (message == null) {
-//				message = "NoKey: [" + key + "]";
-//				logger.error("NoKey: CODE [" + key + "] LOCALE [" + locale + "]");
-//			}
-//		} catch (NullPointerException e) {
-//			logger.error(e.getMessage() + " CODE [" + key + "] LOCALE [" + locale + "]");
-//			message = "NoKey: [" + key + "]";
-//		}
-//		return message;
-//	}
-
 	public static String getPropertyValueByLocale(String key, Locale locale) {
-		return getPropertyValueByLocale(key, locale, null);
+		return getPropertyValueByLocale(key, locale, Arg.build());
 	}
-	
+
 	public static String getPropertyValueByLocale(String key, Locale locale, Arg arg) {
 		String message = null;
 		try {
@@ -53,10 +33,10 @@ public class PropertyResolver {
 			if (arg != null) {
 				List<Value> values = arg.getValues();
 				List<String> arguments = new ArrayList<String>();
-				for(Value value:values){
-					if(value.isKey()){
+				for (Value value : values) {
+					if (value.isKey()) {
 						arguments.add(properties.getProperty(value.getValue()));
-					}else{
+					} else {
 						arguments.add(value.getValue());
 					}
 				}
@@ -72,5 +52,15 @@ public class PropertyResolver {
 			message = "NoKey: [" + key + "]";
 		}
 		return message;
+	}
+
+	public static String getPropertyValueByLocale(String key, Locale locale, Object[] args) {
+		Arg arg = Arg.build();
+		if (args != null) {
+			for (Object o : args) {
+				arg.norm(o);
+			}
+		}
+		return getPropertyValueByLocale(key, locale, arg);
 	}
 }

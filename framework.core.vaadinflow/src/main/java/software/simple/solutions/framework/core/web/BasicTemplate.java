@@ -47,6 +47,7 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.ActionState;
 import software.simple.solutions.framework.core.constants.Columns;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
@@ -202,13 +203,18 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	@SuppressWarnings("unchecked")
 	public void executeBuild() throws FrameworkException {
 		removeAll();
-		Route route = this.getClass().getAnnotation(Route.class);
-		String path = route.value();
+		Long menuId = null;
+		if (isSkipRoute()) {
+			menuId = getViewDetail().getMenu().getId();
+		} else {
+			Route route = this.getClass().getAnnotation(Route.class);
+			String path = route.value();
 
-		Long menuId = getSessionHolder().getRouteMenu(path);
-		if (menuId == null) {
-			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NO_MENU_FOUND_FOR_ROUTE,
-					UI.getCurrent().getLocale(), Arg.build().norm(path));
+			menuId = getSessionHolder().getRouteMenu(path);
+			if (menuId == null) {
+				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.NO_MENU_FOUND_FOR_ROUTE,
+						UI.getCurrent().getLocale(), Arg.build().norm(path));
+			}
 		}
 
 		MenuServiceFacade menuServiceFacade = MenuServiceFacade.get(UI.getCurrent());
@@ -235,63 +241,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		setUpActionBarListeners();
 
 		executePostBuild();
-
-		// homeTab = new Tab("[" + getViewDetail().getMenu().getName() + "] ");
-		// subTabSheet.removeAll();
-		// subTabSheet.add(homeTab);
-		// subTabSheet.addSelectedChangeListener(new
-		// ComponentEventListener<Tabs.SelectedChangeEvent>() {
-		//
-		// private static final long serialVersionUID = -7201114375011146454L;
-		//
-		// @Override
-		// public void onComponentEvent(SelectedChangeEvent event) {
-		// Tab selectedTab = event.getSelectedTab();
-		// if (selectedTab != null) {
-		// if (selectedTab.equals(homeTab)) {
-		// topBarLayout.setVisible(true);
-		// formLayout.setVisible(true);
-		// tabContentLayout.setVisible(false);
-		// } else {
-		// tabContentLayout.getChildren().forEach(p -> p.setVisible(false));
-		// if (createdSubMenusTabs.containsKey(selectedTab)) {
-		// tabContentLayout.setVisible(true);
-		// AbstractBaseView abstractBaseView =
-		// createdSubMenusTabs.get(selectedTab);
-		// Optional<Component> optional = tabContentLayout.getChildren()
-		// .filter(p -> ((AbstractBaseView) p).getViewDetail().getMenu().getId()
-		// .compareTo(abstractBaseView.getViewDetail().getMenu().getId()) == 0)
-		// .findFirst();
-		// if (optional.isPresent()) {
-		// optional.get().setVisible(true);
-		// }
-		// topBarLayout.setVisible(false);
-		// formLayout.setVisible(false);
-		// } else {
-		// SimpleSolutionsMenuItem simpleSolutionsMenuItem = subMenusTabMap
-		// .get(event.getSelectedTab());
-		// try {
-		// AbstractBaseView abstractBaseView =
-		// ViewUtil.initView(simpleSolutionsMenuItem,
-		// getSessionHolder().getSelectedRole() == null ? null
-		// : getSessionHolder().getSelectedRole().getId(),
-		// getSessionHolder().getApplicationUser().getId());
-		// executeSubMenuBuild(abstractBaseView);
-		// abstractBaseView.setSizeFull();
-		// tabContentLayout.setVisible(true);
-		// tabContentLayout.add(abstractBaseView);
-		//
-		// topBarLayout.setVisible(false);
-		// formLayout.setVisible(false);
-		// createdSubMenusTabs.put(selectedTab, abstractBaseView);
-		// } catch (FrameworkException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		// }
-		// }
-		// });
 
 		// addUpdateObserverReferenceKey(getEntityReferenceKey());
 
@@ -393,6 +342,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		ActionState actionState = new ActionState(privileges);
 		getViewDetail().setActionState(actionState);
 		actionBar.setActionState(actionState);
+		actionBar.setSearchDisabled();
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.add(actionBar);
 		// horizontalLayout.setComponentAlignment(actionBar,
@@ -493,10 +443,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 	private Grid<T> setUpGrid() {
 		gridHeaderItems.clear();
 		Grid<T> contentGrid = new Grid<T>();
-		// contentGrid.setSizeFull();
 		contentGrid.setWidth("100%");
 		contentGrid.setSelectionMode(SelectionMode.NONE);
-		// contentGrid.addStyleName("backgroundimage");
 
 		switch (getPopUpMode()) {
 		case TAB:
@@ -520,16 +468,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			Icon icon = FontAwesome.Solid.CHECK_CIRCLE.create();
 			icon.setSize("20px");
 			lookUpColum.setHeader(icon);
-
-			// HeaderRow defaultHeaderRow = contentGrid.getDefaultHeaderRow();
-			// Button popUpHeaderBtn = new Button();
-			// popUpHeaderBtn.setIcon(CxodeIcons.OK);
-			// popUpHeaderBtn.addStyleName(Style.RESIZED_ICON_80);
-			// popUpHeaderBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-			// popUpHeaderBtn.addStyleName(Style.NO_PADDING);
-			// defaultHeaderRow.getCell(Columns.POPUP_ITEM_SELECTED).setStyleName(Style.GIRD_HEADER_COLUMN_CENTERED);
-			// defaultHeaderRow.getCell(Columns.POPUP_ITEM_SELECTED).setComponent(popUpHeaderBtn);
-
 		}
 			break;
 		case NONE: {
@@ -549,15 +487,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			Icon icon = FontAwesome.Solid.CHECK_CIRCLE.create();
 			icon.setSize("20px");
 			rowSelectedColumn.setHeader(icon);
-
-			// HeaderRow defaultHeaderRow = contentGrid.getDefaultHeaderRow();
-			// Button rowSelectedBtn = new Button();
-			// rowSelectedBtn.setIcon(CxodeIcons.CHECK_BOX);
-			// rowSelectedBtn.addStyleName(Style.RESIZED_ICON_80);
-			// rowSelectedBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-			// rowSelectedBtn.addStyleName(Style.NO_PADDING);
-			// defaultHeaderRow.getCell(Columns.ROW_SELECTED).setStyleName(Style.GIRD_HEADER_COLUMN_CENTERED);
-			// defaultHeaderRow.getCell(Columns.ROW_SELECTED).setComponent(rowSelectedBtn);
 		}
 			break;
 		default:
@@ -591,12 +520,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			}
 			column.setHeader(
 					PropertyResolver.getPropertyValueByLocale(gridItem.getCaptionKey(), UI.getCurrent().getLocale()));
-			// column.setCaption(PropertyResolver.getPropertyValueByLocale(gridItem.getCaptionKey(),
-			// UI.getCurrent().getLocale()));
 			column.setId(gridItem.getCaptionKey());
-			if (gridItem.getWidth() > 0) {
-				// column.setWidth(gridItem.getWidth());
-			}
 		}
 
 		for (String hiddenColumnId : hiddenColumnIds) {
@@ -644,10 +568,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		if (formClass == null) {
 			return;
 		}
-
 		try {
-			// formView = formClass.getConstructor(new Class[] { this.getClass()
-			// }).newInstance(new Object[] { this });
 			formView = formClass.newInstance();
 		} catch (SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException e) {
 			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
@@ -656,6 +577,11 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		formView.setParentEntity(getParentEntity());
 		if (getParentReferenceKey() != null) {
 			formView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
+			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
+			if (getSelectedEntity() != null) {
+				formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_ID,
+						((MappedSuperClass) getSelectedEntity()).getId().toString());
+			}
 		}
 		formView.setSelectedEntity(getSelectedEntity());
 		formView.setViewDetail(getViewDetail());
@@ -668,7 +594,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		if (readonlyFormClass == null) {
 			return;
 		}
-
 		try {
 			readonlyFormView = readonlyFormClass.getConstructor(new Class[] { this.getClass() })
 					.newInstance(new Object[] { this });
@@ -681,6 +606,11 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		readonlyFormView.setParentEntity(getParentEntity());
 		if (getParentReferenceKey() != null) {
 			readonlyFormView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
+			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
+			if (getSelectedEntity() != null) {
+				formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_ID,
+						((MappedSuperClass) getSelectedEntity()).getId().toString());
+			}
 		}
 		readonlyFormView.setSelectedEntity(getSelectedEntity());
 		readonlyFormView.setViewDetail(getViewDetail());
@@ -838,6 +768,20 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
+				// VerticalLayout layout = new VerticalLayout();
+				// layout.setMargin(false);
+				// layout.setSpacing(true);
+				// CButton searchBtn = new CButton();
+				// searchBtn.setIcon(FontAwesome.Solid.SEARCH.create());
+				// searchBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+				// add(searchBtn);
+				// searchBtn.setTitle(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SEARCH,
+				// UI.getCurrent().getLocale()));
+				// layout.add(searchBtn, filterView);
+				// QuickPopup qp = new
+				// QuickPopup(actionBar.getToggleAdvancedSearchBtn().getElement(),
+				// layout);
+				// qp.show();
 				advancedSearch = !advancedSearch;
 				filterPanel.setVisible(advancedSearch);
 			}

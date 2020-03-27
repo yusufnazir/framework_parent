@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import software.simple.solutions.framework.core.constants.ActionState;
@@ -57,6 +59,10 @@ public class ViewUtil {
 		String viewClassName = menuItem.getMenu().getView().getViewClassName();
 		AbstractBaseView view = initView(viewClassName);
 		if (view != null) {
+			SessionHolder sessionHolder = (SessionHolder) VaadinSession.getCurrent()
+					.getAttribute(Constants.SESSION_HOLDER);
+			
+			view.setSkipRoute(true);
 			view.setSearchForward(menuItem.getSearchedEntity());
 			view.setPopUpMode(popUpMode);
 
@@ -82,8 +88,6 @@ public class ViewUtil {
 			viewDetail.setMenu(menuItem.getMenu());
 			viewDetail.setView(menuItem.getMenu().getView());
 
-			SessionHolder sessionHolder = (SessionHolder) VaadinSession.getCurrent()
-					.getAttribute(Constants.SESSION_HOLDER);
 			ActionState actionState = ViewActionStateUtil.createActionState(viewDetail.getPrivileges(),
 					menuItem.getMenu().getView().getId(), sessionHolder.getApplicationUser().getId());
 			viewDetail.setActionState(actionState);

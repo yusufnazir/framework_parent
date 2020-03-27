@@ -192,7 +192,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 			((LookUpField) component).setCaptionByKey(key);
 			((LookUpField) component).setReferenceKeys(referenceKeys);
 		} else if (component instanceof CTextField) {
-			((HasSize) component).setWidth("300px");
+//			((HasSize) component).setWidth("300px");
+			((CTextField) component).setCaptionByKey(key);
 		} else if (component instanceof CTextArea) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CPasswordField) {

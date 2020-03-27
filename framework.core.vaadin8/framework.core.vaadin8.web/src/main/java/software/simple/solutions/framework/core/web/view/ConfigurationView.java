@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -30,8 +31,8 @@ public class ConfigurationView extends AbstractBaseView {
 		for (CxodeConfigurationItem configurationItem : items) {
 			try {
 				Component newInstance = configurationItem.getConfigurationClass().newInstance();
-				tabSheet.addTab(newInstance,
-						PropertyResolver.getPropertyValueByLocale(configurationItem.getCaptionKey()));
+				tabSheet.addTab(newInstance, PropertyResolver
+						.getPropertyValueByLocale(configurationItem.getCaptionKey(), UI.getCurrent().getLocale()));
 			} catch (InstantiationException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

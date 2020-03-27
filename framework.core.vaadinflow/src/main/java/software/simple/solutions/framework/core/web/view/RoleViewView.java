@@ -17,7 +17,7 @@ import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.lookup.RoleLookUpField;
 import software.simple.solutions.framework.core.web.lookup.ViewLookUpField;
 import software.simple.solutions.framework.core.web.routing.Routes;
-import software.simple.solutions.framework.core.web.view.forms.RoleForm;
+import software.simple.solutions.framework.core.web.view.forms.RoleViewForm;
 
 @Route(value = Routes.ROLE_VIEW, layout = MainView.class)
 public class RoleViewView extends BasicTemplate<software.simple.solutions.framework.core.entities.RoleView> {
@@ -28,7 +28,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		setEntityClass(software.simple.solutions.framework.core.entities.RoleView.class);
 		setServiceClass(RoleViewServiceFacade.class);
 		setFilterClass(Filter.class);
-		setFormClass(RoleForm.class);
+		setFormClass(RoleViewForm.class);
 		setParentReferenceKey(ReferenceKey.ROLE_VIEW);
 		setEditRoute(Routes.ROLE_VIEW_EDIT);
 	}
@@ -58,7 +58,7 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		if (view != null) {
 			addHiddenColumnId(RoleViewProperty.VIEW);
 		}
-		Role role = getIfParentEntity(View.class);
+		Role role = getIfParentEntity(Role.class);
 		if (role != null) {
 			addHiddenColumnId(RoleViewProperty.ROLE);
 		}
@@ -81,6 +81,17 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 		public void executeBuild() throws FrameworkException {
 			viewLookUpFld = addField(ViewLookUpField.class, RoleViewProperty.VIEW, 0, 0);
 			roleLookUpFld = addField(RoleLookUpField.class, RoleViewProperty.ROLE, 1, 0);
+			
+			View view = getIfParentEntity(View.class);
+			if (view != null) {
+				viewLookUpFld.setValue(view);
+				viewLookUpFld.disableForParent();
+			}
+			Role role = getIfParentEntity(Role.class);
+			if (role != null) {
+				roleLookUpFld.setValue(role);
+				roleLookUpFld.disableForParent();
+			}
 		}
 
 		@Override

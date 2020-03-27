@@ -29,7 +29,7 @@ public class ResetPasswordLayout {
 		this.userId = userId;
 		Object data = UI.getCurrent().getData();
 		Window window = new Window();
-		window.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_RESET_PASSWORD));
+		window.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_RESET_PASSWORD, UI.getCurrent().getLocale()));
 		UI.getCurrent().addWindow(window);
 		window.center();
 		window.setModal(true);

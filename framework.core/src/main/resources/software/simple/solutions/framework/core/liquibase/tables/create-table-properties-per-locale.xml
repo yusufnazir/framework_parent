@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1570914715619">
+		author="yusuf (generated)" id="1585270490442">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="properties_per_locales_" />
@@ -17,12 +17,13 @@
 
 			<column name="VALUE_" type="VARCHAR(4000)" />
 			<column name="LOCALE_ID_" type="BIGINT" />
-			<column name="PROPERTY_ID_" type="BIGINT" />
+			<column name="REFERENCE_KEY_" type="VARCHAR(100)" />
+			<column name="REFERENCE_ID_" type="VARCHAR(100)" />
 
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="yusuf (generated)" id="1570914721941">
+		author="yusuf (generated)" id="1585270492450">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="properties_per_locales_aud" />
@@ -41,7 +42,8 @@
 
 			<column name="VALUE_" type="VARCHAR(4000)" />
 			<column name="LOCALE_ID_" type="BIGINT" />
-			<column name="PROPERTY_ID_" type="BIGINT" />
+			<column name="REFERENCE_KEY_" type="VARCHAR(100)" />
+			<column name="REFERENCE_ID_" type="VARCHAR(100)" />
 
 		</createTable>
 	</changeSet>
@@ -64,6 +66,58 @@
 		</preConditions>
 		<modifyDataType tableName="properties_per_locales_aud"
 			columnName="VALUE_" newDataType="VARCHAR(4000)" />
+	</changeSet>
+
+	<changeSet id="1585270516455" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="properties_per_locales_"
+					columnName="REFERENCE_KEY_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="properties_per_locales_">
+			<column name="REFERENCE_KEY_" type="VARCHAR(100)"></column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="1585270568466" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="properties_per_locales_aud"
+					columnName="REFERENCE_KEY_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="properties_per_locales_aud">
+			<column name="REFERENCE_KEY_" type="VARCHAR(100)"></column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="1585270584467" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="properties_per_locales_"
+					columnName="REFERENCE_ID_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="properties_per_locales_">
+			<column name="REFERENCE_ID_" type="VARCHAR(100)"></column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="1585270590470" author="yusuf (generated)"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="properties_per_locales_aud"
+					columnName="REFERENCE_ID_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="properties_per_locales_aud">
+			<column name="REFERENCE_ID_" type="VARCHAR(100)"></column>
+		</addColumn>
 	</changeSet>
 
 </databaseChangeLog>

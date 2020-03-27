@@ -5,10 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.textfield.TextField;
 
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
@@ -44,8 +42,7 @@ public class CFormLayout extends FormLayout {
 					((CTextArea) component)
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 				} else if (component instanceof LookUpField) {
-					((LookUpField) component)
-							.setCaptionByKey(key);
+					((LookUpField) component).setCaptionByKey(key);
 				} else if (component instanceof CCheckBox) {
 					((CCheckBox) component)
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
@@ -60,6 +57,15 @@ public class CFormLayout extends FormLayout {
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 				} else if (component instanceof CEmailField) {
 					((CEmailField) component)
+							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+				} else if (component instanceof CDiscreetNumberField) {
+					((CDiscreetNumberField) component)
+							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+				} else if (component instanceof CTwinColSelect) {
+					((CTwinColSelect) component)
+							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+				} else if (component instanceof CRichTextEditor) {
+					((CRichTextEditor) component)
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 				}
 			}

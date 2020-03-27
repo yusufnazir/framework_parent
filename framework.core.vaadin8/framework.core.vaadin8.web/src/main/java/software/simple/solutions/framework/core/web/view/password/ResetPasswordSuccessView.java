@@ -4,6 +4,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -26,7 +27,7 @@ public class ResetPasswordSuccessView extends VerticalLayout implements View {
 		messageLbl.setSizeFull();
 		messageLbl.addStyleName(ValoTheme.LABEL_BOLD);
 		messageLbl.addStyleName(ValoTheme.LABEL_H1);
-		messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(SecurityProperty.RESET_PASSWORD_SUCCESS));
+		messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(SecurityProperty.RESET_PASSWORD_SUCCESS, UI.getCurrent().getLocale()));
 		addComponent(messageLbl);
 	}
 

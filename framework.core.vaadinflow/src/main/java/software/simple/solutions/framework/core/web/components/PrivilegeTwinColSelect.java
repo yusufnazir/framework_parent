@@ -1,11 +1,10 @@
-package software.simple.solutions.framework.core.components.select;
+package software.simple.solutions.framework.core.web.components;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.vaadin.ui.UI;
+import com.vaadin.flow.component.UI;
 
-import software.simple.solutions.framework.core.components.CTwinColSelect;
 import software.simple.solutions.framework.core.entities.Privilege;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -16,8 +15,9 @@ public class PrivilegeTwinColSelect extends CTwinColSelect {
 
 	public void setValues(List<Privilege> values) {
 		if (values != null) {
-			List<ComboItem> items = values.stream().map(
-					p -> new ComboItem(p.getId(), p.getCode(), PropertyResolver.getPropertyValueByLocale(p.getKey(), UI.getCurrent().getLocale())))
+			List<ComboItem> items = values.stream()
+					.map(p -> new ComboItem(p.getId(), p.getCode(),
+							PropertyResolver.getPropertyValueByLocale(p.getKey(), UI.getCurrent().getLocale())))
 					.collect(Collectors.toList());
 			setItems(items);
 		}

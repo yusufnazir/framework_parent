@@ -1,14 +1,32 @@
 package software.simple.solutions.framework.core.web.view.forms;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.vaadin.flow.component.HasValue.ValueChangeEvent;
+import com.vaadin.flow.component.HasValue.ValueChangeListener;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.Route;
 
+import software.simple.solutions.framework.core.constants.Privileges;
+import software.simple.solutions.framework.core.entities.Privilege;
+import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.entities.RoleView;
+import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.ComboItem;
+import software.simple.solutions.framework.core.properties.RoleViewPrivilegeProperty;
 import software.simple.solutions.framework.core.properties.RoleViewProperty;
+import software.simple.solutions.framework.core.service.facade.PrivilegeServiceFacade;
+import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.RoleViewVO;
+import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CFormLayout;
 import software.simple.solutions.framework.core.web.components.Panel;
+import software.simple.solutions.framework.core.web.components.PrivilegeTwinColSelect;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.lookup.RoleLookUpField;
 import software.simple.solutions.framework.core.web.lookup.ViewLookUpField;
@@ -22,7 +40,7 @@ public class RoleViewForm extends FormView {
 	private CFormLayout formGrid;
 	private ViewLookUpField viewLookUpFld;
 	private RoleLookUpField roleLookUpFld;
-//	private PrivilegeTwinColSelect privilegesFld;
+	private PrivilegeTwinColSelect privilegesFld;
 
 	private software.simple.solutions.framework.core.entities.RoleView roleView;
 
@@ -40,7 +58,7 @@ public class RoleViewForm extends FormView {
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);
-		formCard.setMaxWidth("400px");
+		formCard.setMaxWidth("600px");
 
 		// HorizontalLayout mainLayout = new HorizontalLayout();
 		// mainLayout.setSpacing(true);
@@ -58,29 +76,18 @@ public class RoleViewForm extends FormView {
 		roleLookUpFld = formGrid.add(RoleLookUpField.class, RoleViewProperty.ROLE);
 		roleLookUpFld.setMaxWidth("400px");
 
-		// privilegesFld = new PrivilegeTwinColSelect();
-		// privilegesFld.setWidth("400px");
-		// privilegesFld.setHeight("300px");
-		// privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
-		// mainLayout.addComponent(privilegesFld);
+		privilegesFld = new PrivilegeTwinColSelect();
+		privilegesFld.setLabel(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES, UI.getCurrent().getLocale()));
+//		privilegesFld = formGrid.add(PrivilegeTwinColSelect.class, RoleViewPrivilegeProperty.PRIVILEGES);
+		formCard.add(privilegesFld);
+		privilegesFld.setWidth("100%");
+		privilegesFld.setHeight("300px");
 	}
 
-	// private void initializePrivileges(List<String> privilegeCodes) throws
-	// FrameworkException {
-	// List<Privilege> privileges =
-	// PrivilegeServiceFacade.get(UI.getCurrent()).getPrivileges(privilegeCodes);
-	// privilegesFld.setValues(privileges);
-	// privilegesFld.setItemCaptionGenerator(new
-	// ItemCaptionGenerator<ComboItem>() {
-	//
-	// private static final long serialVersionUID = 2764744403473604050L;
-	//
-	// @Override
-	// public String apply(ComboItem item) {
-	// return item.getName();
-	// }
-	// });
-	// }
+	private void initializePrivileges(List<String> privilegeCodes) throws FrameworkException {
+		List<Privilege> privileges = PrivilegeServiceFacade.get(UI.getCurrent()).getPrivileges(privilegeCodes);
+		privilegesFld.setValues(privileges);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -89,54 +96,70 @@ public class RoleViewForm extends FormView {
 		viewLookUpFld.setValue(roleView.getView());
 		roleLookUpFld.setValue(roleView.getRole());
 
-		String viewClassName = roleView.getView().getViewClassName();
-		// List<String> privilegeCodes =
-		// Privileges.getPrivilegeCodes(viewClassName);
-		// initializePrivileges(privilegeCodes);
-		// setPrivilegeValues();
+		View view = getIfParentEntity(View.class);
+		if (view != null) {
+			viewLookUpFld.disableForParent();
+		}
 
-		// privilegesFld.addValueChangeListener(new
-		// ValueChangeListener<Set<ComboItem>>() {
-		//
-		// private static final long serialVersionUID = -2456888062255464291L;
-		//
-		// @Override
-		// public void valueChange(ValueChangeEvent<Set<ComboItem>> event) {
-		// Set<ComboItem> values = event.getValue();
-		// List<Long> privilegeIds =
-		// values.parallelStream().map(ComboItem::getLongId)
-		// .collect(Collectors.toList());
-		// try {
-		// RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).updateRoleViewPrivileges(roleView.getId(),
-		// privilegeIds);
-		// } catch (FrameworkException e) {
-		// new MessageWindowHandler(e);
-		// }
-		// }
-		// });
+		Role role = getIfParentEntity(Role.class);
+		if (role != null) {
+			roleLookUpFld.disableForParent();
+		}
+
+		String viewClassName = roleView.getView().getViewClassName();
+		List<String> privilegeCodes = Privileges.getPrivilegeCodes(viewClassName);
+		initializePrivileges(privilegeCodes);
+		setPrivilegeValues();
+
+		privilegesFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Set<ComboItem>>>() {
+
+			private static final long serialVersionUID = -5367827262973425084L;
+
+			@Override
+			public void valueChanged(ValueChangeEvent<Set<ComboItem>> event) {
+				Set<ComboItem> values = event.getValue();
+				List<Long> privilegeIds = values.parallelStream().map(ComboItem::getLongId)
+						.collect(Collectors.toList());
+				try {
+					RoleViewPrivilegeServiceFacade.get(UI.getCurrent()).updateRoleViewPrivileges(roleView.getId(),
+							privilegeIds);
+				} catch (FrameworkException e) {
+					DetailsWindow.build(e);
+				}
+			}
+		});
 
 		return roleView;
 	}
 
-	// private void setPrivilegeValues() {
-	// try {
-	// List<Privilege> privileges =
-	// RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
-	// .getPrivilegesByRoleView(roleView.getId());
-	// if (privileges != null) {
-	// Set<Long> privilegeIds =
-	// privileges.parallelStream().map(Privilege::getId)
-	// .collect(Collectors.toSet());
-	// privilegesFld.setLongValues(privilegeIds);
-	// }
-	// } catch (FrameworkException e) {
-	// new MessageWindowHandler(e);
-	// }
-	// }
+	private void setPrivilegeValues() {
+		try {
+			List<Privilege> privileges = RoleViewPrivilegeServiceFacade.get(UI.getCurrent())
+					.getPrivilegesByRoleView(roleView.getId());
+			if (privileges != null) {
+				Set<Long> privilegeIds = privileges.parallelStream().map(Privilege::getId).collect(Collectors.toSet());
+				privilegesFld.setLongValues(privilegeIds);
+			}
+		} catch (FrameworkException e) {
+			DetailsWindow.build(e);
+		}
+	}
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		// privilegesFld.setVisible(false);
+		privilegesFld.setVisible(false);
+
+		View view = getIfParentEntity(View.class);
+		if (view != null) {
+			viewLookUpFld.setValue(view);
+			viewLookUpFld.disableForParent();
+		}
+
+		Role role = getIfParentEntity(Role.class);
+		if (role != null) {
+			roleLookUpFld.setValue(role);
+			roleLookUpFld.disableForParent();
+		}
 	}
 
 	@Override

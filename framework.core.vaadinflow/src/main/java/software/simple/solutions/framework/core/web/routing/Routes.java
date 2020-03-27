@@ -23,4 +23,13 @@ public class Routes {
 	
 	public static final String ROLE_VIEW = "role_view";
 	public static final String ROLE_VIEW_EDIT = "role_view_edit";
+	
+	public static final String MENU = "menu";
+	public static final String MENU_EDIT = "menu_edit";
+	
+	public static final String LANGUAGE = "language";
+	public static final String LANGUAGE_EDIT = "language_edit";
+	
+	public static final String PROPERTY_PER_LOCALE = "property_per_locale";
+	public static final String PROPERTY_PER_LOCALE_EDIT = "property_per_locale_edit";
 }

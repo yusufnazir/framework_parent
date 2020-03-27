@@ -23,13 +23,9 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.framework.core.constants.Style;
-import software.simple.solutions.framework.core.entities.MessagePerLocale;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.Arg.Key;
 import software.simple.solutions.framework.core.exceptions.Arg.Value;
-import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.IMessagePerLocaleService;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class ErrorLayout extends VerticalLayout {
@@ -65,21 +61,26 @@ public class ErrorLayout extends VerticalLayout {
 		setWidth(500, Unit.PIXELS);
 
 		if (StringUtils.isNotBlank(messageProperty)) {
-			IMessagePerLocaleService messagePerLocaleService = ContextProvider.getBean(IMessagePerLocaleService.class);
-			String iso3Language = UI.getCurrent().getLocale().getISO3Language();
-			MessagePerLocale messagePerLocale = null;
-			try {
-				messagePerLocale = messagePerLocaleService.getByMessageAndLocale(messageProperty, iso3Language);
-				errorMessage = messagePerLocale.getReason();
-			} catch (FrameworkException e) {
-				logger.error(e.getMessage(), e);
-			}
-			if (messagePerLocale == null) {
-				logger.error("No messagenumber defined for [" + messageProperty + "]");
-			}
+			// IMessagePerLocaleService messagePerLocaleService =
+			// ContextProvider.getBean(IMessagePerLocaleService.class);
+//			String iso3Language = UI.getCurrent().getLocale().getISO3Language();
+			// MessagePerLocale messagePerLocale = null;
+			// try {
+			// messagePerLocale =
+			// messagePerLocaleService.getByMessageAndLocale(messageProperty,
+			// iso3Language);
+			// errorMessage = messagePerLocale.getReason();
+			// } catch (FrameworkException e) {
+			// logger.error(e.getMessage(), e);
+			// }
+			// if (messagePerLocale == null) {
+			// logger.error("No messagenumber defined for [" + messageProperty +
+			// "]");
+			// }
 
-			if (StringUtils.isNotBlank(messagePerLocale.getReason())) {
-				errorMessage = messagePerLocale.getReason();
+			if (StringUtils.isNotBlank(messageProperty)) {
+				errorMessage = PropertyResolver.getPropertyValueByLocale(messageProperty, UI.getCurrent().getLocale(),
+						args);
 			}
 			if (errorMessage == null) {
 				errorMessage = "No message defined";
@@ -89,7 +90,8 @@ public class ErrorLayout extends VerticalLayout {
 				List<Object> arguments = new ArrayList<Object>();
 				for (Value value : values) {
 					if (value instanceof Key) {
-						String valueByLocale = PropertyResolver.getPropertyValueByLocale(value.getValue());
+						String valueByLocale = PropertyResolver.getPropertyValueByLocale(value.getValue(),
+								UI.getCurrent().getLocale());
 						arguments.add(valueByLocale);
 					} else {
 						arguments.add(value.getValue());

@@ -77,20 +77,22 @@ public class ResetPasswordView extends VerticalLayout implements View {
 		addComponent(messageLbl);
 
 		Panel loginPanel = new Panel();
-		loginPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SecurityProperty.LOGIN_RESET_PANEL_CAPTION));
+		loginPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SecurityProperty.LOGIN_RESET_PANEL_CAPTION,
+				UI.getCurrent().getLocale()));
 		loginPanel.setSizeUndefined();
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setSizeFull();
 
 		newPasswordFld = new PasswordField();
 		newPasswordFld.setWidth("300px");
-		newPasswordFld.setCaption(PropertyResolver.getPropertyValueByLocale(SecurityProperty.LOGIN_RESET_NEW_PASSWORD));
+		newPasswordFld.setCaption(PropertyResolver.getPropertyValueByLocale(SecurityProperty.LOGIN_RESET_NEW_PASSWORD,
+				UI.getCurrent().getLocale()));
 		verticalLayout.addComponent(newPasswordFld);
 
 		repeatNewPasswordFld = new PasswordField();
 		repeatNewPasswordFld.setWidth("300px");
-		repeatNewPasswordFld.setCaption(
-				PropertyResolver.getPropertyValueByLocale(SecurityProperty.LOGIN_RESET_REPEAT_NEW_PASSWORD));
+		repeatNewPasswordFld.setCaption(PropertyResolver.getPropertyValueByLocale(
+				SecurityProperty.LOGIN_RESET_REPEAT_NEW_PASSWORD, UI.getCurrent().getLocale()));
 		verticalLayout.addComponent(repeatNewPasswordFld);
 
 		submitBtn = new CButton();
@@ -133,7 +135,8 @@ public class ResetPasswordView extends VerticalLayout implements View {
 		if (securityValidation.isSuccess()) {
 			UI.getCurrent().getNavigator().navigateTo(Navigation.RESET_PASSWORD_SUCCESS);
 		} else {
-			messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey()));
+			messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
+					UI.getCurrent().getLocale()));
 			messageLbl.setVisible(true);
 		}
 	}
@@ -143,15 +146,15 @@ public class ResetPasswordView extends VerticalLayout implements View {
 		String repeatNewPassword = repeatNewPasswordFld.getValue();
 
 		if (StringUtils.isBlank(newPassword) || StringUtils.isBlank(repeatNewPassword)) {
-			messageLbl.setValue(
-					PropertyResolver.getPropertyValueByLocale(SecurityProperty.RESET_PASSWORD_ALL_FIELDS_REQUIRED));
+			messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(
+					SecurityProperty.RESET_PASSWORD_ALL_FIELDS_REQUIRED, UI.getCurrent().getLocale()));
 			messageLbl.setVisible(true);
 			return false;
 		}
 
 		if (!newPassword.equalsIgnoreCase(repeatNewPassword)) {
-			messageLbl.setValue(PropertyResolver
-					.getPropertyValueByLocale(SecurityProperty.RESET_PASSWORD_NEW_PASSWORDS_DO_NOT_MATCH));
+			messageLbl.setValue(PropertyResolver.getPropertyValueByLocale(
+					SecurityProperty.RESET_PASSWORD_NEW_PASSWORDS_DO_NOT_MATCH, UI.getCurrent().getLocale()));
 			messageLbl.setVisible(true);
 			return false;
 		}

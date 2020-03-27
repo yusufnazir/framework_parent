@@ -18,13 +18,11 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.components.CButton;
-import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CLabel;
 import software.simple.solutions.framework.core.components.CPasswordField;
 import software.simple.solutions.framework.core.components.CPopupDateField;
@@ -102,7 +100,8 @@ public class LoginView extends VerticalLayout implements View {
 		fields.setSpacing(true);
 		fields.addStyleName("fields");
 
-		Label loginHeaderFld = new Label(PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_HEADER));
+		Label loginHeaderFld = new Label(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_HEADER, UI.getCurrent().getLocale()));
 		loginHeaderFld.addStyleName(ValoTheme.LABEL_H2);
 		loginHeaderFld.addStyleName(ValoTheme.LABEL_BOLD);
 
@@ -110,7 +109,8 @@ public class LoginView extends VerticalLayout implements View {
 		username.setSizeFull();
 		username.addStyleName(ValoTheme.TEXTFIELD_LARGE);
 		username.setCaptionByKey(SystemProperty.LOGIN_USERNAME);
-		username.setPlaceholder(PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_USERNAME));
+		username.setPlaceholder(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_USERNAME, UI.getCurrent().getLocale()));
 		username.setIcon(FontAwesome.USER);
 		username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 
@@ -118,7 +118,8 @@ public class LoginView extends VerticalLayout implements View {
 		password.setSizeFull();
 		password.addStyleName(ValoTheme.TEXTFIELD_LARGE);
 		password.setCaptionByKey(SystemProperty.LOGIN_PASSWORD);
-		password.setPlaceholder(PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_PASSWORD));
+		password.setPlaceholder(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_PASSWORD, UI.getCurrent().getLocale()));
 		password.setIcon(FontAwesome.LOCK);
 		password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 
@@ -165,7 +166,8 @@ public class LoginView extends VerticalLayout implements View {
 								.post(new UserLoginRequestedEvent(applicationUsername, password.getValue()));
 					} else {
 						NotificationWindow.notificationErrorWindow(
-								PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey()),
+								PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
+										UI.getCurrent().getLocale()),
 								UI.getCurrent().getLocale());
 					}
 				} catch (FrameworkException e) {
@@ -195,8 +197,8 @@ public class LoginView extends VerticalLayout implements View {
 		fields.setSpacing(true);
 		fields.setWidth("600px");
 
-		Label registrationHeaderFld = new Label(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_HEADER));
+		Label registrationHeaderFld = new Label(PropertyResolver
+				.getPropertyValueByLocale(RegistrationProperty.REGISTER_HEADER, UI.getCurrent().getLocale()));
 		registrationHeaderFld.addStyleName(ValoTheme.LABEL_H2);
 		registrationHeaderFld.addStyleName(ValoTheme.LABEL_BOLD);
 
@@ -211,8 +213,8 @@ public class LoginView extends VerticalLayout implements View {
 		firstNameFld.setSizeFull();
 		firstNameFld.addStyleName(ValoTheme.TEXTFIELD_LARGE);
 		firstNameFld.setCaptionByKey(RegistrationProperty.REGISTER_FIRST_NAME);
-		firstNameFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_FIRST_NAME));
+		firstNameFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_FIRST_NAME,
+				UI.getCurrent().getLocale()));
 		firstNameFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		firstNameFld.setRequiredIndicatorVisible(true);
 
@@ -220,7 +222,8 @@ public class LoginView extends VerticalLayout implements View {
 		lastNameFld.setSizeFull();
 		lastNameFld.addStyleName(ValoTheme.TEXTFIELD_LARGE);
 		lastNameFld.setCaptionByKey(RegistrationProperty.REGISTER_LAST_NAME);
-		lastNameFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_LAST_NAME));
+		lastNameFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_LAST_NAME,
+				UI.getCurrent().getLocale()));
 		lastNameFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		lastNameFld.setRequiredIndicatorVisible(true);
 
@@ -228,7 +231,8 @@ public class LoginView extends VerticalLayout implements View {
 		dobFld.setSizeFull();
 		dobFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
 		dobFld.setCaptionByKey(RegistrationProperty.REGISTER_DATE_OF_BIRTH);
-		dobFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_DATE_OF_BIRTH));
+		dobFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_DATE_OF_BIRTH,
+				UI.getCurrent().getLocale()));
 		dobFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		dobFld.setDateFormat(Constants.SIMPLE_DATE_FORMAT.toPattern());
 		dobFld.setRangeEnd(LocalDate.now());
@@ -238,14 +242,15 @@ public class LoginView extends VerticalLayout implements View {
 		genderFld.setSizeFull();
 		genderFld.addStyleName(ValoTheme.COMBOBOX_LARGE);
 		genderFld.setCaptionByKey(RegistrationProperty.REGISTER_GENDER);
-		genderFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_GENDER));
+		genderFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_GENDER,
+				UI.getCurrent().getLocale()));
 
 		final CTextField contactNumberFld = new CTextField();
 		contactNumberFld.setSizeFull();
 		contactNumberFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
 		contactNumberFld.setCaptionByKey(RegistrationProperty.REGISTER_MOBILE_NUMBER);
-		contactNumberFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_MOBILE_NUMBER));
+		contactNumberFld.setPlaceholder(PropertyResolver
+				.getPropertyValueByLocale(RegistrationProperty.REGISTER_MOBILE_NUMBER, UI.getCurrent().getLocale()));
 		contactNumberFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		contactNumberFld.setRequiredIndicatorVisible(true);
 
@@ -253,7 +258,8 @@ public class LoginView extends VerticalLayout implements View {
 		emailFld.setSizeFull();
 		emailFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
 		emailFld.setCaptionByKey(RegistrationProperty.REGISTER_EMAIL);
-		emailFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_EMAIL));
+		emailFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_EMAIL,
+				UI.getCurrent().getLocale()));
 		emailFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		emailFld.setRequiredIndicatorVisible(true);
 
@@ -261,7 +267,8 @@ public class LoginView extends VerticalLayout implements View {
 		passwordFld.setSizeFull();
 		passwordFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
 		passwordFld.setCaptionByKey(RegistrationProperty.REGISTER_PASSWORD);
-		passwordFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_PASSWORD));
+		passwordFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_PASSWORD,
+				UI.getCurrent().getLocale()));
 		passwordFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		passwordFld.setRequiredIndicatorVisible(true);
 
@@ -269,19 +276,19 @@ public class LoginView extends VerticalLayout implements View {
 		confirmPasswordFld.setSizeFull();
 		confirmPasswordFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
 		confirmPasswordFld.setCaptionByKey(RegistrationProperty.REGISTER_CONFIRM_PASSWORD);
-		confirmPasswordFld.setPlaceholder(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_CONFIRM_PASSWORD));
+		confirmPasswordFld.setPlaceholder(PropertyResolver
+				.getPropertyValueByLocale(RegistrationProperty.REGISTER_CONFIRM_PASSWORD, UI.getCurrent().getLocale()));
 		confirmPasswordFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		confirmPasswordFld.setRequiredIndicatorVisible(true);
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-//		CCheckBox termsAndConditionCheckFld = new CCheckBox();
-//		horizontalLayout.addComponent(termsAndConditionCheckFld);
-//		Link link = new Link();
-//		link.setCaption(
-//				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
-//		link.addStyleName(Style.REGISTER_LINK);
-//		horizontalLayout.addComponent(link);
+		// CCheckBox termsAndConditionCheckFld = new CCheckBox();
+		// horizontalLayout.addComponent(termsAndConditionCheckFld);
+		// Link link = new Link();
+		// link.setCaption(
+		// PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
+		// link.addStyleName(Style.REGISTER_LINK);
+		// horizontalLayout.addComponent(link);
 
 		final CButton registerFld = new CButton();
 		registerFld.setSizeFull();
@@ -319,7 +326,7 @@ public class LoginView extends VerticalLayout implements View {
 				emailFld.clear();
 				passwordFld.clear();
 				confirmPasswordFld.clear();
-//				termsAndConditionCheckFld.clear();
+				// termsAndConditionCheckFld.clear();
 			}
 
 			private void registerUser() {
@@ -336,15 +343,16 @@ public class LoginView extends VerticalLayout implements View {
 				vo.setEmail(emailFld.getValue());
 				vo.setPassword(passwordFld.getValue());
 				vo.setPasswordConfirm(confirmPasswordFld.getValue());
-//				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
+				// vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
 				try {
 					SecurityValidation securityValidation = applicationUserService.registerUser(vo);
 					if (!securityValidation.isSuccess()) {
 						errorLbl.setVisible(true);
 						errorLbl.setValue(PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
-								securityValidation.getArgs(t -> {
+								UI.getCurrent().getLocale(), securityValidation.getArgs(t -> {
 									if (t.isKey()) {
-										return PropertyResolver.getPropertyValueByLocale(t.getValue());
+										return PropertyResolver.getPropertyValueByLocale(t.getValue(),
+												UI.getCurrent().getLocale());
 									} else {
 										return t.getValue();
 									}
@@ -382,8 +390,8 @@ public class LoginView extends VerticalLayout implements View {
 		fields.setSpacing(true);
 		fields.setWidth("600px");
 
-		Label registrationHeaderFld = new Label(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_HEADER_SUCCESSFULL));
+		Label registrationHeaderFld = new Label(PropertyResolver.getPropertyValueByLocale(
+				RegistrationProperty.REGISTER_HEADER_SUCCESSFULL, UI.getCurrent().getLocale()));
 		registrationHeaderFld.addStyleName(ValoTheme.LABEL_H2);
 		registrationHeaderFld.addStyleName(ValoTheme.LABEL_BOLD);
 
@@ -392,8 +400,8 @@ public class LoginView extends VerticalLayout implements View {
 		successLbl.addStyleName(ValoTheme.LABEL_SUCCESS);
 		successLbl.addStyleName(ValoTheme.LABEL_H2);
 		successLbl.setSizeFull();
-		successLbl.setValue(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_USER_CREATED_SUCCESSFULLY));
+		successLbl.setValue(PropertyResolver.getPropertyValueByLocale(
+				RegistrationProperty.REGISTER_USER_CREATED_SUCCESSFULLY, UI.getCurrent().getLocale()));
 
 		final CButton backToLoginFld = new CButton();
 		backToLoginFld.addStyleName(ValoTheme.BUTTON_LARGE);

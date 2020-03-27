@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -125,14 +126,16 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 			for (Entry<String, List<MailTemplatePlaceholderItem>> entry : groupMap.entrySet()) {
 				VerticalLayout verticalLayout = new VerticalLayout();
 				accordion.addTab(verticalLayout);
-				accordion.getTab(verticalLayout).setCaption(PropertyResolver.getPropertyValueByLocale(entry.getKey()));
+				accordion.getTab(verticalLayout).setCaption(
+						PropertyResolver.getPropertyValueByLocale(entry.getKey(), UI.getCurrent().getLocale()));
 
 				List<MailTemplatePlaceholderItem> list = entry.getValue();
 				for (MailTemplatePlaceholderItem mailTemplatePlaceholderItem : list) {
 					Label label = new Label("${" + mailTemplatePlaceholderItem.getKey()
 							.replace(MailTemplateGroup.PREFIX, "").replace(".", "_") + "}");
 					label.addStyleName(ValoTheme.LABEL_COLORED);
-					label.setCaption(PropertyResolver.getPropertyValueByLocale(mailTemplatePlaceholderItem.getKey()));
+					label.setCaption(PropertyResolver.getPropertyValueByLocale(mailTemplatePlaceholderItem.getKey(),
+							UI.getCurrent().getLocale()));
 					verticalLayout.addComponent(label);
 				}
 			}

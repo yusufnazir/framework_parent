@@ -207,7 +207,7 @@ public abstract class AuditTemplate extends AbstractBaseView implements Build {
 		filterPanel.setVisible(advancedSearch);
 		filterPanel.setHeight("-1px");
 		filterPanel.setContent(filterView);
-		filterPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SEARCH_FILTER));
+		filterPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SEARCH_FILTER, UI.getCurrent().getLocale()));
 		filterAndResultLayout.addComponentAsFirst(filterPanel);
 	}
 

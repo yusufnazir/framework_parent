@@ -35,6 +35,7 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	private Boolean viewContentUpdated = false;
 	private String parentReferenceKey;
 	private String uuid;
+	private boolean skipRoute = false;
 
 	public AbstractBaseView() {
 		super();
@@ -135,7 +136,7 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 	public void setParentEntity(Object parentEntity) {
 		this.parentEntity = parentEntity;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T getIfParentEntity(Class<?> cl) {
 		if (parentEntity != null && cl.isAssignableFrom(parentEntity.getClass())) {
@@ -257,6 +258,14 @@ public abstract class AbstractBaseView extends VerticalLayout implements BaseVie
 
 	public boolean isSubMenuValid() {
 		return true;
+	}
+
+	public void setSkipRoute(boolean skipRoute) {
+		this.skipRoute = skipRoute;
+	}
+
+	public boolean isSkipRoute() {
+		return skipRoute;
 	}
 
 }

@@ -134,7 +134,8 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 			formGrid = ComponentUtil.createGrid();
 			mainLayout.addComponent(formGrid);
 			formGrid.setSpacing(true);
-			formGrid.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewProperty.BASIC_INFORMATION));
+			formGrid.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewProperty.BASIC_INFORMATION,
+					UI.getCurrent().getLocale()));
 
 			viewLookUpFld = formGrid.addField(ViewLookUpField.class, RoleViewProperty.VIEW, 0, 0);
 			viewLookUpFld.handleForParentEntity(getParentEntity());
@@ -145,7 +146,8 @@ public class RoleViewView extends BasicTemplate<software.simple.solutions.framew
 			privilegesFld = new PrivilegeTwinColSelect();
 			privilegesFld.setWidth("400px");
 			privilegesFld.setHeight("300px");
-			privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
+			privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES,
+					UI.getCurrent().getLocale()));
 			mainLayout.addComponent(privilegesFld);
 		}
 

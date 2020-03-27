@@ -8,11 +8,20 @@ public class PropertyPerLocaleVO extends SuperVO {
 
 	private static final long serialVersionUID = 1991750417486245358L;
 
-	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.PROPERTY)
-	private StringInterval propertyInterval;
+	// @FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.PROPERTY)
+	// private StringInterval propertyInterval;
 
 	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.VALUE)
 	private StringInterval valueInterval;
+
+	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.REFERENCE_KEY)
+	private StringInterval referenceKeyInterval;
+
+	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.REFERENCE_ID)
+	private StringInterval referenceIdInterval;
+
+	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.REFERENCE_ID)
+	private String referenceId;
 
 	@FilterFieldProperty(fieldProperty = PropertyPerLocaleProperty.LANGUAGE)
 	private Long languageId;
@@ -22,7 +31,8 @@ public class PropertyPerLocaleVO extends SuperVO {
 
 	private Long id;
 	private String value;
-	private String property;
+	private String referenceKey;
+	// private String property;
 
 	public String getValue() {
 		return value;
@@ -52,13 +62,13 @@ public class PropertyPerLocaleVO extends SuperVO {
 		this.active = active;
 	}
 
-	public StringInterval getPropertyInterval() {
-		return propertyInterval;
-	}
+	// public StringInterval getPropertyInterval() {
+	// return propertyInterval;
+	// }
 
-	public void setPropertyInterval(StringInterval propertyInterval) {
-		this.propertyInterval = propertyInterval;
-	}
+	// public void setPropertyInterval(StringInterval propertyInterval) {
+	// this.propertyInterval = propertyInterval;
+	// }
 
 	public StringInterval getValueInterval() {
 		return valueInterval;
@@ -76,12 +86,44 @@ public class PropertyPerLocaleVO extends SuperVO {
 		this.languageId = languageId;
 	}
 
-	public String getProperty() {
-		return property;
+	public StringInterval getReferenceKeyInterval() {
+		return referenceKeyInterval;
 	}
 
-	public void setProperty(String property) {
-		this.property = property;
+	public void setReferenceKeyInterval(StringInterval referenceKeyInterval) {
+		this.referenceKeyInterval = referenceKeyInterval;
 	}
+
+	public String getReferenceId() {
+		return referenceId;
+	}
+
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
+	}
+
+	public String getReferenceKey() {
+		return referenceKey;
+	}
+
+	public void setReferenceKey(String referenceKey) {
+		this.referenceKey = referenceKey;
+	}
+
+	public StringInterval getReferenceIdInterval() {
+		return referenceIdInterval;
+	}
+
+	public void setReferenceIdInterval(StringInterval referenceIdInterval) {
+		this.referenceIdInterval = referenceIdInterval;
+	}
+
+	// public String getProperty() {
+	// return property;
+	// }
+
+	// public void setProperty(String property) {
+	// this.property = property;
+	// }
 
 }

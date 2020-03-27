@@ -17,6 +17,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.CCheckBox;
@@ -122,13 +123,15 @@ public class PersonView extends BasicTemplate<Person> {
 			public String apply(Person source) {
 				if (source.getGender() != null) {
 					if (source.getGender().getKey() != null) {
-						return PropertyResolver.getPropertyValueByLocale(source.getGender().getKey());
+						return PropertyResolver.getPropertyValueByLocale(source.getGender().getKey(),
+								UI.getCurrent().getLocale());
 					} else {
 						return source.getGender().getName();
 					}
 				}
 				return source.getGender() == null ? null
-						: PropertyResolver.getPropertyValueByLocale(source.getGender().getKey());
+						: PropertyResolver.getPropertyValueByLocale(source.getGender().getKey(),
+								UI.getCurrent().getLocale());
 			}
 		}, PersonProperty.GENDER);
 		addContainerProperty(Person::getAge, PersonProperty.AGE);

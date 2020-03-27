@@ -14,6 +14,13 @@ public class ReferenceKey {
 	public static final String USER_ROLE = CxodeTables.USER_ROLE.NAME;
 	public static final String VIEW = CxodeTables.VIEW.NAME;
 	public static final String ROLE_VIEW = CxodeTables.ROLE_VIEW.NAME;
+	public static final String MENU = CxodeTables.MENU.NAME;
+	public static final String LANGUAGE = CxodeTables.LANGUAGE.NAME;
+	public static final String PROPERTY = CxodeTables.PROPERTY.NAME;
+	public static final String PROPERTY_PER_LOCALE = CxodeTables.PROPERTY_PER_LOCALE.NAME;
 
 	public static final String LOGIN_SUCCESSFULL = "LOGIN_SUCCESSFULL";
+	
+	public static final String LANGUAGE_PROPERTY_REFERENCE_KEY = "LANGUAGE_PROPERTY_REFERENCE_KEY";
+	public static final String LANGUAGE_PROPERTY_REFERENCE_ID = "LANGUAGE_PROPERTY_REFERENCE_ID";
 }

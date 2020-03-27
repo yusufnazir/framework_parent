@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.HeaderRow;
 
@@ -306,7 +307,7 @@ public class ExportToExcel<BEANTYPE> extends AbstractExportTo {
 				}
 			} else if (headerFooterConfig.getColumnKeys() != null) {
 //				myCell.setCellValue(headerFooterConfig.getColumnKeys()[columns]);
-				myCell.setCellValue(PropertyResolver.getPropertyValueByLocale(columnId));
+				myCell.setCellValue(PropertyResolver.getPropertyValueByLocale(columnId, UI.getCurrent().getLocale()));
 			}
 			myCell.setCellStyle(componentConfiguration.getHeaderStyleFunction().apply(this.workbook, columnId));
 		}

@@ -28,7 +28,12 @@ public class Property extends MappedSuperClass implements ILocalized {
 	private static final long serialVersionUID = -8223719865490484691L;
 
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
@@ -64,6 +69,43 @@ public class Property extends MappedSuperClass implements ILocalized {
 	@Override
 	public void setKey(String key) {
 		this.key = StringUtils.lowerCase(key);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Property other = (Property) obj;
+		if (active == null) {
+			if (other.active != null)
+				return false;
+		} else if (!active.equals(other.active))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		return true;
 	}
 
 }

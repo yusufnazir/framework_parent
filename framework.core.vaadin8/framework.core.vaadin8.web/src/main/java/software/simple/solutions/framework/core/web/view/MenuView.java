@@ -1,6 +1,7 @@
 package software.simple.solutions.framework.core.web.view;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CComboBox;
@@ -15,7 +16,6 @@ import software.simple.solutions.framework.core.components.select.MenuTypeSelect
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.MenuProperty;
-import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -66,7 +66,8 @@ public class MenuView extends BasicTemplate<Menu> {
 				if (source.getType() == null) {
 					return null;
 				}
-				return PropertyResolver.getPropertyValueByLocale(MenuProperty.TYPE + "." + source.getType());
+				return PropertyResolver.getPropertyValueByLocale(MenuProperty.TYPE + "." + source.getType(),
+						UI.getCurrent().getLocale());
 			}
 		}, MenuProperty.TYPE);
 		addContainerProperty(Menu::getIndex, MenuProperty.INDEX);

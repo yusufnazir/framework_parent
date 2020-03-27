@@ -5,6 +5,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.constants.ActionState;
@@ -263,7 +264,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		backBtn.setEnabled(false);
 		backBtn.setVisible(false);
 	}
-	
+
 	public void setCancelDisabled() {
 		cancelBtn.setEnabled(false);
 		cancelBtn.setVisible(false);
@@ -314,63 +315,70 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
 		toggleAdvancedSearchBtn = menuBar.addItem("");
-		toggleAdvancedSearchBtn
-				.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_FILTER));
+		toggleAdvancedSearchBtn.setDescription(PropertyResolver
+				.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_FILTER, UI.getCurrent().getLocale()));
 		// toggleAdvancedSearchBtn.setIcon(FontAwesome.FILTER);
 		toggleAdvancedSearchBtn.setIcon(CxodeIcons.FILTER);
 		toggleAdvancedSearchBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		searchBtn = menuBar.addItem("");
-		searchBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SEARCH));
+		searchBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SEARCH,
+				UI.getCurrent().getLocale()));
 		// searchBtn.setIcon(VaadinIcons.SEARCH);
 		searchBtn.setIcon(CxodeIcons.SEARCH);
 		searchBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		eraseBtn = menuBar.addItem("");
-		eraseBtn.setDescription(
-				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CLEAR_FILTER));
+		eraseBtn.setDescription(PropertyResolver
+				.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CLEAR_FILTER, UI.getCurrent().getLocale()));
 		// eraseBtn.setIcon(VaadinIcons.ERASER);
 		eraseBtn.setIcon(CxodeIcons.CLEAR);
 		eraseBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		backBtn = menuBar.addItem("");
-		backBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_BACK));
+		backBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_BACK,
+				UI.getCurrent().getLocale()));
 		// backBtn.setIcon(VaadinIcons.ARROW_CIRCLE_LEFT);
 		backBtn.setIcon(CxodeIcons.BACK);
 		backBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		newBtn = menuBar.addItem("");
-		newBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_ADD));
+		newBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_ADD,
+				UI.getCurrent().getLocale()));
 		// newBtn.setIcon(VaadinIcons.PLUS);
 		newBtn.setIcon(CxodeIcons.ADD);
 		newBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		deleteBtn = menuBar.addItem("");
-		deleteBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_DELETE));
+		deleteBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_DELETE,
+				UI.getCurrent().getLocale()));
 		// deleteBtn.setIcon(VaadinIcons.TRASH);
 		deleteBtn.setIcon(CxodeIcons.DELETE);
 		deleteBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		restoreBtn = menuBar.addItem("");
-		restoreBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_RESTORE));
+		restoreBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_RESTORE,
+				UI.getCurrent().getLocale()));
 		restoreBtn.setIcon(CxodeIcons.RESTORE);
 		restoreBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		saveBtn = menuBar.addItem("");
-		saveBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SAVE));
+		saveBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SAVE,
+				UI.getCurrent().getLocale()));
 		// saveBtn.setIcon(FontAwesome.SAVE);
 		saveBtn.setIcon(CxodeIcons.SAVE);
 		saveBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		cancelBtn = menuBar.addItem("");
-		cancelBtn.setDescription(
-				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CANCEL_EDIT));
+		cancelBtn.setDescription(PropertyResolver
+				.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CANCEL_EDIT, UI.getCurrent().getLocale()));
 		// saveBtn.setIcon(FontAwesome.SAVE);
 		cancelBtn.setIcon(CxodeIcons.CANCEL);
 		cancelBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		editBtn = menuBar.addItem("");
-		editBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT));
+		editBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT,
+				UI.getCurrent().getLocale()));
 		// saveBtn.setIcon(FontAwesome.SAVE);
 		editBtn.setIcon(CxodeIcons.EDIT);
 		editBtn.setStyleName(Style.ACTION_BAR_MORE);
@@ -381,15 +389,15 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		printBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		exportExcelBtn = menuBar.addItem("");
-		exportExcelBtn.setDescription(
-				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EXPORT_EXCEL));
+		exportExcelBtn.setDescription(PropertyResolver
+				.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EXPORT_EXCEL, UI.getCurrent().getLocale()));
 		// exportExcelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
 		exportExcelBtn.setIcon(CxodeIcons.EXCEL);
 		exportExcelBtn.setStyleName(Style.ACTION_BAR_MORE);
 
 		infoMenuBtn = menuBar.addItem("");
-		infoMenuBtn.setDescription(
-				PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_MORE_ACTIONS));
+		infoMenuBtn.setDescription(PropertyResolver
+				.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_MORE_ACTIONS, UI.getCurrent().getLocale()));
 		infoMenuBtn.setIcon(CxodeIcons.MORE);
 		infoMenuBtn.setStyleName(Style.ACTION_BAR_MORE);
 

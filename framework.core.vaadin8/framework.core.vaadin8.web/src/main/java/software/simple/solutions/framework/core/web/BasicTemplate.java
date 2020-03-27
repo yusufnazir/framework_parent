@@ -443,8 +443,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 					popUpBtn.addStyleName(ValoTheme.BUTTON_SMALL);
 					popUpBtn.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
 					popUpBtn.addStyleName(Style.RESIZED_ICON);
-					popUpBtn.setDescription(
-							PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SELECT_LOOKUP));
+					popUpBtn.setDescription(PropertyResolver.getPropertyValueByLocale(
+							SystemProperty.SYSTEM_DESCRIPTION_SELECT_LOOKUP, UI.getCurrent().getLocale()));
 					popUpBtn.addClickListener(new PopUpModeEvent(source));
 					return popUpBtn;
 				}
@@ -489,8 +489,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			public CButton apply(T source) {
 				CButton formBtn = new CButton();
 				formBtn.setIcon(CxodeIcons.VIEW);
-				formBtn.setDescription(
-						PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT));
+				formBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_EDIT,
+						UI.getCurrent().getLocale()));
 				formBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 				formBtn.addStyleName(ValoTheme.BUTTON_SMALL);
 				formBtn.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -520,7 +520,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			} else {
 				column = contentGrid.addColumn(gridItem.getValueProvider());
 			}
-			column.setCaption(PropertyResolver.getPropertyValueByLocale(gridItem.getCaptionKey()));
+			column.setCaption(
+					PropertyResolver.getPropertyValueByLocale(gridItem.getCaptionKey(), UI.getCurrent().getLocale()));
 			column.setId(gridItem.getCaptionKey());
 			if (gridItem.getWidth() > 0) {
 				column.setWidth(gridItem.getWidth());
@@ -805,7 +806,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		filterPanel.setVisible(advancedSearch);
 		filterPanel.setHeight("-1px");
 		filterPanel.setContent(filterView);
-		filterPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SEARCH_FILTER));
+		filterPanel.setCaption(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.SEARCH_FILTER, UI.getCurrent().getLocale()));
 		filterAndResultLayout.addComponentAsFirst(filterPanel);
 	}
 
@@ -1169,7 +1171,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 					window.setHeight("90%");
 					window.center();
 					window.setModal(true);
-					window.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.AUDIT));
+					window.setCaption(PropertyResolver.getPropertyValueByLocale(AuditProperty.AUDIT,
+							UI.getCurrent().getLocale()));
 					AuditView auditView = new AuditView();
 					auditView.setEntityClass(entityClass);
 					auditView.setEntityId(((IMappedSuperClass) BasicTemplate.this.entity).getId());

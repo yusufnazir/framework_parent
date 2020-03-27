@@ -230,9 +230,9 @@ public class AppLayoutView extends VerticalLayout {
 		VerticalLayout loggedInAsLayout = new VerticalLayout();
 		loggedInAsLayout.addStyleName(ValoTheme.LAYOUT_WELL);
 		loggedInAsLayout.setMargin(new MarginInfo(false, false, false, true));
-		Label loggedInAsUserLbl = new Label(
-				PropertyResolver.getPropertyValueByLocale(SystemProperty.PROFILE_LOGGED_IN_AS,
-						new Object[] { sessionHolder.getApplicationUser().getUsername() }));
+		Label loggedInAsUserLbl = new Label(PropertyResolver.getPropertyValueByLocale(
+				SystemProperty.PROFILE_LOGGED_IN_AS, UI.getCurrent().getLocale(),
+				new Object[] { sessionHolder.getApplicationUser().getUsername() }));
 		loggedInAsUserLbl.addStyleName(ValoTheme.LABEL_H2);
 		loggedInAsUserLbl.addStyleName(ValoTheme.LABEL_COLORED);
 		loggedInAsUserLbl.addStyleName(Style.LABEL_PRE_WRAPPED);
@@ -588,8 +588,8 @@ public class AppLayoutView extends VerticalLayout {
 			ChangePasswordView changePasswordView = new ChangePasswordView();
 			changePasswordView.setMandatory(false);
 			tabSheet.addComponent(changePasswordView);
-			tabSheet.getTab(changePasswordView)
-					.setCaption(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD));
+			tabSheet.getTab(changePasswordView).setCaption(PropertyResolver
+					.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD, UI.getCurrent().getLocale()));
 			tabSheet.getTab(changePasswordView).setClosable(true);
 			tabSheet.setSelectedTab(changePasswordView);
 			if (!tabSheet.isVisible()) {

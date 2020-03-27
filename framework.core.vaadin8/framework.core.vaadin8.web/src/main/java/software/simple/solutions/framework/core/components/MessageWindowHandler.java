@@ -24,14 +24,11 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import software.simple.solutions.framework.core.entities.MessagePerLocale;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.Arg.Key;
 import software.simple.solutions.framework.core.exceptions.Arg.Value;
 import software.simple.solutions.framework.core.exceptions.ExceptionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.IMessagePerLocaleService;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class MessageWindowHandler {
@@ -102,7 +99,8 @@ public class MessageWindowHandler {
 			if (cause != null) {
 				ExceptionHolder exceptionHolder = null;
 				if (cause instanceof FrameworkException) {
-//					exceptionHolder = ((FrameworkException) cause).getExceptionHolder();
+					// exceptionHolder = ((FrameworkException)
+					// cause).getExceptionHolder();
 				}
 
 				if (exceptionHolder != null) {
@@ -112,23 +110,27 @@ public class MessageWindowHandler {
 			}
 
 			if (StringUtils.isNotBlank(messageProperty)) {
-				IMessagePerLocaleService messagePerLocaleService = ContextProvider
-						.getBean(IMessagePerLocaleService.class);
-				String iso3Language = UI.getCurrent().getLocale().getISO3Language();
-				MessagePerLocale messagePerLocale = null;
-				try {
-					messagePerLocale = messagePerLocaleService.getByMessageAndLocale(messageProperty, iso3Language);
-					errorMessage = messagePerLocale.getReason();
-				} catch (FrameworkException e) {
-					logger.error(e.getMessage(), e);
-				}
-				if (messagePerLocale == null) {
-					logger.error("No messagenumber defined for [{0}]", messageProperty, null);
-				}
+				// IMessagePerLocaleService messagePerLocaleService =
+				// ContextProvider
+				// .getBean(IMessagePerLocaleService.class);
+				// String iso3Language =
+				// UI.getCurrent().getLocale().getISO3Language();
+				// MessagePerLocale messagePerLocale = null;
+				// try {
+				// messagePerLocale =
+				// messagePerLocaleService.getByMessageAndLocale(messageProperty,
+				// iso3Language);
+				// errorMessage = messagePerLocale.getReason();
+				// } catch (FrameworkException e) {
+				// logger.error(e.getMessage(), e);
+				// }
+				// if (messagePerLocale == null) {
+				// logger.error("No messagenumber defined for [{0}]",
+				// messageProperty, null);
+				// }
 
-				if (messagePerLocale != null && StringUtils.isNotBlank(messagePerLocale.getReason())) {
-					errorMessage = messagePerLocale.getReason();
-				}
+				errorMessage = PropertyResolver.getPropertyValueByLocale(messageProperty, UI.getCurrent().getLocale(),
+						args);
 				if (errorMessage == null) {
 					errorMessage = "No message defined";
 				} else if (args != null) {
@@ -137,7 +139,8 @@ public class MessageWindowHandler {
 					List<Object> arguments = new ArrayList<>();
 					for (Value value : values) {
 						if (value instanceof Key) {
-							String valueByLocale = PropertyResolver.getPropertyValueByLocale(value.getValue());
+							String valueByLocale = PropertyResolver.getPropertyValueByLocale(value.getValue(),
+									UI.getCurrent().getLocale());
 							arguments.add(valueByLocale);
 						} else {
 							arguments.add(value.getValue());

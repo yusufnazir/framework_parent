@@ -68,12 +68,6 @@
 	<include file="create-table-application-user-configuration.xml"
 		relativeToChangelogFile="true" />
 
-	<include file="create-table-message.xml"
-		relativeToChangelogFile="true" />
-
-	<include file="create-table-messages-per-locale.xml"
-		relativeToChangelogFile="true" />
-
 	<include file="create-table-mail-template.xml"
 		relativeToChangelogFile="true" />
 

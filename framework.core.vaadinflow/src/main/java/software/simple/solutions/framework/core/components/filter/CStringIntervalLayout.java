@@ -176,4 +176,14 @@ public class CStringIntervalLayout extends CustomField<StringInterval> implement
 		// TODO Auto-generated method stub
 
 	}
+
+	public void setOperatorDisabled() {
+		operatorSelect.setReadOnly(true);
+	}
+	
+	@Override
+	public void setReadOnly(boolean readOnly) {
+		operatorSelect.setReadOnly(readOnly);
+		textFld.setReadOnly(readOnly);
+	}
 }

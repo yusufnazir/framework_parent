@@ -118,7 +118,8 @@ public class ChangePasswordView extends VerticalLayout {
 						confirmNewPassword.setValue(null);
 					} else {
 						NotificationWindow.notificationErrorWindow(
-								PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey()),
+								PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
+										UI.getCurrent().getLocale()),
 								UI.getCurrent().getLocale());
 					}
 				} catch (FrameworkException e) {

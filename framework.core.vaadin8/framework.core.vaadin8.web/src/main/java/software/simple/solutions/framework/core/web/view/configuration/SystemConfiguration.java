@@ -276,7 +276,7 @@ public class SystemConfiguration extends CGridLayout {
 			List<ComboItem> items = new ArrayList<ComboItem>();
 			for (Menu menu : menus) {
 				ComboItem comboItem = new ComboItem(menu.getId());
-				comboItem.setName(PropertyResolver.getPropertyValueByLocale(menu.getKey()));
+				comboItem.setName(PropertyResolver.getPropertyValueByLocale(menu.getKey(), UI.getCurrent().getLocale()));
 				items.add(comboItem);
 			}
 			homeViewFld.setItems(items);

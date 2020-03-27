@@ -36,7 +36,8 @@ public class RolePrivilgesView extends AbstractBaseView {
 
 		privilegesFld.setWidth("400px");
 		privilegesFld.setHeight("300px");
-		privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES));
+		privilegesFld.setCaption(PropertyResolver.getPropertyValueByLocale(RoleViewPrivilegeProperty.PRIVILEGES,
+				UI.getCurrent().getLocale()));
 		addComponent(privilegesFld);
 
 		initializePrivileges();

@@ -3,6 +3,7 @@ package software.simple.solutions.framework.core.web;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -16,6 +17,7 @@ import com.vaadin.flow.server.Command;
 
 import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import de.codecamp.vaadin.components.messagedialog.MessageDialog.FluentButton;
+import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.exceptions.ValidationException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
@@ -46,6 +48,15 @@ public class DetailsWindow extends Dialog {
 		if (e instanceof ValidationException) {
 			ValidationException validationException = (ValidationException) e;
 			dialog.setMessage(validationException.getMessage());
+		} else if (e instanceof FrameworkException) {
+			FrameworkException frameworkException = (FrameworkException) e;
+			Locale locale = frameworkException.getLocale();
+			if (locale == null) {
+				locale = UI.getCurrent().getLocale();
+			}
+			String message = PropertyResolver.getPropertyValueByLocale(frameworkException.getMessageKey(), locale,
+					frameworkException.getArg());
+			dialog.setMessage(message);
 		} else {
 			dialog.setMessage(e.getMessage());
 			FluentButton detailsBtn = dialog.addButtonToLeft();

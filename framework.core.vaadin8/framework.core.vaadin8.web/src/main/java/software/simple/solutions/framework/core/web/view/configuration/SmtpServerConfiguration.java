@@ -119,7 +119,7 @@ public class SmtpServerConfiguration extends CGridLayout {
 				Window window = new Window();
 				UI.getCurrent().addWindow(window);
 				window.setCaption(
-						PropertyResolver.getPropertyValueByLocale(ConfigurationProperty.SMTP_VALIDATE_CONFIGURATION));
+						PropertyResolver.getPropertyValueByLocale(ConfigurationProperty.SMTP_VALIDATE_CONFIGURATION, UI.getCurrent().getLocale()));
 				CGridLayout validateSmtpLayout = ComponentUtil.createGrid();
 				validateSmtpLayout.setMargin(true);
 

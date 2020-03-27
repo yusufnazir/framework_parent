@@ -651,8 +651,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 	}
 
 	private MenuItem createChangePasswordItem() {
-		return userMenuItem.addItem(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD),
-				FontAwesome.KEY, new Command() {
+		return userMenuItem.addItem(PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD,
+				UI.getCurrent().getLocale()), FontAwesome.KEY, new Command() {
 					private static final long serialVersionUID = -3515364978684559560L;
 
 					@Override
@@ -661,8 +661,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 							ChangePasswordView changePasswordView = new ChangePasswordView();
 							changePasswordView.setMandatory(false);
 							tabSheet.addComponent(changePasswordView);
-							tabSheet.getTab(changePasswordView).setCaption(
-									PropertyResolver.getPropertyValueByLocale(ApplicationUserProperty.CHANGE_PASSWORD));
+							tabSheet.getTab(changePasswordView).setCaption(PropertyResolver.getPropertyValueByLocale(
+									ApplicationUserProperty.CHANGE_PASSWORD, UI.getCurrent().getLocale()));
 							tabSheet.getTab(changePasswordView).setClosable(true);
 							tabSheet.setSelectedTab(changePasswordView);
 							if (!tabSheet.isVisible()) {

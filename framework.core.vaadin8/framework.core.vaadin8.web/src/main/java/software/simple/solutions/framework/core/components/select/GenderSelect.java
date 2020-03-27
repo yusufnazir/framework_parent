@@ -2,6 +2,8 @@ package software.simple.solutions.framework.core.components.select;
 
 import java.util.List;
 
+import com.vaadin.ui.UI;
+
 import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.entities.Gender;
@@ -20,7 +22,8 @@ public class GenderSelect extends CComboBox {
 		List<ComboItem> items;
 		try {
 			items = genderService.getForListing(Gender.class, true);
-			items.stream().forEach(p -> p.setName(PropertyResolver.getPropertyValueByLocale(p.getName())));
+			items.stream().forEach(p -> p
+					.setName(PropertyResolver.getPropertyValueByLocale(p.getName(), UI.getCurrent().getLocale())));
 			setItems(items);
 		} catch (FrameworkException e) {
 			new MessageWindowHandler(e);
