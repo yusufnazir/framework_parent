@@ -461,8 +461,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			lastNameFld.setValue(person.getLastName());
 			dateOfBirthFld.setValue(person.getDateOfBirth());
 			genderFld.setValue(person.getGender() == null ? null
-					: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
-							UI.getCurrent().getLocale()));
+					: PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER, person.getGender().getId(),
+							UI.getCurrent().getLocale(), person.getGender().getName()));
 			isPersonActiveFld.setValue(person.getActive());
 
 			IFileService fileService = ContextProvider.getBean(IFileService.class);
@@ -708,8 +708,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 				dateOfBirthFld.setValue(person.getDateOfBirth() == null ? null
 						: person.getDateOfBirth().format(Constants.DATE_FORMATTER));
 				genderFld.setValue(person.getGender() == null ? null
-						: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
-								UI.getCurrent().getLocale()));
+						: PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER, person.getGender().getId(),
+								UI.getCurrent().getLocale(), person.getGender().getName()));
 				isPersonActiveFld.setValue(person.getActive());
 
 				IFileService fileService = ContextProvider.getBean(IFileService.class);

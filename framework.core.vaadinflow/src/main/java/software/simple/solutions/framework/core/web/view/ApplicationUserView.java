@@ -140,9 +140,9 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			activeFld = addField(ActiveSelect.class, ApplicationUserProperty.ACTIVE, 0, 1);
 			personFirstNameFld = addField(CStringIntervalLayout.class, PersonProperty.FIRST_NAME, 1, 0);
 			personLastNameFld = addField(CStringIntervalLayout.class, PersonProperty.LAST_NAME, 1, 1);
-			
+
 			ApplicationUser applicationUser = getIfParentEntity(ApplicationUser.class);
-			if(applicationUser!=null){
+			if (applicationUser != null) {
 				userNameFld.setValue(applicationUser.getUsername());
 				userNameFld.setEnabled(false);
 			}
@@ -445,8 +445,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			lastNameFld.setValue(person.getLastName());
 			dateOfBirthFld.setValue(person.getDateOfBirth());
 			genderFld.setValue(person.getGender() == null ? null
-					: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(),
-							UI.getCurrent().getLocale()));
+					: PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER, person.getGender().getId(),
+							UI.getCurrent().getLocale(), person.getGender().getName()));
 			isPersonActiveFld.setValue(person.getActive());
 
 			IFileService fileService = ContextProvider.getBean(IFileService.class);

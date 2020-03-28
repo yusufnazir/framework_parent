@@ -16,10 +16,12 @@ import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.valueobjects.MenuVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IMenuRepository.class)
 public class MenuService extends SuperService implements IMenuService {
+
+	private static final long serialVersionUID = -8964279928538580750L;
 
 	@Autowired
 	private IMenuRepository menuRepository;
@@ -40,9 +42,6 @@ public class MenuService extends SuperService implements IMenuService {
 		menu.setActive(vo.getActive());
 		menu.setType(vo.getType());
 		menu.setView(get(View.class, vo.getViewId()));
-		menu.setKey(vo.getKey());
-
-		createKeyifNotExists(vo.getKey());
 
 		return (T) saveOrUpdate(menu, vo.isNew());
 	}
@@ -61,9 +60,9 @@ public class MenuService extends SuperService implements IMenuService {
 	public List<Menu> findAuthorizedMenus(Long roleId) throws FrameworkException {
 		return menuRepository.findAuthorizedMenus(roleId);
 	}
-	
+
 	@Override
-	public List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException{
+	public List<Menu> findAuthorizedMenusByUser(Long applicationUserId) throws FrameworkException {
 		return menuRepository.findAuthorizedMenusByUser(applicationUserId);
 	}
 

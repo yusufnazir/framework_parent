@@ -25,4 +25,9 @@ public class PropertyPerLocaleServiceFacade extends SuperServiceFacade<IProperty
 	public List<PropertyPerLocale> findAll() throws FrameworkException {
 		return service.findAll();
 	}
+
+	@Override
+	public List<PropertyPerLocale> findAllButProperty() throws FrameworkException {
+		return service.findAllButProperty();
+	}
 }

@@ -67,6 +67,7 @@ import software.simple.solutions.framework.core.components.ConfirmWindow.Confirm
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.MenuType;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
@@ -271,8 +272,8 @@ public class AppLayoutView extends VerticalLayout {
 					abstractBaseView.setMargin(true);
 
 					tabSheet.addTab(abstractBaseView);
-					String menuName = menu.getKey() == null ? menu.getName()
-							: PropertyResolver.getPropertyValueByLocale(menu.getKey(), UI.getCurrent().getLocale());
+					String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
+							UI.getCurrent().getLocale(), menu.getName());
 					tabSheet.getTab(abstractBaseView).setCaption(menuName);
 					tabSheet.getTab(abstractBaseView).setClosable(true);
 					tabSheet.setSelectedTab(abstractBaseView);
@@ -298,8 +299,8 @@ public class AppLayoutView extends VerticalLayout {
 					if (codePoint != null) {
 						fontAwesome = FontAwesome.fromCodepoint(codePoint);
 					}
-					String menuName = homeMenu.getKey() == null ? homeMenu.getName()
-							: PropertyResolver.getPropertyValueByLocale(homeMenu.getKey(), UI.getCurrent().getLocale());
+					String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, homeMenu.getId(),
+							UI.getCurrent().getLocale(), homeMenu.getName());
 					navigatorAppLayoutBuilder.addClickable(menuName, fontAwesome, new Button.ClickListener() {
 
 						private static final long serialVersionUID = -8337443024708870791L;
@@ -335,9 +336,8 @@ public class AppLayoutView extends VerticalLayout {
 							}
 							Class<? extends View> viewClass = (Class<? extends View>) Class
 									.forName(menu.getView().getViewClassName());
-							String menuName = menu.getKey() == null ? menu.getName()
-									: PropertyResolver.getPropertyValueByLocale(menu.getKey(),
-											UI.getCurrent().getLocale());
+							String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
+									UI.getCurrent().getLocale(), menu.getName());
 							NavigatorNavigationElement navigationElement = new NavigatorNavigationElement(menuName,
 									menu.getId().toString(), fontAwesome, null, viewClass);
 							navigatorAppLayoutBuilder.add(navigationElement);
@@ -385,8 +385,8 @@ public class AppLayoutView extends VerticalLayout {
 			abstractBaseView.executeSearch();
 			abstractBaseView.setMargin(true);
 
-			String menuName = homeMenu.getKey() == null ? homeMenu.getName()
-					: PropertyResolver.getPropertyValueByLocale(homeMenu.getKey(), UI.getCurrent().getLocale());
+			String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, homeMenu.getId(),
+					UI.getCurrent().getLocale(), homeMenu.getName());
 			tabSheet.addComponent(abstractBaseView);
 			tabSheet.getTab(abstractBaseView).setCaption(menuName);
 			tabSheet.getTab(abstractBaseView).setClosable(false);

@@ -18,7 +18,6 @@ public abstract class MappedSuperClass implements Serializable, IMappedSuperClas
 	public static final String ACTIVE_ = "ACTIVE_";
 	public static final String UPDATED_DATE_ = "UPDATED_DATE_";
 	public static final String UPDATED_BY_ = "UPDATED_BY_";
-	public static final String KEY_ = "KEY_";
 
 	public static final String CODE_ = "CODE_";
 	public static final String NAME_ = "NAME_";

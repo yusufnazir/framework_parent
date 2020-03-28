@@ -6,7 +6,6 @@ import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.ISubMenuService;
-import software.simple.solutions.framework.core.service.ISuperService;
 
 public class SubMenuServiceFacade extends SuperServiceFacade<ISubMenuService> implements ISubMenuService {
 

@@ -122,7 +122,6 @@ public class MenuView extends BasicTemplate<Menu> {
 		private CDiscreetNumberField indexFld;
 		private ViewLookUpField viewFld;
 		private MenuLookUpField menuFld;
-		private CTextField propertyFld;
 
 		private Menu menu;
 
@@ -152,8 +151,6 @@ public class MenuView extends BasicTemplate<Menu> {
 
 			indexFld = formGrid.addField(CDiscreetNumberField.class, MenuProperty.INDEX, 1, 1);
 
-			propertyFld = formGrid.addField(CTextField.class, MenuProperty.KEY, 1, 2);
-
 			activeFld = formGrid.addField(CCheckBox.class, MenuProperty.ACTIVE, 1, 3);
 
 			return formGrid;
@@ -170,7 +167,6 @@ public class MenuView extends BasicTemplate<Menu> {
 			menuFld.setValue(menu.getParentMenu());
 			indexFld.setLongValue(menu.getIndex());
 			typeFld.setLongValue(menu.getType());
-			propertyFld.setValue(menu.getKey());
 
 			nameFld.setRequired();
 			codeFld.setReadOnly(true);
@@ -201,7 +197,6 @@ public class MenuView extends BasicTemplate<Menu> {
 			vo.setViewId(viewFld.getItemId());
 			vo.setParentMenuId(menuFld.getItemId());
 			vo.setType(typeFld.getItemId());
-			vo.setKey(propertyFld.getValue());
 
 			return vo;
 		}

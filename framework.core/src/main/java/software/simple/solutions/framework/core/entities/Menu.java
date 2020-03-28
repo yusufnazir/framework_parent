@@ -26,12 +26,17 @@ import software.simple.solutions.framework.core.properties.ViewProperty;
 @Table(name = CxodeTables.MENU.NAME)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
-public class Menu extends MappedSuperClass implements ILocalized {
+public class Menu extends MappedSuperClass {
 
 	private static final long serialVersionUID = -720087732122778727L;
 
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@FilterFieldProperty(fieldProperty = MenuProperty.ID)
 	@Column(name = ID_)
@@ -73,8 +78,8 @@ public class Menu extends MappedSuperClass implements ILocalized {
 	@Column(name = CxodeTables.MENU.COLUMNS.ACTIVE)
 	private Boolean active;
 
-	@Column(name = KEY_)
-	private String key;
+	// @Column(name = KEY_)
+	// private String key;
 
 	public Boolean getActive() {
 		return active;
@@ -156,15 +161,15 @@ public class Menu extends MappedSuperClass implements ILocalized {
 		this.id = id;
 	}
 
-	@Override
-	public String getKey() {
-		return key;
-	}
+	// @Override
+	// public String getKey() {
+	// return key;
+	// }
 
-	@Override
-	public void setKey(String key) {
-		this.key = key;
-	}
+	// @Override
+	// public void setKey(String key) {
+	// this.key = key;
+	// }
 
 	@Override
 	public String getCaption() {

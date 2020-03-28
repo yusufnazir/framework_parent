@@ -32,7 +32,7 @@ public class PropertyRepository extends GenericRepository implements IPropertyRe
 			}
 			PropertyPerLocale propertyPerLocale = ClassUtil.getEntity(ar, PropertyPerLocale.class);
 			Map<String, PropertyPerLocale> pplMap = map.get(property);
-			if (!pplMap.containsKey(propertyPerLocale.getLanguage().getCode())) {
+			if (propertyPerLocale != null && !pplMap.containsKey(propertyPerLocale.getLanguage().getCode())) {
 				pplMap.put(propertyPerLocale.getLanguage().getCode(), propertyPerLocale);
 			}
 		}

@@ -11,13 +11,9 @@ public class GenderVO extends SuperVO {
 	private Long id;
 	private String name;
 	private Boolean active;
-	private String key;
 
 	@FilterFieldProperty(fieldProperty = GenderProperty.NAME)
 	private StringInterval nameInterval;
-
-	@FilterFieldProperty(fieldProperty = GenderProperty.PROPERTY_KEY)
-	private StringInterval keyInterval;
 
 	public String getName() {
 		return name;
@@ -45,28 +41,12 @@ public class GenderVO extends SuperVO {
 		this.active = active;
 	}
 
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
 	public StringInterval getNameInterval() {
 		return nameInterval;
 	}
 
 	public void setNameInterval(StringInterval nameInterval) {
 		this.nameInterval = nameInterval;
-	}
-
-	public StringInterval getKeyInterval() {
-		return keyInterval;
-	}
-
-	public void setKeyInterval(StringInterval keyInterval) {
-		this.keyInterval = keyInterval;
 	}
 
 }

@@ -32,7 +32,6 @@ public class MenuForm extends FormView {
 	private CDiscreetNumberField indexFld;
 	private ViewLookUpField viewLookUpField;
 	private MenuLookUpField menuLookUpField;
-	private CTextField propertyFld;
 
 	private Menu menu;
 
@@ -65,8 +64,6 @@ public class MenuForm extends FormView {
 
 		indexFld = formGrid.add(CDiscreetNumberField.class, MenuProperty.INDEX);
 
-		propertyFld = formGrid.add(CTextField.class, MenuProperty.KEY);
-
 		activeFld = formGrid.add(CCheckBox.class, MenuProperty.ACTIVE);
 
 		return formGrid;
@@ -83,7 +80,6 @@ public class MenuForm extends FormView {
 		menuLookUpField.setValue(menu.getParentMenu());
 		indexFld.setLongValue(menu.getIndex());
 		typeFld.setLongValue(menu.getType());
-		propertyFld.setValue(menu.getKey());
 
 		nameFld.setRequired();
 		codeFld.setReadOnly(true);
@@ -130,7 +126,6 @@ public class MenuForm extends FormView {
 		vo.setViewId(viewLookUpField.getItemId());
 		vo.setParentMenuId(menuLookUpField.getItemId());
 		vo.setType(typeFld.getItemId());
-		vo.setKey(propertyFld.getValue());
 
 		return vo;
 	}

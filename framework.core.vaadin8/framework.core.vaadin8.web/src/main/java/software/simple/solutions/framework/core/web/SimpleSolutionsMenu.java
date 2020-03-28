@@ -1,28 +1,16 @@
 package software.simple.solutions.framework.core.web;
 
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.entities.ApplicationUser;

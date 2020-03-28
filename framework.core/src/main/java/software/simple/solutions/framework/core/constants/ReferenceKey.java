@@ -18,6 +18,7 @@ public class ReferenceKey {
 	public static final String LANGUAGE = CxodeTables.LANGUAGE.NAME;
 	public static final String PROPERTY = CxodeTables.PROPERTY.NAME;
 	public static final String PROPERTY_PER_LOCALE = CxodeTables.PROPERTY_PER_LOCALE.NAME;
+	public static final String GENDER = CxodeTables.GENDER.NAME;
 
 	public static final String LOGIN_SUCCESSFULL = "LOGIN_SUCCESSFULL";
 	

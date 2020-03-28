@@ -4,12 +4,14 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import software.simple.solutions.framework.core.config.PropertyHolder;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.Arg.Value;
 
@@ -26,9 +28,25 @@ public class PropertyResolver {
 	}
 
 	public static String getPropertyValueByLocale(String key, Locale locale, Arg arg) {
+		return getPropertyValueByLocale(ReferenceKey.PROPERTY, key, locale, arg, null);
+	}
+
+	public static String getPropertyValueByLocale(String key, Locale locale, Object[] args) {
+		Arg arg = Arg.build();
+		if (args != null) {
+			for (Object o : args) {
+				arg.norm(o);
+			}
+		}
+		return getPropertyValueByLocale(key, locale, arg);
+	}
+
+	public static String getPropertyValueByLocale(String reference, String key, Locale locale, Arg arg,
+			String defaultValue) {
 		String message = null;
 		try {
-			Properties properties = PropertyHolder.propertyLocalized.get(locale.getISO3Language());
+			Map<String, Properties> mapByReference = PropertyHolder.localization.get(reference);
+			Properties properties = mapByReference.get(locale.getISO3Language());
 			message = properties.getProperty(key);
 			if (arg != null) {
 				List<Value> values = arg.getValues();
@@ -44,8 +62,12 @@ public class PropertyResolver {
 				message = messageFormat.format(arguments.toArray());
 			}
 			if (message == null) {
-				message = "NoKey: [" + key + "]";
-				logger.error("NoKey: CODE [" + key + "] LOCALE [" + locale + "]");
+				if (defaultValue == null) {
+					message = "NoKey: [" + key + "]";
+					logger.error("NoKey: CODE [" + key + "] LOCALE [" + locale + "]");
+				} else {
+					message = defaultValue;
+				}
 			}
 		} catch (NullPointerException e) {
 			logger.error(e.getMessage() + " CODE [" + key + "] LOCALE [" + locale + "]");
@@ -54,13 +76,12 @@ public class PropertyResolver {
 		return message;
 	}
 
-	public static String getPropertyValueByLocale(String key, Locale locale, Object[] args) {
-		Arg arg = Arg.build();
-		if (args != null) {
-			for (Object o : args) {
-				arg.norm(o);
-			}
-		}
-		return getPropertyValueByLocale(key, locale, arg);
+	public static String getPropertyValueByLocale(String reference, String key, Locale locale, String defaultValue) {
+		return getPropertyValueByLocale(reference, key, locale, null, defaultValue);
 	}
+
+	public static String getPropertyValueByLocale(String reference, Long key, Locale locale, String defaultValue) {
+		return getPropertyValueByLocale(reference, key.toString(), locale, null, defaultValue);
+	}
+
 }

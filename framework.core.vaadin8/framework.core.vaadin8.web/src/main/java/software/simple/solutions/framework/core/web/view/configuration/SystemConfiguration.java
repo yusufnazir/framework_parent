@@ -49,6 +49,7 @@ import software.simple.solutions.framework.core.components.select.LayoutSelect;
 import software.simple.solutions.framework.core.components.select.RoleSelect;
 import software.simple.solutions.framework.core.config.SystemObserver;
 import software.simple.solutions.framework.core.constants.MimeType;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
@@ -276,7 +277,8 @@ public class SystemConfiguration extends CGridLayout {
 			List<ComboItem> items = new ArrayList<ComboItem>();
 			for (Menu menu : menus) {
 				ComboItem comboItem = new ComboItem(menu.getId());
-				comboItem.setName(PropertyResolver.getPropertyValueByLocale(menu.getKey(), UI.getCurrent().getLocale()));
+				comboItem.setName(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
+						UI.getCurrent().getLocale(), menu.getName()));
 				items.add(comboItem);
 			}
 			homeViewFld.setItems(items);

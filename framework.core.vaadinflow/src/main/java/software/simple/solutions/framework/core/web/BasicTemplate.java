@@ -575,7 +575,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 		formView.setReferenceKeys(getReferenceKeys());
 		formView.setParentEntity(getParentEntity());
-		if (getParentReferenceKey() != null) {
+		if (getParentReferenceKey() != null && !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
 			formView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
 			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
 			if (getSelectedEntity() != null) {
@@ -604,7 +604,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		readonlyFormView.setParentEntity(getParentEntity());
-		if (getParentReferenceKey() != null) {
+		if (getParentReferenceKey() != null && !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
 			readonlyFormView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
 			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
 			if (getSelectedEntity() != null) {

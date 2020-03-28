@@ -9,4 +9,6 @@ public interface IPropertyPerLocaleService extends ISuperService {
 
 	public List<PropertyPerLocale> findAll() throws FrameworkException;
 
+	public List<PropertyPerLocale> findAllButProperty() throws FrameworkException;
+
 }

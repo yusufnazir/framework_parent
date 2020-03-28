@@ -63,6 +63,7 @@ import software.simple.solutions.framework.core.components.ConfirmWindow.Confirm
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.config.SystemObserver;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
@@ -353,9 +354,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 			Command command = getCommand(
 					menuItem.getMenu().getView() == null ? null : menuItem.getMenu().getView().getId(),
 					menuItem.getMenu());
-			String menuName = menuItem.getMenu().getKey() == null ? menuItem.getMenu().getName()
-					: PropertyResolver.getPropertyValueByLocale(menuItem.getMenu().getKey(),
-							UI.getCurrent().getLocale());
+			String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menuItem.getMenu().getId(),
+					UI.getCurrent().getLocale(), menuItem.getMenu().getName());
 			MenuBar.MenuItem item = menuBar_.addItem(menuName, command);
 			setMenuItems(menuItem, item);
 		}
@@ -368,9 +368,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 				Command command = getCommand(
 						child.getMenu().getView() == null ? null : child.getMenu().getView().getId(), child.getMenu());
 
-				String menuName = child.getMenu().getKey() == null ? child.getMenu().getName()
-						: PropertyResolver.getPropertyValueByLocale(child.getMenu().getKey(),
-								UI.getCurrent().getLocale());
+				String menuName = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, child.getMenu().getId(),
+						UI.getCurrent().getLocale(), child.getMenu().getName());
 
 				if (useNavigator) {
 					if (child.getMenu().getView() != null) {
@@ -526,8 +525,9 @@ public class TopMenuLayoutView extends VerticalLayout {
 			abstractBaseView.executeSearch();
 			tabSheet.addComponent(abstractBaseView);
 			Tab tab = tabSheet.getTab(abstractBaseView);
-			tab.setCaption(PropertyResolver.getPropertyValueByLocale(
-					abstractBaseView.getViewDetail().getMenu().getKey(), UI.getCurrent().getLocale()));
+			tab.setCaption(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+					abstractBaseView.getViewDetail().getMenu().getId(), UI.getCurrent().getLocale(),
+					abstractBaseView.getViewDetail().getMenu().getName()));
 			tabSheet.getTab(abstractBaseView).setClosable(true);
 			tabSheet.setSelectedTab(abstractBaseView);
 
@@ -578,8 +578,10 @@ public class TopMenuLayoutView extends VerticalLayout {
 			abstractBaseView.executeBuild();
 			abstractBaseView.executeSearch();
 			tabSheet.addComponent(abstractBaseView);
-			tabSheet.getTab(abstractBaseView).setCaption(PropertyResolver.getPropertyValueByLocale(
-					abstractBaseView.getViewDetail().getMenu().getKey(), UI.getCurrent().getLocale()));
+			tabSheet.getTab(abstractBaseView)
+					.setCaption(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+							abstractBaseView.getViewDetail().getMenu().getId(), UI.getCurrent().getLocale(),
+							abstractBaseView.getViewDetail().getMenu().getName()));
 			tabSheet.getTab(abstractBaseView).setClosable(true);
 			tabSheet.setSelectedTab(abstractBaseView);
 
@@ -631,9 +633,8 @@ public class TopMenuLayoutView extends VerticalLayout {
 				// MessageHandler.getMessage(language.getProperty().getCode()));
 				// }
 
-				languageItem.addItem(language.getKey() == null ? language.getCode()
-						: PropertyResolver.getPropertyValueByLocale(language.getKey(), UI.getCurrent().getLocale()),
-						new Command() {
+				languageItem.addItem(PropertyResolver.getPropertyValueByLocale(ReferenceKey.LANGUAGE, language.getId(),
+						UI.getCurrent().getLocale(), language.getName()), new Command() {
 
 							private static final long serialVersionUID = -5927663312101535392L;
 

@@ -33,10 +33,7 @@ public class MenuVO extends SuperVO {
 	private Long type;
 
 	private String code;
-
 	private String name;
-
-	private String key;
 
 	public MenuVO() {
 		super();
@@ -124,11 +121,4 @@ public class MenuVO extends SuperVO {
 		this.parentMenuId = parentMenuId;
 	}
 
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
 }

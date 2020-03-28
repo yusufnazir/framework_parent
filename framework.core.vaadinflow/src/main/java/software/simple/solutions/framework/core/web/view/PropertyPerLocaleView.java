@@ -55,7 +55,11 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 							if (propertyPerLocale.getReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY)) {
 								Long id = NumberUtil.getLong(propertyPerLocale.getReferenceId());
 								Property property = propertyService.get(Property.class, id);
-								PropertyHolder.updateKeyValue(property.getKey(), propertyPerLocale);
+								PropertyHolder.updateKeyValue(ReferenceKey.PROPERTY, property.getKey(),
+										propertyPerLocale);
+							} else {
+								PropertyHolder.updateKeyValue(propertyPerLocale.getReferenceKey(),
+										propertyPerLocale.getReferenceId(), propertyPerLocale);
 							}
 						}
 					} else {
@@ -63,7 +67,10 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 						if (propertyPerLocale.getReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY)) {
 							Long id = NumberUtil.getLong(propertyPerLocale.getReferenceId());
 							Property property = propertyService.get(Property.class, id);
-							PropertyHolder.updateKeyValue(property.getKey(), propertyPerLocale);
+							PropertyHolder.updateKeyValue(ReferenceKey.PROPERTY, property.getKey(), propertyPerLocale);
+						} else {
+							PropertyHolder.updateKeyValue(propertyPerLocale.getReferenceKey(),
+									propertyPerLocale.getReferenceId(), propertyPerLocale);
 						}
 					}
 				}
@@ -75,6 +82,8 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 	public void setUpCustomColumns() {
 		addContainerProperty(new ValueProvider<PropertyPerLocale, String>() {
 
+			private static final long serialVersionUID = 8402961422425388896L;
+
 			@Override
 			public String apply(PropertyPerLocale source) {
 				return source.getReferenceKey();
@@ -82,12 +91,16 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 		}, PropertyPerLocaleProperty.REFERENCE_KEY);
 		addContainerProperty(new ValueProvider<PropertyPerLocale, String>() {
 
+			private static final long serialVersionUID = 913309432619065814L;
+
 			@Override
 			public String apply(PropertyPerLocale source) {
 				return source.getReferenceId();
 			}
 		}, PropertyPerLocaleProperty.REFERENCE_ID);
 		addContainerProperty(new ValueProvider<PropertyPerLocale, String>() {
+
+			private static final long serialVersionUID = -7930100448480453903L;
 
 			@Override
 			public String apply(PropertyPerLocale source) {

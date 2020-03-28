@@ -9,4 +9,6 @@ public interface IPropertyPerLocaleRepository extends IGenericRepository {
 
 	public List<PropertyPerLocale> findAll() throws FrameworkException;
 
+	public List<PropertyPerLocale> findAllButProperty() throws FrameworkException;
+
 }

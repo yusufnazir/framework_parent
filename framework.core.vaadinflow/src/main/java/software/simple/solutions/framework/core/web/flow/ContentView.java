@@ -13,6 +13,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -36,6 +37,7 @@ import software.simple.solutions.framework.core.pojo.PopUpMode;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.web.AbstractBaseView;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -93,15 +95,17 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 			subTabSheet.removeAll();
 			if (component instanceof AbstractBaseView) {
 				abstractBaseView = (AbstractBaseView) component;
-				String menuName = abstractBaseView.getViewDetail().getMenu().getName();
-				Tab tab = new Tab(menuName);
+				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+						abstractBaseView.getViewDetail().getMenu().getId(), UI.getCurrent().getLocale(),
+						abstractBaseView.getViewDetail().getMenu().getName()));
 				createdSubMenusTabs.put(tab, abstractBaseView);
 				subTabSheet.add(tab);
 
 				List<Menu> subMenus = abstractBaseView.getViewDetail().getSubMenus();
 				if (subMenus != null) {
 					for (Menu menu : subMenus) {
-						Tab subMenuTab = new Tab(menu.getName());
+						Tab subMenuTab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+								menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
 						subMenuTab.getStyle().set("background", "#f3d512");
 						subMenuTab.getStyle().set("border-top-left-radius", "50%");
 						subMenuTab.getStyle().set("border-top-right-radius", "5%");
@@ -239,7 +243,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.executeSearch();
 				contentLayout.add(view);
 				view.setVisible(false);
-				Tab tab = new Tab(menu.getName());
+				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+						menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
 				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
 				tab.getStyle().set("border-top-left-radius", "50%");
 				tab.getStyle().set("border-top-right-radius", "5%");
@@ -300,7 +305,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.executeSearch();
 				contentLayout.add(view);
 				view.setVisible(false);
-				Tab tab = new Tab(menu.getName());
+				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+						menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
 				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
 				tab.getStyle().set("border-top-left-radius", "50%");
 				tab.getStyle().set("border-top-right-radius", "5%");

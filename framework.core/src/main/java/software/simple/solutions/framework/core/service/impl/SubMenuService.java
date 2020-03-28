@@ -16,11 +16,13 @@ import software.simple.solutions.framework.core.service.ISubMenuService;
 import software.simple.solutions.framework.core.valueobjects.SubMenuVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = ISubMenuRepository.class)
 public class SubMenuService extends SuperService implements ISubMenuService {
 
+	private static final long serialVersionUID = 4818539291431596062L;
+	
 	@Autowired
 	private ISubMenuRepository subMenuRepository;
 
@@ -36,9 +38,7 @@ public class SubMenuService extends SuperService implements ISubMenuService {
 		}
 
 		subMenu.setParentMenu(get(Menu.class, vo.getParentMenuId()));
-
 		subMenu.setChildMenu(get(Menu.class, vo.getChildMenuId()));
-
 		subMenu.setActive(vo.getActive());
 
 		return (T) saveOrUpdate(subMenu, vo.isNew());

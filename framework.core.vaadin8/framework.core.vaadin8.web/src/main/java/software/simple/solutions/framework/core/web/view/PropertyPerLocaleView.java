@@ -16,7 +16,6 @@ import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.components.select.LanguageSelect;
 import software.simple.solutions.framework.core.config.PropertyHolder;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
-import software.simple.solutions.framework.core.entities.ILocalized;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Property;
 import software.simple.solutions.framework.core.entities.PropertyPerLocale;
@@ -52,7 +51,11 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 							if (propertyPerLocale.getReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY)) {
 								Long id = NumberUtil.getLong(propertyPerLocale.getReferenceId());
 								Property property = propertyService.get(Property.class, id);
-								PropertyHolder.updateKeyValue(property.getKey(), propertyPerLocale);
+								PropertyHolder.updateKeyValue(ReferenceKey.PROPERTY, property.getKey(),
+										propertyPerLocale);
+							} else {
+								PropertyHolder.updateKeyValue(propertyPerLocale.getReferenceKey(),
+										propertyPerLocale.getReferenceId(), propertyPerLocale);
 							}
 						}
 					} else {
@@ -60,7 +63,10 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 						if (propertyPerLocale.getReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY)) {
 							Long id = NumberUtil.getLong(propertyPerLocale.getReferenceId());
 							Property property = propertyService.get(Property.class, id);
-							PropertyHolder.updateKeyValue(property.getKey(), propertyPerLocale);
+							PropertyHolder.updateKeyValue(ReferenceKey.PROPERTY, property.getKey(), propertyPerLocale);
+						} else {
+							PropertyHolder.updateKeyValue(propertyPerLocale.getReferenceKey(),
+									propertyPerLocale.getReferenceId(), propertyPerLocale);
 						}
 					}
 				}
@@ -118,12 +124,12 @@ public class PropertyPerLocaleView extends BasicTemplate<PropertyPerLocale> {
 			valueFld = addField(CStringIntervalLayout.class, PropertyPerLocaleProperty.VALUE, 1, 0);
 			activeFld = addField(ActiveSelect.class, PropertyPerLocaleProperty.ACTIVE, 1, 1);
 
-			MappedSuperClass parentEntity = getParentEntity();
-			if (parentEntity != null && parentEntity instanceof ILocalized) {
-				ILocalized property = (ILocalized) getParentEntity();
-				referenceKeyFld.setValue(property.getKey());
-				referenceKeyFld.setReadOnly(true);
-			}
+			// MappedSuperClass parentEntity = getParentEntity();
+			// if (parentEntity != null && parentEntity instanceof ILocalized) {
+			// ILocalized property = (ILocalized) getParentEntity();
+			// referenceKeyFld.setValue(property.getKey());
+			// referenceKeyFld.setReadOnly(true);
+			// }
 		}
 
 		@Override

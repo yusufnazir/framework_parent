@@ -23,6 +23,7 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = IGenderRepository.class)
 public class GenderService extends SuperService implements IGenderService {
 
+	private static final long serialVersionUID = -6958881271813455262L;
 	@Autowired
 	private IGenderRepository genderRepository;
 
@@ -42,27 +43,16 @@ public class GenderService extends SuperService implements IGenderService {
 				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
 						Arg.build().key(GenderProperty.NAME));
 			}
-			Boolean isKeyUnique = genderRepository.isKeyUnique(null, vo.getName());
-			if (!isKeyUnique) {
-				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						Arg.build().key(GenderProperty.PROPERTY_KEY));
-			}
 		} else {
 			Boolean isNameUnique = genderRepository.isNameUnique(vo.getId(), vo.getName());
 			if (!isNameUnique) {
 				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
 						Arg.build().key(GenderProperty.NAME));
 			}
-			Boolean isKeyUnique = genderRepository.isKeyUnique(vo.getId(), vo.getName());
-			if (!isKeyUnique) {
-				throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
-						Arg.build().key(GenderProperty.PROPERTY_KEY));
-			}
 			gender = get(Gender.class, vo.getId());
 		}
 		gender.setName(vo.getName());
 		gender.setActive(vo.getActive());
-		gender.setKey(vo.getKey());
 
 		return (T) saveOrUpdate(gender, vo.isNew());
 	}

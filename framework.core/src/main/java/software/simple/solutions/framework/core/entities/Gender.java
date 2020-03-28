@@ -23,7 +23,7 @@ import software.simple.solutions.framework.core.properties.GenderProperty;
 @Table(name = CxodeTables.GENDER.NAME)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
-public class Gender extends MappedSuperClass implements ILocalized {
+public class Gender extends MappedSuperClass {
 
 	private static final long serialVersionUID = 1385205519828303252L;
 
@@ -39,10 +39,6 @@ public class Gender extends MappedSuperClass implements ILocalized {
 
 	@Column(name = CxodeTables.GENDER.COLUMNS.ACTIVE)
 	private Boolean active;
-
-	@FilterFieldProperty(fieldProperty = GenderProperty.PROPERTY_KEY)
-	@Column(name = KEY_)
-	private String key;
 
 	public Boolean getActive() {
 		return active;
@@ -66,16 +62,6 @@ public class Gender extends MappedSuperClass implements ILocalized {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public String getKey() {
-		return key;
-	}
-
-	@Override
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 }

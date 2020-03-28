@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
-import software.simple.solutions.framework.core.entities.Property;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.pojo.PagingSetting;
@@ -23,7 +21,7 @@ import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service(value = "superService")
 public abstract class SuperService implements ISuperService {
 
@@ -46,20 +44,6 @@ public abstract class SuperService implements ISuperService {
 
 	@Autowired
 	protected ApplicationEventPublisher applicationEventPublisher;
-
-	public Property createKeyifNotExists(String key) throws FrameworkException {
-		Property property = null;
-		if (StringUtils.isNotBlank(key)) {
-			property = genericRepository.getBypropertyKey(Property.class, key);
-			if (property == null) {
-				property = new Property();
-				property.setActive(true);
-				property.setKey(key);
-				property = saveOrUpdate(property, true);
-			}
-		}
-		return property;
-	}
 
 	@Override
 	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException {

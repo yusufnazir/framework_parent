@@ -29,7 +29,6 @@ public class GenderView extends BasicTemplate<Gender> {
 	@Override
 	public void setUpCustomColumns() {
 		addContainerProperty(Gender::getName, GenderProperty.NAME);
-		addContainerProperty(Gender::getKey, GenderProperty.PROPERTY_KEY);
 	}
 
 	/**
@@ -43,19 +42,16 @@ public class GenderView extends BasicTemplate<Gender> {
 		private static final long serialVersionUID = 117780868467918033L;
 
 		private CStringIntervalLayout nameFld;
-		private CStringIntervalLayout keyFld;
 
 		@Override
 		public void executeBuild() throws FrameworkException {
 			nameFld = addField(CStringIntervalLayout.class, GenderProperty.NAME, 0, 0);
-			keyFld = addField(CStringIntervalLayout.class, GenderProperty.PROPERTY_KEY, 1, 0);
 		}
 
 		@Override
 		public Object getCriteria() {
 			GenderVO vo = new GenderVO();
 			vo.setNameInterval(nameFld.getValue());
-			vo.setKeyInterval(keyFld.getValue());
 			return vo;
 		}
 	}
@@ -66,7 +62,6 @@ public class GenderView extends BasicTemplate<Gender> {
 
 		private CGridLayout formGrid;
 		private CTextField nameFld;
-		private CTextArea keyFld;
 
 		private Gender gender;
 
@@ -85,9 +80,6 @@ public class GenderView extends BasicTemplate<Gender> {
 
 			nameFld = formGrid.addField(CTextField.class, GenderProperty.NAME, 0, 0);
 
-			keyFld = formGrid.addField(CTextArea.class, GenderProperty.PROPERTY_KEY, 0, 1, 1, 1);
-			keyFld.setRows(1);
-
 			return formGrid;
 		}
 
@@ -96,7 +88,6 @@ public class GenderView extends BasicTemplate<Gender> {
 		public Gender setFormValues(Object entity) throws FrameworkException {
 			gender = (Gender) entity;
 			nameFld.setValue(gender.getName());
-			keyFld.setValue(gender.getKey());
 
 			return gender;
 		}
@@ -104,7 +95,6 @@ public class GenderView extends BasicTemplate<Gender> {
 		@Override
 		public void handleNewForm() throws FrameworkException {
 			nameFld.setRequired();
-			keyFld.setRequired();
 		}
 
 		@Override
@@ -113,7 +103,6 @@ public class GenderView extends BasicTemplate<Gender> {
 
 			vo.setId(gender == null ? null : gender.getId());
 
-			vo.setKey(keyFld.getValue());
 			vo.setName(nameFld.getValue());
 
 			return vo;

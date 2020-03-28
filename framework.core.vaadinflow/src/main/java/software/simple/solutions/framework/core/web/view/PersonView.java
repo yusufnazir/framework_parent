@@ -97,16 +97,10 @@ public class PersonView extends BasicTemplate<Person> {
 			@Override
 			public String apply(Person source) {
 				if (source.getGender() != null) {
-					if (source.getGender().getKey() != null) {
-						return PropertyResolver.getPropertyValueByLocale(source.getGender().getKey(),
-								UI.getCurrent().getLocale());
-					} else {
-						return source.getGender().getName();
-					}
+					return PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER, source.getGender().getId(),
+							UI.getCurrent().getLocale(), source.getGender().getName());
 				}
-				return source.getGender() == null ? null
-						: PropertyResolver.getPropertyValueByLocale(source.getGender().getKey(),
-								UI.getCurrent().getLocale());
+				return null;
 			}
 		}, PersonProperty.GENDER);
 		addContainerProperty(Person::getAge, PersonProperty.AGE);
@@ -138,9 +132,9 @@ public class PersonView extends BasicTemplate<Person> {
 			if (getViewDetail().getPrivileges().contains(Privileges.PERSON_SHOW_GENDER)) {
 				genderFld.setVisible(true);
 			}
-			
+
 			Person person = getIfParentEntity(Person.class);
-			if(person!=null){
+			if (person != null) {
 				firstNameFld.setValue(person.getFirstName());
 				firstNameFld.setEnabled(false);
 				lastNameFld.setValue(person.getLastName());

@@ -53,4 +53,9 @@ public class PropertyPerLocaleService extends SuperService implements IPropertyP
 		return (T) saveOrUpdate(propertyPerLocale, vo.isNew());
 	}
 
+	@Override
+	public List<PropertyPerLocale> findAllButProperty() throws FrameworkException {
+		return propertyPerLocaleRepository.findAllButProperty();
+	}
+
 }

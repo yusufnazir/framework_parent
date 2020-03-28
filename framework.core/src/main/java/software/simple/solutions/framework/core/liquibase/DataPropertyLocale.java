@@ -73,7 +73,7 @@ public class DataPropertyLocale extends CustomDataTaskChange {
 				}
 			} else {
 				String insert = "insert into properties_per_locales_(id_,active_,value_,locale_id_,reference_key_,reference_id_) "
-						+ "values(?,?,?,?,?)";
+						+ "values(?,?,?,?,?,?)";
 				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
 					setData(prepareStatement, 1, id);
 					prepareStatement.setBoolean(2, true);

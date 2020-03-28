@@ -361,7 +361,8 @@ public class ApplicationUserForm extends FormView {
 		lastNameFld.setValue(person.getLastName());
 		dateOfBirthFld.setValue(person.getDateOfBirth());
 		genderFld.setValue(person.getGender() == null ? null
-				: PropertyResolver.getPropertyValueByLocale(person.getGender().getKey(), UI.getCurrent().getLocale()));
+				: PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER, person.getGender().getId(),
+						UI.getCurrent().getLocale(), person.getGender().getName()));
 		isPersonActiveFld.setValue(person.getActive());
 
 		IFileService fileService = ContextProvider.getBean(IFileService.class);
