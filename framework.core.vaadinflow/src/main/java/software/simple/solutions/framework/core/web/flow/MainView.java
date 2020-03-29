@@ -423,6 +423,7 @@ public class MainView extends AppLayoutRouterLayout
 					@Override
 					public void onComponentEvent(ClickEvent<?> event) {
 						if (forName != null) {
+							contentView.resetTabs();
 							Route route = forName.getAnnotation(Route.class);
 							if (route != null) {
 								String value = route.value();

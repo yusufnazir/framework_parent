@@ -66,6 +66,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 	private Object selectedEntity;
 	private BehaviorSubject<LookUpHolder> lookUpFieldLinkObserver;
 	private BehaviorSubject<LookUpHolder> lookUpFieldSelectObserver;
+	private Tab parentViewTab;
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
@@ -95,11 +96,11 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 			subTabSheet.removeAll();
 			if (component instanceof AbstractBaseView) {
 				abstractBaseView = (AbstractBaseView) component;
-				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+				parentViewTab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
 						abstractBaseView.getViewDetail().getMenu().getId(), UI.getCurrent().getLocale(),
 						abstractBaseView.getViewDetail().getMenu().getName()));
-				createdSubMenusTabs.put(tab, abstractBaseView);
-				subTabSheet.add(tab);
+				createdSubMenusTabs.put(parentViewTab, abstractBaseView);
+				subTabSheet.add(parentViewTab);
 
 				List<Menu> subMenus = abstractBaseView.getViewDetail().getSubMenus();
 				if (subMenus != null) {
@@ -121,21 +122,26 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 
 					@Override
 					public void accept(EntitySelect entitySelect) throws Exception {
-						selectedEntity = entitySelect.getEntity();
-						if (entitySelect.getEntity() == null) {
-							subMenusTabMap.keySet().stream().forEach(p -> p.setVisible(false));
-							Set<Tab> keySet = lookUpMenusTabMap.keySet();
-							for (Tab tab : keySet) {
-								subMenusTabMap.remove(tab);
-							}
-							lookUpMenusTabMap.clear();
-							subMenusTabMap.keySet().stream().forEach(p -> createdSubMenusTabs.remove(p));
-						} else {
-							subMenusTabMap.keySet().stream().forEach(p -> p.setVisible(true));
-						}
+						handleSelectedEntity(entitySelect);
 					}
 				});
 			}
+		}
+	}
+	
+	private void handleSelectedEntity(EntitySelect entitySelect) {
+		selectedEntity = entitySelect.getEntity();
+		if (entitySelect.getEntity() == null) {
+			subMenusTabMap.keySet().stream().forEach(p -> p.setVisible(false));
+			Set<Tab> keySet = lookUpMenusTabMap.keySet();
+			for (Tab tab : keySet) {
+				subMenusTabMap.remove(tab);
+				subTabSheet.remove(tab);
+			}
+			lookUpMenusTabMap.clear();
+			subMenusTabMap.keySet().stream().forEach(p -> createdSubMenusTabs.remove(p));
+		} else {
+			subMenusTabMap.keySet().stream().forEach(p -> p.setVisible(true));
 		}
 	}
 
@@ -333,6 +339,17 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				subTabSheet.setSelectedTab(tab);
 			}
 		});
+	}
+	
+	public void resetTabs(){
+		handleSelectedEntity(new EntitySelect());
+		Set<Tab> keySet = lookUpMenusTabMap.keySet();
+		for (Tab tab : keySet) {
+			subMenusTabMap.remove(tab);
+		}
+		lookUpMenusTabMap.clear();
+		subMenusTabMap.keySet().stream().forEach(p -> createdSubMenusTabs.remove(p));
+		subTabSheet.setSelectedTab(parentViewTab);
 	}
 
 }

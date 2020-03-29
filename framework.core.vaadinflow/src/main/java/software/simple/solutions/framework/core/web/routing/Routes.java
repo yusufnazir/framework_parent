@@ -37,4 +37,7 @@ public class Routes {
 	
 	public static final String MAIL_TEMPLATE = "mail_template";
 	public static final String MAIL_TEMPLATE_EDIT = "mail_template_edit";
+	
+	public static final String GENDER = "gender_template";
+	public static final String GENDER_EDIT = "gender_edit";
 }
