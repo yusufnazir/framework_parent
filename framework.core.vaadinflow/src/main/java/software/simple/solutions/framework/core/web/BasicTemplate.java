@@ -147,7 +147,6 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		System.out.println("navigationtarget [" + event.getNavigationTarget().getName() + "]");
 		SessionHolder sessionHolder = getSessionHolder();
 		if (sessionHolder == null) {
 			sessionHolder = new SessionHolder();
@@ -176,10 +175,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		location = event.getLocation();
-		System.out.println(event.getLocation().getPath());
 		initialize();
 		QueryParameters queryParameters = event.getLocation().getQueryParameters();
-		System.out.println("queryParameters [" + queryParameters.getParameters() + "]");
 		List<String> idList = queryParameters.getParameters().get("id");
 		if (idList != null && !idList.isEmpty()) {
 			String id = idList.get(0);

@@ -16,7 +16,6 @@ public class DataMenu extends CustomDataTaskChange {
 
 	private JdbcConnection connection;
 	private Long id;
-	private String key;
 	private String code;
 	private String description;
 	private String name;
@@ -67,37 +66,33 @@ public class DataMenu extends CustomDataTaskChange {
 			}
 
 			if (exists) {
-				String update = "update menus_ set key_=?, code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=?, icon_=? where id_=?";
+				String update = "update menus_ set code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=?, icon_=? where id_=?";
 				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
-					setData(prepareStatement, 1, key);
-					setData(prepareStatement, 2, code);
-					setData(prepareStatement, 3, description);
-					setData(prepareStatement, 4, name);
-					setData(prepareStatement, 5, viewId);
-					setData(prepareStatement, 6, index);
-					setData(prepareStatement, 7, parentMenuId);
-					setData(prepareStatement, 8, type);
-					setData(prepareStatement, 9, icon);
-					setData(prepareStatement, 10, id);
+					setData(prepareStatement, 1, code);
+					setData(prepareStatement, 2, description);
+					setData(prepareStatement, 3, name);
+					setData(prepareStatement, 4, viewId);
+					setData(prepareStatement, 5, index);
+					setData(prepareStatement, 6, parentMenuId);
+					setData(prepareStatement, 7, type);
+					setData(prepareStatement, 8, icon);
+					setData(prepareStatement, 9, id);
 					prepareStatement.executeUpdate();
 				}
 			} else {
-				String insert = "insert into menus_(id_,active_,key_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_,icon_) "
-						+ "values(?,?,?,?,?,?,?,?,?,?,?)";
+				String insert = "insert into menus_(id_,active_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_,icon_) "
+						+ "values(?,?,?,?,?,?,?,?,?,?)";
 				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
 					setData(prepareStatement, 1, id);
 					prepareStatement.setBoolean(2, true);
-					// prepareStatement.setDate(3, new
-					// Date(Calendar.getInstance().getTime().getTime()));
-					setData(prepareStatement, 3, key);
-					setData(prepareStatement, 4, code);
-					setData(prepareStatement, 5, description);
-					setData(prepareStatement, 6, name);
-					setData(prepareStatement, 7, viewId);
-					setData(prepareStatement, 8, index);
-					setData(prepareStatement, 9, parentMenuId);
-					setData(prepareStatement, 10, type);
-					setData(prepareStatement, 11, icon);
+					setData(prepareStatement, 3, code);
+					setData(prepareStatement, 4, description);
+					setData(prepareStatement, 5, name);
+					setData(prepareStatement, 6, viewId);
+					setData(prepareStatement, 7, index);
+					setData(prepareStatement, 8, parentMenuId);
+					setData(prepareStatement, 9, type);
+					setData(prepareStatement, 10, icon);
 					prepareStatement.executeUpdate();
 				}
 			}
@@ -115,14 +110,6 @@ public class DataMenu extends CustomDataTaskChange {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public String getCode() {

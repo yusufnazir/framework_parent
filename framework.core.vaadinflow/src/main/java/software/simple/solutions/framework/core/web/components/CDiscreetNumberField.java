@@ -52,6 +52,10 @@ public class CDiscreetNumberField extends IntegerField implements IField, Compar
 		return NumberUtil.getLong(getValue());
 	}
 
+	public String getStringValue() {
+		return getValue() == null ? null : getValue().toString();
+	}
+
 	public boolean isThisRequired() {
 		return this.isThisRequired;
 	}

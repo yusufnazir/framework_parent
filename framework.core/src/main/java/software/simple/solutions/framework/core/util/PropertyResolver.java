@@ -2,6 +2,7 @@ package software.simple.solutions.framework.core.util;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,8 +46,9 @@ public class PropertyResolver {
 			String defaultValue) {
 		String message = null;
 		try {
-			Map<String, Properties> mapByReference = PropertyHolder.localization.get(reference);
-			Properties properties = mapByReference.get(locale.getISO3Language());
+			Map<String, Properties> mapByReference = PropertyHolder.localization.getOrDefault(reference,
+					new HashMap<String, Properties>());
+			Properties properties = mapByReference.getOrDefault(locale.getISO3Language(), new Properties());
 			message = properties.getProperty(key);
 			if (arg != null) {
 				List<Value> values = arg.getValues();

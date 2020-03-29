@@ -25,6 +25,7 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
@@ -68,6 +69,7 @@ import software.simple.solutions.framework.core.web.flow.applayout.CustomLeftSub
 
 @Push
 @PreserveOnRefresh
+@CssImport(value = "./styles/my-custom-dialog.css", themeFor = "vaadin-dialog-overlay")
 public class MainView extends AppLayoutRouterLayout
 // implements BeforeEnterObserver
 {
@@ -215,6 +217,7 @@ public class MainView extends AppLayoutRouterLayout
 	        + "vaadin-custom-field::before {"
 	        + "content: none;"
 	        + "}"
+	        + ""
 	        ;
 	// @formatter:on
 
@@ -378,7 +381,7 @@ public class MainView extends AppLayoutRouterLayout
 							// forName, MainView.class);
 						}
 					} catch (ClassNotFoundException e) {
-						logger.error(e.getMessage());
+						logger.error(e.getMessage(), e);
 					}
 					com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon icon = null;
 					if (menu.getIcon() != null) {

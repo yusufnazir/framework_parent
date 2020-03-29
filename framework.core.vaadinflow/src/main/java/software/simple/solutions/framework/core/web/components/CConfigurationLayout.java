@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -18,22 +17,23 @@ import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.LookUpField;
 
-public class CFormLayout extends FormLayout {
+public class CConfigurationLayout extends VerticalLayout {
 
-	private static final Logger logger = LogManager.getLogger(CFormLayout.class);
+	private static final Logger logger = LogManager.getLogger(CConfigurationLayout.class);
 
 	private static final long serialVersionUID = -3761260727823808576L;
 
-	public CFormLayout() {
-		// setWidthFull();
-		// setResponsiveSteps(new ResponsiveStep("25em", 1), new
-		// ResponsiveStep("32em", 2), new ResponsiveStep("40em", 3));
+	public CConfigurationLayout() {
+		super();
 	}
 
 	public <T extends Component> T add(Class<?> componentClass, String key) {
 		Component component = null;
 		try {
 			component = (Component) componentClass.newInstance();
+			if (component instanceof HasSize) {
+				((HasSize) component).setWidth("400px");
+			}
 
 			if (key != null) {
 				if (component instanceof TextField) {

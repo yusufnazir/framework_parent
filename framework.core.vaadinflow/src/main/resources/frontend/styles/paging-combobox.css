@@ -1,0 +1,3 @@
+[part~="text-field"]{
+	--lumo-text-field-size: var(--lumo-size-s);
+}

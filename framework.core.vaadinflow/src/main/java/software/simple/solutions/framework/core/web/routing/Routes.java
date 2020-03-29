@@ -32,4 +32,6 @@ public class Routes {
 	
 	public static final String PROPERTY_PER_LOCALE = "property_per_locale";
 	public static final String PROPERTY_PER_LOCALE_EDIT = "property_per_locale_edit";
+	
+	public static final String CONFIGURATION = "configuration";
 }

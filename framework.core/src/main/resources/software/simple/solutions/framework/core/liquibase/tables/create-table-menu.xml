@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1577565895596">
+		author="simplesolutions" id="1585362823685">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="menus_" />
@@ -14,8 +14,6 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
-			<column name="KEY_" type="VARCHAR(255)" />
-
 			<column name="CODE_" type="VARCHAR(255)" />
 			<column name="DESCRIPTION_" type="VARCHAR(255)" />
 			<column name="NAME_" type="VARCHAR(255)" />
@@ -28,7 +26,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1577565923910">
+		author="simplesolutions" id="1585362831694">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="menus_aud" />
@@ -43,8 +41,6 @@
 			</column>
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="ACTIVE_" type="BIT(1)" />
-			<column name="KEY_" type="VARCHAR(255)" />
-
 			<column name="CODE_" type="VARCHAR(255)" />
 			<column name="DESCRIPTION_" type="VARCHAR(255)" />
 			<column name="NAME_" type="VARCHAR(255)" />

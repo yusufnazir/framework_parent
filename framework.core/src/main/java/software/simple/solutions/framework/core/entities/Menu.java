@@ -78,9 +78,6 @@ public class Menu extends MappedSuperClass {
 	@Column(name = CxodeTables.MENU.COLUMNS.ACTIVE)
 	private Boolean active;
 
-	// @Column(name = KEY_)
-	// private String key;
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -160,16 +157,6 @@ public class Menu extends MappedSuperClass {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	// @Override
-	// public String getKey() {
-	// return key;
-	// }
-
-	// @Override
-	// public void setKey(String key) {
-	// this.key = key;
-	// }
 
 	@Override
 	public String getCaption() {

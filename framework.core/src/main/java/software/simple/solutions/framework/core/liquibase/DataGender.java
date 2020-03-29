@@ -16,7 +16,6 @@ public class DataGender extends CustomDataTaskChange {
 
 	private JdbcConnection connection;
 	private Long id;
-	private String key;
 	private String name;
 
 	@Override
@@ -48,37 +47,32 @@ public class DataGender extends CustomDataTaskChange {
 		connection = (JdbcConnection) database.getConnection();
 
 		try {
-			String query = "select id_ from genders_ where id_=?";
-			PreparedStatement prepareStatement = connection.prepareStatement(query);
-			setData(prepareStatement, 1, id);
-			ResultSet resultSet = prepareStatement.executeQuery();
-
 			boolean exists = false;
-			while (resultSet.next()) {
-				exists = true;
+			String query = "select id_ from genders_ where id_=?";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+				setData(prepareStatement, 1, id);
+				try (ResultSet resultSet = prepareStatement.executeQuery()) {
+					while (resultSet.next()) {
+						exists = true;
+					}
+				}
 			}
-			resultSet.close();
-			prepareStatement.close();
 
 			if (exists) {
-				String update = "update genders_ set key_=?, name_=? where id_=?";
-				prepareStatement = connection.prepareStatement(update);
-				setData(prepareStatement, 1, key);
-				setData(prepareStatement, 2, name);
-				setData(prepareStatement, 3, id);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String update = "update genders_ set name_=? where id_=?";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+					setData(prepareStatement, 1, name);
+					setData(prepareStatement, 2, id);
+					prepareStatement.executeUpdate();
+				}
 			} else {
-				String insert = "insert into genders_(id_,active_,key_,name_) " + "values(?,?,?,?)";
-				prepareStatement = connection.prepareStatement(insert);
-				setData(prepareStatement, 1, id);
-				prepareStatement.setBoolean(2, true);
-				// prepareStatement.setDate(3, new
-				// Date(Calendar.getInstance().getTime().getTime()));
-				setData(prepareStatement, 3, key);
-				setData(prepareStatement, 4, name);
-				prepareStatement.executeUpdate();
-				prepareStatement.close();
+				String insert = "insert into genders_(id_,active_,name_) " + "values(?,?,?)";
+				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+					setData(prepareStatement, 1, id);
+					prepareStatement.setBoolean(2, true);
+					setData(prepareStatement, 3, name);
+					prepareStatement.executeUpdate();
+				}
 			}
 
 		} catch (DatabaseException | SQLException e) {
@@ -94,14 +88,6 @@ public class DataGender extends CustomDataTaskChange {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public String getName() {
