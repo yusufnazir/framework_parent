@@ -14,6 +14,7 @@ public class Panel extends Card {
 
 	public Panel() {
 		header = new Header();
+		header.getStyle().set("color", "var(--lumo-primary-color)");
 		add(header);
 		add(new Hr());
 		getContent().setPadding(true);

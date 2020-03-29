@@ -42,7 +42,7 @@ import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
-import software.simple.solutions.framework.core.web.components.CConfigurationLayout;
+import software.simple.solutions.framework.core.web.components.CVerticalLayout;
 import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.web.components.CPasswordField;
 import software.simple.solutions.framework.core.web.components.CTextArea;
@@ -51,7 +51,7 @@ import software.simple.solutions.framework.core.web.components.NotificationBuild
 import software.simple.solutions.framework.core.web.components.Panel;
 
 @CxodeConfigurationComponent(order = 2, captionKey = ConfigurationProperty.SMTP_CONFIGURATION)
-public class SmtpServerConfiguration extends CConfigurationLayout {
+public class SmtpServerConfiguration extends CVerticalLayout {
 
 	private static final long serialVersionUID = -4290908153354032925L;
 
@@ -73,7 +73,7 @@ public class SmtpServerConfiguration extends CConfigurationLayout {
 	private SessionHolder sessionHolder;
 	private UI ui;
 
-	private CConfigurationLayout validateSmtpConfigurationLayout;
+	private CVerticalLayout validateSmtpConfigurationLayout;
 
 	public SmtpServerConfiguration() throws FrameworkException {
 		ui = UI.getCurrent();
@@ -85,7 +85,7 @@ public class SmtpServerConfiguration extends CConfigurationLayout {
 		horizontalLayout.add(smtpSettingsPanel);
 		add(horizontalLayout);
 		
-		CConfigurationLayout smtpSettingsLayout = new CConfigurationLayout();
+		CVerticalLayout smtpSettingsLayout = new CVerticalLayout();
 		smtpSettingsPanel.add(smtpSettingsLayout);
 		
 		enableSmtp = smtpSettingsLayout.add(CCheckBox.class, ConfigurationProperty.SMTP_ENABLE);
@@ -128,7 +128,7 @@ public class SmtpServerConfiguration extends CConfigurationLayout {
 		validateSmtpConfigurationPanel.setHeaderKey(ConfigurationProperty.SMTP_VALIDATE_CONFIGURATION);
 		horizontalLayout.add(validateSmtpConfigurationPanel);
 		
-		validateSmtpConfigurationLayout = new CConfigurationLayout();
+		validateSmtpConfigurationLayout = new CVerticalLayout();
 		validateSmtpConfigurationPanel.add(validateSmtpConfigurationLayout);
 		
 		validateSmtpStateFld = validateSmtpConfigurationLayout.add(CButton.class, null);

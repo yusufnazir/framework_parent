@@ -18,6 +18,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.RoleViewPrivilegeProperty;
 import software.simple.solutions.framework.core.properties.RoleViewProperty;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.facade.PrivilegeServiceFacade;
 import software.simple.solutions.framework.core.service.facade.RoleViewPrivilegeServiceFacade;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -55,6 +56,7 @@ public class RoleViewForm extends FormView {
 
 	private void createFormGrid() throws FrameworkException {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);

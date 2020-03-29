@@ -9,6 +9,7 @@ import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.PropertyPerLocale;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.PropertyPerLocaleProperty;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.PropertyPerLocaleVO;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
@@ -44,6 +45,7 @@ public class PropertyPerLocaleForm extends FormView {
 
 	private CFormLayout createFormGrid() {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);

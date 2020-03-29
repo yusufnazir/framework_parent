@@ -34,4 +34,7 @@ public class Routes {
 	public static final String PROPERTY_PER_LOCALE_EDIT = "property_per_locale_edit";
 	
 	public static final String CONFIGURATION = "configuration";
+	
+	public static final String MAIL_TEMPLATE = "mail_template";
+	public static final String MAIL_TEMPLATE_EDIT = "mail_template_edit";
 }

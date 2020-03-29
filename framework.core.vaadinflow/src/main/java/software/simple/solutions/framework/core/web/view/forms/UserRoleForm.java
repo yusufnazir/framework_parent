@@ -4,6 +4,7 @@ import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.entities.UserRole;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.properties.UserRoleProperty;
 import software.simple.solutions.framework.core.valueobjects.UserRoleVO;
 import software.simple.solutions.framework.core.web.FormView;
@@ -34,6 +35,7 @@ public class UserRoleForm extends FormView {
 
 	private CFormLayout createFormGrid() {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);

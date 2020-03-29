@@ -68,4 +68,6 @@ public class SystemProperty {
 	public static final String SYSTEM_LAYOUT_TYPE_TOP_MENU = "system.layout.type.top.menu";
 	public static final String SYSTEM_LAYOUT_TYPE_APP_LAYOUT = "system.layout.type.app.layout";
 	
+	public static final String SYSTEM_PANEL_BASIC_INFORMATION = "system.panel.basic.information";
+	
 }

@@ -7,6 +7,7 @@ import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.MenuProperty;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.MenuVO;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
@@ -46,6 +47,7 @@ public class MenuForm extends FormView {
 
 	private CFormLayout createFormGrid() {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);

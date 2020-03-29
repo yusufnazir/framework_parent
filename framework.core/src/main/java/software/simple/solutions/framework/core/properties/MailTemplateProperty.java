@@ -13,4 +13,6 @@ public class MailTemplateProperty {
 	public static final String SUBJECT = "entity.mail.template.subject";
 	public static final String MESSAGE = "entity.mail.template.message";
 	
+	public static final String PLACEHOLDERS = "entity.mail.template.placeholders";
+	
 }

@@ -7,6 +7,7 @@ import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RoleCategoryProperty;
 import software.simple.solutions.framework.core.properties.RoleProperty;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.RoleVO;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
@@ -42,6 +43,7 @@ public class RoleForm extends FormView {
 
 	private CFormLayout createFormGrid() {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);

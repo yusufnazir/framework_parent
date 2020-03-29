@@ -17,13 +17,13 @@ import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.LookUpField;
 
-public class CConfigurationLayout extends VerticalLayout {
+public class CVerticalLayout extends VerticalLayout {
 
-	private static final Logger logger = LogManager.getLogger(CConfigurationLayout.class);
+	private static final Logger logger = LogManager.getLogger(CVerticalLayout.class);
 
 	private static final long serialVersionUID = -3761260727823808576L;
 
-	public CConfigurationLayout() {
+	public CVerticalLayout() {
 		super();
 	}
 

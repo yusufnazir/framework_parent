@@ -2,6 +2,7 @@ package software.simple.solutions.framework.core.web.view.forms;
 
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.properties.ViewProperty;
 import software.simple.solutions.framework.core.valueobjects.ViewVO;
 import software.simple.solutions.framework.core.web.FormView;
@@ -34,6 +35,7 @@ public class ViewForm extends FormView {
 
 	private CFormLayout createFormGrid() {
 		Panel formCard = new Panel();
+		formCard.setHeaderKey(SystemProperty.SYSTEM_PANEL_BASIC_INFORMATION);
 		add(formCard);
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);
