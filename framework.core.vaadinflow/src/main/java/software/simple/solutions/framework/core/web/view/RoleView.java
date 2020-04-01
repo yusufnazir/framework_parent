@@ -1,6 +1,7 @@
 package software.simple.solutions.framework.core.web.view;
 
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
@@ -36,6 +37,19 @@ public class RoleView extends BasicTemplate<Role> {
 		addContainerProperty(Role::getCode, RoleProperty.CODE);
 		addContainerProperty(Role::getName, RoleProperty.NAME);
 		addContainerProperty(Role::getDescription, RoleProperty.DESCRIPTION);
+		addContainerProperty(new ValueProvider<Role, String>() {
+
+			private static final long serialVersionUID = 8532691664397807578L;
+
+			@Override
+			public String apply(Role role) {
+				if (role.getRoleCategory() == null) {
+					return null;
+				} else {
+					return role.getRoleCategory().getCaption();
+				}
+			}
+		}, RoleProperty.CATEGORY);
 	}
 
 	/**

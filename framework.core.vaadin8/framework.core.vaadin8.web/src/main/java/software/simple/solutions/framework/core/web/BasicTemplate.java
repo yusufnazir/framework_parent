@@ -1009,8 +1009,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				resetErrorContent();
-				ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.DELETE_HEADER,
-						SystemProperty.DELETE_CONFIRMATION_REQUEST, SystemProperty.CONFIRM, SystemProperty.CANCEL);
+				ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.CONFIRMATION_NEEDED_HEADER,
+						SystemProperty.CONFIRMATION_NEEDED_MESSAGE, SystemProperty.CONFIRM, SystemProperty.CANCEL);
 				confirmWindow.execute(new ConfirmationHandler() {
 
 					@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -1061,8 +1061,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				resetErrorContent();
-				ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.RESTORE_HEADER,
-						SystemProperty.RESTORE_CONFIRMATION_REQUEST, SystemProperty.CONFIRM, SystemProperty.CANCEL);
+				ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.CONFIRMATION_NEEDED_HEADER,
+						SystemProperty.CONFIRMATION_NEEDED_MESSAGE, SystemProperty.CONFIRM, SystemProperty.CANCEL);
 				confirmWindow.execute(new ConfirmationHandler() {
 
 					@Override

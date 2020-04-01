@@ -3,6 +3,7 @@ package software.simple.solutions.framework.core.valueobjects;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.pojo.StringInterval;
 import software.simple.solutions.framework.core.properties.PersonInformationProperty;
+import software.simple.solutions.framework.core.properties.ViewProperty;
 
 public class PersonInformationVO extends SuperVO {
 
@@ -19,11 +20,18 @@ public class PersonInformationVO extends SuperVO {
 	@FilterFieldProperty(fieldProperty = PersonInformationProperty.PERSON_LAST_NAME)
 	private StringInterval personLastNameInterval;
 
+	@FilterFieldProperty(fieldProperty = PersonInformationProperty.PERSON)
 	private Long personId;
+	
 	private String primaryEmail;
 	private String secondaryEmail;
 	private String primaryContactNumber;
 	private String secondaryContactNumber;
+	private String streetAddress;
+	private String city;
+	private String state;
+	private String postalCode;
+	private Long countryId;
 
 	public String getPrimaryEmail() {
 		return primaryEmail;
@@ -113,6 +121,46 @@ public class PersonInformationVO extends SuperVO {
 	@Override
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getStreetAddress() {
+		return streetAddress;
+	}
+
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public Long getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 }

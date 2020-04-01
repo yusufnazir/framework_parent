@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.Command;
 import com.vaadin.flow.server.StreamResource;
 
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
@@ -41,6 +42,17 @@ public class PersonView extends BasicTemplate<Person> {
 
 	private static final Logger logger = LogManager.getLogger(PersonView.class);
 
+	private UI ui;
+
+	// @formatter:off
+	private String styles = ".applayout-profile-image { "
+	        + "border-radius: 50%;"
+	        + "object-fit: cover;"
+	        + "border: 2px solid #ffc13f;"
+	        + " }"
+	        ;
+	// @formatter:on
+
 	public PersonView() {
 		setEntityClass(Person.class);
 		setServiceClass(PersonServiceFacade.class);
@@ -48,6 +60,7 @@ public class PersonView extends BasicTemplate<Person> {
 		setFormClass(PersonForm.class);
 		// setGridRowHeight(75);
 		setEditRoute(Routes.PERSON_EDIT);
+		ui = UI.getCurrent();
 	}
 
 	@Override
@@ -58,9 +71,10 @@ public class PersonView extends BasicTemplate<Person> {
 
 			@Override
 			public Image apply(Person source) {
-				Image image = new Image();
-				image.setHeight("75px");
-				image.setWidth("75px");
+				Image imageField = new Image("img/profile-pic-300px.jpg", "profile-image");
+				imageField.addClassName("applayout-profile-image");
+				imageField.setHeight("75px");
+				imageField.setWidth("75px");
 
 				Thread thread = new Thread(new Runnable() {
 
@@ -73,9 +87,19 @@ public class PersonView extends BasicTemplate<Person> {
 										ReferenceKey.PERSON, FileReference.USER_PROFILE_IMAGE);
 
 								if (entityFile != null) {
-									StreamResource resource = new StreamResource("profile-image.jpg",
+									StreamResource resource = new StreamResource(entityFile.getName(),
 											() -> new ByteArrayInputStream(entityFile.getFileObject()));
-									image.setSrc(resource);
+									if (resource != null) {
+										ui.access(new Command() {
+
+											private static final long serialVersionUID = 337925124788709903L;
+
+											@Override
+											public void execute() {
+												imageField.setSrc(resource);
+											}
+										});
+									}
 								}
 							}
 						} catch (FrameworkException e) {
@@ -84,8 +108,8 @@ public class PersonView extends BasicTemplate<Person> {
 					}
 				});
 				thread.start();
-
-				return image;
+				//
+				return imageField;
 			}
 		}, PersonProperty.IMAGE);
 		addContainerProperty(Person::getLastName, PersonProperty.LAST_NAME);

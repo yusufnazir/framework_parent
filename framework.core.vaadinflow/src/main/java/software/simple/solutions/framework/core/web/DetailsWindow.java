@@ -15,13 +15,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.server.Command;
 
-import de.codecamp.vaadin.components.messagedialog.MessageDialog;
-import de.codecamp.vaadin.components.messagedialog.MessageDialog.FluentButton;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.exceptions.ValidationException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.web.components.CMessageDialog;
+import software.simple.solutions.framework.core.web.components.CMessageDialog.FluentButton;
 
 public class DetailsWindow extends Dialog {
 
@@ -38,7 +38,7 @@ public class DetailsWindow extends Dialog {
 	}
 
 	public void init(Exception e) {
-		MessageDialog dialog = new MessageDialog();
+		CMessageDialog dialog = new CMessageDialog();
 		dialog.setWidth("400px");
 		Icon icon = VaadinIcon.WARNING.create();
 		icon.setColor("#FF0000");

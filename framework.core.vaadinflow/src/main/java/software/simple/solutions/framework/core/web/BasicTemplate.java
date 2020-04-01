@@ -24,9 +24,11 @@ import com.github.appreciated.card.Card;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
@@ -75,6 +77,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
+import software.simple.solutions.framework.core.web.components.Table;
 import software.simple.solutions.framework.core.web.routing.Routes;
 
 public abstract class BasicTemplate<T> extends AbstractBaseView implements GridTable, Build, BeforeEnterObserver {
@@ -183,8 +186,10 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 			try {
 				Object entity = superService.get(entityClass, NumberUtil.getLong(id));
-				setSelectedEntity(entity);
-				switchToForm(entity, false);
+				if (entity != null) {
+					setSelectedEntity(entity);
+					switchToForm(entity, false);
+				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				updateErrorContent(e);
@@ -249,10 +254,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 					Optional<T> optional = dataProvider.getItems().stream()
 							.filter(p -> ((MappedSuperClass) p).getId().compareTo(((MappedSuperClass) t).getId()) == 0)
 							.findFirst();
+					ArrayList<T> list = new ArrayList<T>(dataProvider.getItems());
 					if (optional.isPresent()) {
-						dataProvider.getItems().remove(optional.get());
+						list.remove(optional.get());
 					}
-					dataProvider.getItems().add((T) t);
+					list.add((T) t);
+					dataProvider = DataProvider.ofCollection(list);
 					dataProvider.refreshAll();
 				}
 			}
@@ -572,7 +579,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 		formView.setReferenceKeys(getReferenceKeys());
 		formView.setParentEntity(getParentEntity());
-		if (getParentReferenceKey() != null && !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
+		if (getParentReferenceKey() != null
+				&& !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
 			formView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
 			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
 			if (getSelectedEntity() != null) {
@@ -601,7 +609,8 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		}
 
 		readonlyFormView.setParentEntity(getParentEntity());
-		if (getParentReferenceKey() != null && !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
+		if (getParentReferenceKey() != null
+				&& !getParentReferenceKey().equalsIgnoreCase(ReferenceKey.PROPERTY_PER_LOCALE)) {
 			readonlyFormView.addToReferenceKey(getParentReferenceKey(), getSelectedEntity());
 			formView.addToReferenceKey(ReferenceKey.LANGUAGE_PROPERTY_REFERENCE_KEY, getParentReferenceKey());
 			if (getSelectedEntity() != null) {
@@ -833,20 +842,21 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			}
 		});
 
-		actionBar.setActionCancel(new ComponentEventListener<ClickEvent<Button>>() {
-
-			private static final long serialVersionUID = 3499030569856099283L;
-
-			@Override
-			public void onComponentEvent(ClickEvent<Button> event) {
-				try {
-					switchToForm(getSelectedEntity(), false);
-				} catch (FrameworkException e) {
-					logger.error(e.getMessage(), e);
-					updateErrorContent(e);
-				}
-			}
-		});
+		// actionBar.setActionCancel(new
+		// ComponentEventListener<ClickEvent<Button>>() {
+		//
+		// private static final long serialVersionUID = 3499030569856099283L;
+		//
+		// @Override
+		// public void onComponentEvent(ClickEvent<Button> event) {
+		// try {
+		// switchToForm(getSelectedEntity(), false);
+		// } catch (FrameworkException e) {
+		// logger.error(e.getMessage(), e);
+		// updateErrorContent(e);
+		// }
+		// }
+		// });
 
 		actionBar.setActionSave(new ComponentEventListener<ClickEvent<Button>>() {
 
@@ -938,6 +948,26 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 				//
 				// }
 				// });
+			}
+		});
+
+		actionBar.setActionInfo(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = -2864840063433847243L;
+
+			@Override
+			public void onComponentEvent(ClickEvent<Button> event) {
+				Dialog dialog = new Dialog();
+				ViewDetail viewDetail = getViewDetail();
+				Table table = new Table(2, 2);
+				dialog.add(table);
+				table.setWidth("100px");
+				table.add(new Text("viewClass:"), 0, 0);
+				table.add(new Text(viewDetail.getMenu().getView().getViewClassName()), 1, 0);
+				table.add(new Text("menu id:"), 0, 1);
+				table.add(new Text(viewDetail.getMenu().getId().toString()), 1, 1);
+				dialog.open();
+
 			}
 		});
 
@@ -1155,6 +1185,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 			resetAllSelectCheckBoxes();
 			clearToDeleteIds();
 			resetSubMenuItems();
+			getEntitySelectedObserver().onNext(new EntitySelect(null));
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
 			// updateErrorContent(e);
@@ -1276,9 +1307,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		setUpFormActions();
 		if (editable) {
 			actionBar.authorizeSave();
-			if (readonlyFormClass == null) {
-				actionBar.setCancelDisabled();
-			}
+			// if (readonlyFormClass == null) {
+			// actionBar.setCancelDisabled();
+			// }
 		} else {
 			actionBar.authorizeEdit();
 		}

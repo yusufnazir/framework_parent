@@ -4,17 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import liquibase.database.Database;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.CustomChangeException;
 import liquibase.exception.DatabaseException;
-import liquibase.exception.SetupException;
-import liquibase.exception.ValidationErrors;
-import liquibase.resource.ResourceAccessor;
 
 public class DataMenu extends CustomDataTaskChange {
 
-	private JdbcConnection connection;
 	private Long id;
 	private String code;
 	private String description;
@@ -26,82 +19,50 @@ public class DataMenu extends CustomDataTaskChange {
 	private String icon;
 
 	@Override
-	public String getConfirmationMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void handleUpdate() throws DatabaseException, SQLException {
 
-	@Override
-	public void setUp() throws SetupException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setFileOpener(ResourceAccessor resourceAccessor) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public ValidationErrors validate(Database database) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void execute(Database database) throws CustomChangeException {
-		connection = (JdbcConnection) database.getConnection();
-
-		try {
-			String query = "select id_ from menus_ where id_=?";
-			boolean exists = false;
-			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
-				setData(prepareStatement, 1, id);
-				try (ResultSet resultSet = prepareStatement.executeQuery()) {
-					while (resultSet.next()) {
-						exists = true;
-					}
+		String query = "select id_ from menus_ where id_=?";
+		boolean exists = false;
+		try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+			setData(prepareStatement, 1, id);
+			try (ResultSet resultSet = prepareStatement.executeQuery()) {
+				while (resultSet.next()) {
+					exists = true;
 				}
 			}
-
-			if (exists) {
-				String update = "update menus_ set code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=?, icon_=? where id_=?";
-				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
-					setData(prepareStatement, 1, code);
-					setData(prepareStatement, 2, description);
-					setData(prepareStatement, 3, name);
-					setData(prepareStatement, 4, viewId);
-					setData(prepareStatement, 5, index);
-					setData(prepareStatement, 6, parentMenuId);
-					setData(prepareStatement, 7, type);
-					setData(prepareStatement, 8, icon);
-					setData(prepareStatement, 9, id);
-					prepareStatement.executeUpdate();
-				}
-			} else {
-				String insert = "insert into menus_(id_,active_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_,icon_) "
-						+ "values(?,?,?,?,?,?,?,?,?,?)";
-				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
-					setData(prepareStatement, 1, id);
-					prepareStatement.setBoolean(2, true);
-					setData(prepareStatement, 3, code);
-					setData(prepareStatement, 4, description);
-					setData(prepareStatement, 5, name);
-					setData(prepareStatement, 6, viewId);
-					setData(prepareStatement, 7, index);
-					setData(prepareStatement, 8, parentMenuId);
-					setData(prepareStatement, 9, type);
-					setData(prepareStatement, 10, icon);
-					prepareStatement.executeUpdate();
-				}
-			}
-
-		} catch (DatabaseException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
+		if (exists) {
+			String update = "update menus_ set code_=?, description_=?,name_=?,view_id_=?,index_=?,parent_menu_id_=?,type_=?, icon_=? where id_=?";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+				setData(prepareStatement, 1, code);
+				setData(prepareStatement, 2, description);
+				setData(prepareStatement, 3, name);
+				setData(prepareStatement, 4, viewId);
+				setData(prepareStatement, 5, index);
+				setData(prepareStatement, 6, parentMenuId);
+				setData(prepareStatement, 7, type);
+				setData(prepareStatement, 8, icon);
+				setData(prepareStatement, 9, id);
+				prepareStatement.executeUpdate();
+			}
+		} else {
+			String insert = "insert into menus_(id_,active_,code_,description_,name_,view_id_,index_,parent_menu_id_,type_,icon_) "
+					+ "values(?,?,?,?,?,?,?,?,?,?)";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+				setData(prepareStatement, 1, id);
+				setData(prepareStatement, 2, true);
+				setData(prepareStatement, 3, code);
+				setData(prepareStatement, 4, description);
+				setData(prepareStatement, 5, name);
+				setData(prepareStatement, 6, viewId);
+				setData(prepareStatement, 7, index);
+				setData(prepareStatement, 8, parentMenuId);
+				setData(prepareStatement, 9, type);
+				setData(prepareStatement, 10, icon);
+				prepareStatement.executeUpdate();
+			}
+		}
 	}
 
 	public Long getId() {

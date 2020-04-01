@@ -57,7 +57,7 @@ public class GenderForm extends FormView {
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		nameFld.setRequired();
+		nameFld.setRequiredIndicatorVisible(true);
 	}
 
 	@Override

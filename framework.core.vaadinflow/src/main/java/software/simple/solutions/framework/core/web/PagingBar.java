@@ -41,6 +41,7 @@ public class PagingBar extends HorizontalLayout {
 
 	public PagingBar() {
 		itemsPerPageSelect = new ComboBox();
+		itemsPerPageSelect.getElement().setAttribute("theme", "small");
 		List<Integer> items = new ArrayList<Integer>();
 		items.add(5);
 		items.add(10);

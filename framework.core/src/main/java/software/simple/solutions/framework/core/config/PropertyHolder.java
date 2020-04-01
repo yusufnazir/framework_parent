@@ -90,10 +90,17 @@ public class PropertyHolder {
 		}
 	}
 
-	public static void updateKeyValue(String reference, String locale, String key, String value) {
-		Properties properties = propertyLocalized.get(locale);
+	public static void updateKeyValue(String referenceKey, String locale, String referenceId, String value) {
+		if (!localization.containsKey(referenceKey)) {
+			localization.put(referenceKey, new HashMap<String, Properties>());
+		}
+		Map<String, Properties> mapByReference = localization.get(referenceKey);
+		if (!mapByReference.containsKey(locale.toLowerCase())) {
+			mapByReference.put(locale.toLowerCase(), new Properties());
+		}
+		Properties properties = mapByReference.get(locale.toLowerCase());
 		if (properties != null) {
-			properties.setProperty(key, value);
+			properties.setProperty(referenceId, value);
 		}
 	}
 
@@ -101,9 +108,16 @@ public class PropertyHolder {
 		if (propertyPerLocale != null) {
 			String locale = propertyPerLocale.getLanguage().getCode();
 			if (locale != null) {
-				Map<String, Properties> mapByreference = localization.getOrDefault(referenceKey,
-						new HashMap<String, Properties>());
-				Properties properties = mapByreference.get(locale.toLowerCase());
+				if (!localization.containsKey(referenceKey)) {
+					localization.put(referenceKey, new HashMap<String, Properties>());
+				}
+				Map<String, Properties> mapByReference = localization.get(referenceKey);
+
+				if (!mapByReference.containsKey(locale.toLowerCase())) {
+					mapByReference.put(locale.toLowerCase(), new Properties());
+				}
+
+				Properties properties = mapByReference.get(locale.toLowerCase());
 				if (properties != null) {
 					String value = propertyPerLocale.getValue();
 					properties.setProperty(propertyKey, value);

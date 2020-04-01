@@ -20,8 +20,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.StartedEvent;
@@ -32,7 +30,6 @@ import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 
-import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.select.LayoutSelect;
 import software.simple.solutions.framework.core.components.select.RoleSelect;
@@ -60,9 +57,10 @@ import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
 import software.simple.solutions.framework.core.web.components.CComboBox;
-import software.simple.solutions.framework.core.web.components.CVerticalLayout;
 import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.CVerticalLayout;
+import software.simple.solutions.framework.core.web.components.ConfirmationDialog;
 import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 
 @CxodeConfigurationComponent(order = 1, captionKey = ConfigurationProperty.APPLICATION_CONFIGURATION)
@@ -279,40 +277,30 @@ public class SystemConfiguration extends CVerticalLayout {
 		deleteImgBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		deleteImgBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
+			private static final long serialVersionUID = 2924783488205387596L;
+
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
 				if (applicationLogoConfiguration != null) {
-					MessageDialog confirmDialog = new MessageDialog();
-					confirmDialog.setWidth("400px");
-					Icon icon = VaadinIcon.WARNING.create();
-					icon.setColor("#FF0000");
-					confirmDialog.setTitle(PropertyResolver.getPropertyValueByLocale(SystemProperty.DELETE_HEADER,
-							UI.getCurrent().getLocale()), icon);
-					confirmDialog.setMessage(PropertyResolver.getPropertyValueByLocale(
-							SystemProperty.DELETE_CONFIRMATION_REQUEST, UI.getCurrent().getLocale()));
-					confirmDialog.addButton()
-							.text(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_BUTTON_OK,
-									ui.getLocale()))
-							.primary().onClick(new ComponentEventListener<ClickEvent<Button>>() {
+					ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+					confirmationDialog.buildConfirmation(new ComponentEventListener<ClickEvent<Button>>() {
 
-								@Override
-								public void onComponentEvent(ClickEvent<Button> event) {
-									try {
-										FileServiceFacade.get(UI.getCurrent()).deleteFileByEntityAndType(
-												applicationLogoConfiguration.getId().toString(),
-												Configuration.class.getName(), ConfigurationProperty.APPLICATION_LOGO);
-										applicationLogoImage.setSrc("../cxode/img/your-logo-here.png");
-										SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
-										systemObserver.getApplicationLogoChangeObserver().onNext(true);
-									} catch (FrameworkException e) {
-										logger.error(e.getMessage(), e);
-									}
-								}
-							}).closeOnClick();
-					confirmDialog
-							.addButtonToLeft().text(PropertyResolver
-									.getPropertyValueByLocale(SystemProperty.SYSTEM_BUTTON_CANCEL, ui.getLocale()))
-							.tertiary().closeOnClick();
+						private static final long serialVersionUID = 5401556180015329749L;
+
+						@Override
+						public void onComponentEvent(ClickEvent<Button> event) {
+							try {
+								FileServiceFacade.get(UI.getCurrent()).deleteFileByEntityAndType(
+										applicationLogoConfiguration.getId().toString(), Configuration.class.getName(),
+										ConfigurationProperty.APPLICATION_LOGO);
+								applicationLogoImage.setSrc("../cxode/img/your-logo-here.png");
+								SystemObserver systemObserver = ContextProvider.getBean(SystemObserver.class);
+								systemObserver.getApplicationLogoChangeObserver().onNext(true);
+							} catch (FrameworkException e) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+					});
 				}
 			}
 		});

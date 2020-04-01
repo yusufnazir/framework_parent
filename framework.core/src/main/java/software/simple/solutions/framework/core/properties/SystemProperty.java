@@ -17,6 +17,7 @@ public class SystemProperty {
 	public static final String SYSTEM_BUTTON_REPORTS = "system.button.reports";
 	public static final String SYSTEM_BUTTON_EXPORT= "system.button.export";
 	public static final String SYSTEM_BUTTON_OK= "system.button.ok";
+	public static final String SYSTEM_BUTTON_RESET= "system.button.reset";
 	public static final String SYSTEM_RESET_PASSWORD = "system.reset.password";
 	public static final String SYSTEM_BACK_TO_RESULTS = "system.back.to.results";
 	public static final String SYSTEM_MANAGE_PASSWORD = "system.manage.password";
@@ -24,10 +25,6 @@ public class SystemProperty {
 	public static final String TOTAL_RECORDS_FOUND = "system.search.count.found";
 	public static final String NO_RECORD_SELECTED = "system.no.records.selected";
 	public static final String TOTAL_RECORDS_DELETED = "system.action.delete.count";
-	public static final String DELETE_HEADER = "system.action.delete.header";
-	public static final String RESTORE_HEADER = "system.action.restore.header";
-	public static final String DELETE_CONFIRMATION_REQUEST = "system.action.delete.confirmation.request";
-	public static final String RESTORE_CONFIRMATION_REQUEST = "system.action.restore.confirmation.request";
 	public static final String CONFIRM = "system.action.confirm";
 	public static final String CANCEL = "system.action.cancel";
 	public static final String SEARCH = "system.action.search";
@@ -38,6 +35,8 @@ public class SystemProperty {
 	public static final String UNSAVED_CHANGES_CONFIRMATION_REQUEST = "system.notification.unsaved.changes.request";
 	public static final String SYSTEM_MENU_NOT_AUTHORIZED = "system.menu.not.authorized";
 	public static final String SYSTEM_MENU_NOT_AUTHORIZED_MESSAGE = "system.menu.not.authorized.message";
+	public static final String CONFIRMATION_NEEDED_HEADER = "system.action.confirmation.needed.header";
+	public static final String CONFIRMATION_NEEDED_MESSAGE = "system.action.confirmation.needed.message";
 
 	public static final String LOGIN_HEADER = "system.login.header";
 	public static final String LOGIN_USERNAME = "system.login.username";

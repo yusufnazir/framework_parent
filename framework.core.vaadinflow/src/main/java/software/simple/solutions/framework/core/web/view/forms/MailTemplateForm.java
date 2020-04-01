@@ -1,11 +1,14 @@
 package software.simple.solutions.framework.core.web.view.forms;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.vaadin.pekka.WysiwygE;
 
+import com.vaadin.flow.component.HasValue.ValueChangeEvent;
+import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.html.Label;
@@ -13,10 +16,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
+import software.simple.solutions.framework.core.components.select.LanguageSelect;
 import software.simple.solutions.framework.core.config.MailTemplateGroup;
 import software.simple.solutions.framework.core.constants.MailTemplatePlaceholderItem;
+import software.simple.solutions.framework.core.constants.MailTemplateReference;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.MailTemplate;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.MailTemplateProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -37,15 +44,13 @@ public class MailTemplateForm extends FormView {
 	private CFormLayout formGrid;
 	private CTextField nameFld;
 	private CTextArea descriptionFld;
-
 	private CTextField subjectFld;
 	private WysiwygE messageFld;
-
+	private LanguageSelect languageFld;
 	private Accordion accordion;
+	private HorizontalLayout horizontalLayout;
 
 	private MailTemplate mailTemplate;
-
-	private HorizontalLayout horizontalLayout;
 
 	public MailTemplateForm() {
 		super();
@@ -66,6 +71,8 @@ public class MailTemplateForm extends FormView {
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);
 		formCard.setMaxWidth("600px");
+
+		languageFld = formGrid.add(LanguageSelect.class, MailTemplateProperty.LANGUAGE);
 
 		nameFld = formGrid.add(CTextField.class, MailTemplateProperty.NAME);
 
@@ -130,9 +137,41 @@ public class MailTemplateForm extends FormView {
 		mailTemplate = (MailTemplate) entity;
 		nameFld.setValue(mailTemplate.getName());
 		descriptionFld.setValue(mailTemplate.getDescription());
-
 		subjectFld.setValue(mailTemplate.getSubject());
 		messageFld.setValue(mailTemplate.getMessage());
+		languageFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<ComboItem>>() {
+
+			private static final long serialVersionUID = 7157444484765652218L;
+
+			@Override
+			public void valueChanged(ValueChangeEvent<ComboItem> event) {
+				ComboItem comboItem = languageFld.getValue();
+				if (comboItem == null || comboItem.getCode().equalsIgnoreCase(Locale.ENGLISH.getISO3Language())) {
+					nameFld.setValue(mailTemplate.getName());
+					descriptionFld.setValue(mailTemplate.getDescription());
+					subjectFld.setValue(mailTemplate.getSubject());
+					messageFld.setValue(mailTemplate.getMessage());
+				} else {
+					String languageCode = comboItem.getCode();
+					nameFld.setValue(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+							MailTemplateReference.NAME + mailTemplate.getId(), new Locale(languageCode), null, null));
+					nameFld.setPlaceholder(mailTemplate.getName());
+					descriptionFld.setValue(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+							MailTemplateReference.DESCRIPTION + mailTemplate.getId(), new Locale(languageCode), null,
+							null));
+					descriptionFld.setPlaceholder(mailTemplate.getDescription());
+					subjectFld.setValue(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+							MailTemplateReference.SUBJECT + mailTemplate.getId(), new Locale(languageCode), null,
+							null));
+					subjectFld.setPlaceholder(mailTemplate.getSubject());
+					String propertyValueByLocale = PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+							MailTemplateReference.MESSAGE + mailTemplate.getId(), new Locale(languageCode), null, null);
+					messageFld.setValue(propertyValueByLocale == null ? "" : propertyValueByLocale);
+					messageFld.setPlaceholder(mailTemplate.getMessage());
+				}
+			}
+		});
+		languageFld.setValue(UI.getCurrent().getLocale().getISO3Language().toLowerCase());
 
 		createTabs();
 
@@ -152,6 +191,8 @@ public class MailTemplateForm extends FormView {
 		vo.setDescription(descriptionFld.getValue());
 		vo.setSubject(subjectFld.getValue());
 		vo.setMessage(messageFld.getValue());
+		vo.setLanguageCode(languageFld.getValue().getCode());
+		vo.setLanguageId(languageFld.getLongValue());
 
 		return vo;
 	}

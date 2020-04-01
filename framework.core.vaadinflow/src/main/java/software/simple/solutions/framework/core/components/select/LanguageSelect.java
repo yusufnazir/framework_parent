@@ -1,6 +1,10 @@
 package software.simple.solutions.framework.core.components.select;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.vaadin.flow.data.provider.Query;
 
 import software.simple.solutions.framework.core.entities.Language;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -17,6 +21,16 @@ public class LanguageSelect extends CComboBox {
 		ILanguageService languageService = ContextProvider.getBean(ILanguageService.class);
 		List<ComboItem> items = languageService.getForListing(Language.class, true);
 		setItems(items);
+	}
+	
+	public void setValue(String type) {
+		if (type != null) {
+			Optional<ComboItem> optional = getDataProvider().fetch(new Query<>()).collect(Collectors.toList()).stream()
+					.filter(p -> p.getCode().equalsIgnoreCase(type)).findFirst();
+			if (optional.isPresent()) {
+				setValue(optional.get());
+			}
+		}
 	}
 
 }

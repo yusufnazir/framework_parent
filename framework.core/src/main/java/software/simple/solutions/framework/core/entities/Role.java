@@ -55,7 +55,7 @@ public class Role extends MappedSuperClass {
 	@Column(name = CxodeTables.ROLE.COLUMNS.ACTIVE)
 	private Boolean active;
 
-	@FilterFieldProperty(fieldProperty = RoleProperty.ACTIVE)
+	@FilterFieldProperty(fieldProperty = RoleProperty.CATEGORY)
 	@ManyToOne
 	@JoinColumn(name = CxodeTables.ROLE.COLUMNS.ROLE_CATEGORY_ID_)
 	private RoleCategory roleCategory;

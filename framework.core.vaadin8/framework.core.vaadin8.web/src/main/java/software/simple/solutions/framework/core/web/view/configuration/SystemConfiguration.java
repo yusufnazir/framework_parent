@@ -310,8 +310,8 @@ public class SystemConfiguration extends CGridLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (applicationLogoConfiguration != null) {
-					ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.DELETE_HEADER,
-							SystemProperty.DELETE_CONFIRMATION_REQUEST, SystemProperty.CONFIRM, SystemProperty.CANCEL);
+					ConfirmWindow confirmWindow = new ConfirmWindow(SystemProperty.CONFIRMATION_NEEDED_HEADER,
+							SystemProperty.CONFIRMATION_NEEDED_MESSAGE, SystemProperty.CONFIRM, SystemProperty.CANCEL);
 					confirmWindow.execute(new ConfirmationHandler() {
 
 						@Override

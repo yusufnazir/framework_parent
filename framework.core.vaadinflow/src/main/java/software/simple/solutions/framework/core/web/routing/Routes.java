@@ -40,4 +40,13 @@ public class Routes {
 	
 	public static final String GENDER = "gender_template";
 	public static final String GENDER_EDIT = "gender_edit";
+	
+	public static final String PERSON_INFORMATION = "person_information";
+	public static final String PERSON_INFORMATION_EDIT = "person_information_edit";
+	
+	public static final String PERSON_EMERGENCY_CONTACT = "person_emergency_contact";
+	public static final String PERSON_EMERGENCY_CONTACT_EDIT = "person_emergency_contact_edit";
+	
+	public static final String RELATION_TYPE = "relation_type_template";
+	public static final String RELATION_TYPE_EDIT = "relation_type_edit";
 }

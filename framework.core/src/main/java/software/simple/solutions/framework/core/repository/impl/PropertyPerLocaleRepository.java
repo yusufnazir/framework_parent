@@ -28,4 +28,19 @@ public class PropertyPerLocaleRepository extends GenericRepository implements IP
 		return createListQuery(query, paramMap);
 	}
 
+	@Override
+	public PropertyPerLocale getByUniqueKeys(Long languageId, String referenceKey, String referenceId)
+			throws FrameworkException {
+		// @formatter:off
+		String query ="from PropertyPerLocale where language.id=:languageId "
+				+ "and referenceKey=:referenceKey "
+				+ "and referenceId=:referenceId";
+		// @formatter:on
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("languageId", languageId);
+		paramMap.put("referenceKey", referenceKey);
+		paramMap.put("referenceId", referenceId);
+		return getByQuery(query, paramMap);
+	}
+
 }

@@ -15,7 +15,6 @@ import software.simple.solutions.framework.core.components.filter.CDiscreetNumbe
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.util.PropertyResolver;
-import software.simple.solutions.framework.core.web.LookUpField;
 
 public class CVerticalLayout extends VerticalLayout {
 

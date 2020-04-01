@@ -56,7 +56,6 @@ public class RelationTypeService extends SuperService implements IRelationTypeSe
 		relationType.setCode(vo.getCode().toUpperCase());
 		relationType.setName(vo.getName());
 		relationType.setActive(vo.getActive());
-		relationType.setKey(vo.getKey());
 
 		return (T) saveOrUpdate(relationType, vo.isNew());
 	}

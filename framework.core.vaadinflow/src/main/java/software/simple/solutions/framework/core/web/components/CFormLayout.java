@@ -7,7 +7,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
@@ -16,7 +15,6 @@ import software.simple.solutions.framework.core.components.filter.CDiscreetNumbe
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.util.PropertyResolver;
-import software.simple.solutions.framework.core.web.LookUpField;
 
 public class CFormLayout extends FormLayout {
 
@@ -71,6 +69,9 @@ public class CFormLayout extends FormLayout {
 				} else if (component instanceof CButton) {
 					((CButton) component)
 							.setText(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+				} else if (component instanceof EditEmailField) {
+					((EditEmailField) component)
+							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 				}
 			}
 			// setUpComponent(component);

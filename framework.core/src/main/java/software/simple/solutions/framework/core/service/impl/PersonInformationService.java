@@ -8,7 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.entities.PersonInformation;
+import software.simple.solutions.framework.core.exceptions.Arg;
+import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.PersonEmergencyContactProperty;
+import software.simple.solutions.framework.core.properties.PersonInformationProperty;
+import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IPersonInformationRepository;
 import software.simple.solutions.framework.core.service.IPersonInformationService;
 import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
@@ -19,6 +24,7 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = IPersonInformationRepository.class)
 public class PersonInformationService extends SuperService implements IPersonInformationService {
 
+	private static final long serialVersionUID = 3245860402021694519L;
 	@Autowired
 	private IPersonInformationRepository personInformationRepository;
 
@@ -30,6 +36,12 @@ public class PersonInformationService extends SuperService implements IPersonInf
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
 		PersonInformationVO vo = (PersonInformationVO) valueObject;
+		
+		if (vo.getPersonId() == null) {
+			throw ExceptionBuilder.VALIDATION_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED, vo.getLocale(),
+					Arg.build().key(PersonInformationProperty.PERSON));
+		}
+		
 		PersonInformation personInformation = null;
 		if (vo.isNew()) {
 			personInformation = new PersonInformation();

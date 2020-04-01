@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.pojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PagingResult<T> {
@@ -7,6 +8,11 @@ public class PagingResult<T> {
 	private List<T> result;
 	private Long count;
 	private PagingSetting pagingSetting;
+
+	public PagingResult() {
+		super();
+		result = new ArrayList<T>();
+	}
 
 	public List<T> getResult() {
 		return result;

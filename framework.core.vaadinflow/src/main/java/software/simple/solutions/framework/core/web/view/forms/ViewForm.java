@@ -69,8 +69,8 @@ public class ViewForm extends FormView {
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		codeFld.setRequired();
-		nameFld.setRequired();
+		codeFld.setRequiredIndicatorVisible(true);
+		nameFld.setRequiredIndicatorVisible(true);
 		classNameFld.setRequired();
 		activeFld.setValue(true);
 	}

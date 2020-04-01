@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.vaadin.flow.component.UI;
 
+import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Gender;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
@@ -21,8 +22,8 @@ public class GenderSelect extends CComboBox {
 		List<ComboItem> items;
 		try {
 			items = genderService.getForListing(Gender.class, true);
-			items.stream().forEach(p -> p
-					.setName(PropertyResolver.getPropertyValueByLocale(p.getName(), UI.getCurrent().getLocale())));
+			items.stream().forEach(p -> p.setName(PropertyResolver.getPropertyValueByLocale(ReferenceKey.GENDER,
+					p.getId().toString(), UI.getCurrent().getLocale(), null, p.getName())));
 			setItems(items);
 		} catch (FrameworkException e) {
 			// new MessageWindowHandler(e);

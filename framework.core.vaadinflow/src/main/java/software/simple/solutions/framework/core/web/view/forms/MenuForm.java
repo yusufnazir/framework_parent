@@ -54,7 +54,7 @@ public class MenuForm extends FormView {
 		formCard.setMaxWidth("400px");
 
 		codeFld = formGrid.add(CTextField.class, MenuProperty.CODE);
-		codeFld.setRequired();
+		codeFld.setRequiredIndicatorVisible(true);
 
 		nameFld = formGrid.add(CTextField.class, MenuProperty.NAME);
 
@@ -83,7 +83,7 @@ public class MenuForm extends FormView {
 		indexFld.setLongValue(menu.getIndex());
 		typeFld.setLongValue(menu.getType());
 
-		nameFld.setRequired();
+		nameFld.setRequiredIndicatorVisible(true);
 		codeFld.setReadOnly(true);
 
 		View view = getIfParentEntity(View.class);
@@ -100,8 +100,8 @@ public class MenuForm extends FormView {
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		codeFld.setRequired();
-		nameFld.setRequired();
+		codeFld.setRequiredIndicatorVisible(true);
+		nameFld.setRequiredIndicatorVisible(true);
 		activeFld.setValue(true);
 
 		View view = getIfParentEntity(View.class);

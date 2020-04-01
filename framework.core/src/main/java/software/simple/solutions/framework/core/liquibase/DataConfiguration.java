@@ -4,102 +4,54 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import liquibase.database.Database;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.CustomChangeException;
 import liquibase.exception.DatabaseException;
-import liquibase.exception.SetupException;
-import liquibase.exception.ValidationErrors;
-import liquibase.resource.ResourceAccessor;
 import software.simple.solutions.framework.core.constants.CxodeTables;
 
 public class DataConfiguration extends CustomDataTaskChange {
 
-	private JdbcConnection connection;
 	private Long id;
 	private String code;
 	private String name;
 	private String value;
 
 	@Override
-	public String getConfirmationMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void handleUpdate() throws DatabaseException, SQLException {
+		boolean exists = false;
+		String query = "select id_ from " + CxodeTables.CONFIGURATION.NAME + " where "
+				+ CxodeTables.CONFIGURATION.COLUMNS.ID + "=?";
+		try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
+			setData(prepareStatement, 1, id);
+			try (ResultSet resultSet = prepareStatement.executeQuery()) {
 
-	@Override
-	public void setUp() throws SetupException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setFileOpener(ResourceAccessor resourceAccessor) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public ValidationErrors validate(Database database) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void execute(Database database) throws CustomChangeException {
-		connection = (JdbcConnection) database.getConnection();
-
-		try {
-			boolean exists = false;
-			String query = "select id_ from " + CxodeTables.CONFIGURATION.NAME + " where "
-					+ CxodeTables.CONFIGURATION.COLUMNS.ID + "=?";
-			try (PreparedStatement prepareStatement = connection.prepareStatement(query)) {
-				setData(prepareStatement, 1, id);
-				try (ResultSet resultSet = prepareStatement.executeQuery()) {
-
-					while (resultSet.next()) {
-						exists = true;
-					}
+				while (resultSet.next()) {
+					exists = true;
 				}
 			}
-
-			if (exists) {
-				String update = "update " + CxodeTables.CONFIGURATION.NAME + " set "
-						+ CxodeTables.CONFIGURATION.COLUMNS.CODE + "=?, " + CxodeTables.CONFIGURATION.COLUMNS.NAME
-						+ "=?," + CxodeTables.CONFIGURATION.COLUMNS.VALUE + "=? where id_=?";
-				try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
-					setData(prepareStatement, 1, code);
-					setData(prepareStatement, 2, name);
-					setData(prepareStatement, 3, value);
-					setData(prepareStatement, 4, id);
-					prepareStatement.executeUpdate();
-				}
-			} else {
-				String insert = "insert into " + CxodeTables.CONFIGURATION.NAME + "("
-						+ CxodeTables.CONFIGURATION.COLUMNS.ID + "," + CxodeTables.CONFIGURATION.COLUMNS.ACTIVE
-						+ ",code_,name_,value_) " + "values(?,?,?,?,?)";
-				try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
-					setData(prepareStatement, 1, id);
-					prepareStatement.setBoolean(2, true);
-					setData(prepareStatement, 3, code);
-					setData(prepareStatement, 4, name);
-					setData(prepareStatement, 5, value);
-					prepareStatement.executeUpdate();
-				}
-			}
-
-		} catch (DatabaseException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-	}
 
-	public JdbcConnection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(JdbcConnection connection) {
-		this.connection = connection;
+		if (exists) {
+			String update = "update " + CxodeTables.CONFIGURATION.NAME + " set "
+					+ CxodeTables.CONFIGURATION.COLUMNS.CODE + "=?, " + CxodeTables.CONFIGURATION.COLUMNS.NAME + "=?,"
+					+ CxodeTables.CONFIGURATION.COLUMNS.VALUE + "=? where id_=?";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(update)) {
+				setData(prepareStatement, 1, code);
+				setData(prepareStatement, 2, name);
+				setData(prepareStatement, 3, value);
+				setData(prepareStatement, 4, id);
+				prepareStatement.executeUpdate();
+			}
+		} else {
+			String insert = "insert into " + CxodeTables.CONFIGURATION.NAME + "(" + CxodeTables.CONFIGURATION.COLUMNS.ID
+					+ "," + CxodeTables.CONFIGURATION.COLUMNS.ACTIVE + ",code_,name_,value_) " + "values(?,?,?,?,?)";
+			try (PreparedStatement prepareStatement = connection.prepareStatement(insert)) {
+				setData(prepareStatement, 1, id);
+				setData(prepareStatement, 2, true);
+				setData(prepareStatement, 3, code);
+				setData(prepareStatement, 4, name);
+				setData(prepareStatement, 5, value);
+				prepareStatement.executeUpdate();
+			}
+		}
 	}
 
 	public Long getId() {

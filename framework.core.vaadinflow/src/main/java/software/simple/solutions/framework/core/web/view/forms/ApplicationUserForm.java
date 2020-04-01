@@ -42,10 +42,13 @@ import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.components.CCheckBox;
+import software.simple.solutions.framework.core.web.components.CEmailField;
 import software.simple.solutions.framework.core.web.components.CFormLayout;
-import software.simple.solutions.framework.core.web.components.CPasswordField;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.ConfirmationDialog;
+import software.simple.solutions.framework.core.web.components.EditEmailField;
+import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
@@ -66,14 +69,13 @@ public class ApplicationUserForm extends FormView {
 	private CTextField usernameFld;
 	private CCheckBox activeFld;
 	private CCheckBox forceChangePasswordFld;
-	private CCheckBox changePasswordFld;
-	private CButton managePasswordBtn;
-	private CTextField emailFld;
+	private CButton resetPasswordBtn;
+	private CEmailField emailFld;
 
 	private Panel passwordCard;
 	private CFormLayout passwordLayout;
-	private CPasswordField passwordFld;
-	private CPasswordField confirmPasswordFld;
+	private CTextField passwordFld;
+	// private CPasswordField confirmPasswordFld;
 
 	private CTextField lastNameFld;
 	private CTextField firstNameFld;
@@ -159,15 +161,18 @@ public class ApplicationUserForm extends FormView {
 		userInfoCard.add(userInfoLayout);
 
 		personLookUpFld = userInfoLayout.add(PersonLookUpField.class, PersonProperty.PERSON);
+		personLookUpFld.setRequiredIndicatorVisible(true);
 		// userInfoLayout.setComponentAlignment(personLookUpFld,
 		// Alignment.BOTTOM_LEFT);
 
 		// usernameFld
 		usernameFld = userInfoLayout.add(CTextField.class, ApplicationUserProperty.USERNAME);
+		usernameFld.setRequiredIndicatorVisible(true);
 		// usernameFld.setWidth("250px");
 
 		// emailFld
-		emailFld = userInfoLayout.add(CTextField.class, ApplicationUserProperty.EMAIL);
+		emailFld = userInfoLayout.add(CEmailField.class, ApplicationUserProperty.EMAIL);
+		emailFld.setReadOnly(true);
 		// emailFld.setWidth("250px");
 
 		// isActiveChkBox
@@ -180,23 +185,18 @@ public class ApplicationUserForm extends FormView {
 		passwordCard = new Panel();
 		passwordCard.setHeaderKey(ApplicationUserProperty.PASSWORD_LAYOUT);
 
-		// passwordCard.setMaxWidth("400px");
 		passwordLayout = new CFormLayout();
 		passwordLayout.setMaxWidth("400px");
 		passwordCard.add(passwordLayout);
 
 		forceChangePasswordFld = passwordLayout.add(CCheckBox.class, ApplicationUserProperty.FORCE_CHANGE_PASSWORD);
 
-		changePasswordFld = passwordLayout.add(CCheckBox.class, SystemProperty.SYSTEM_RESET_PASSWORD);
-
-		passwordFld = passwordLayout.add(CPasswordField.class, ApplicationUserProperty.PASSWORD);
-
-		confirmPasswordFld = passwordLayout.add(CPasswordField.class, ApplicationUserProperty.PASSWORD_CONFIRM);
+		passwordFld = passwordLayout.add(CTextField.class, ApplicationUserProperty.PASSWORD);
 
 		// managePasswordBtn
-		managePasswordBtn = new CButton();
-		passwordLayout.add(managePasswordBtn);
-		managePasswordBtn.setText(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_RESET_PASSWORD,
+		resetPasswordBtn = new CButton();
+		passwordLayout.add(resetPasswordBtn);
+		resetPasswordBtn.setText(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_RESET_PASSWORD,
 				UI.getCurrent().getLocale()));
 
 		return passwordCard;
@@ -273,8 +273,8 @@ public class ApplicationUserForm extends FormView {
 		activeFld.setValue(true);
 		forceChangePasswordFld.setValue(true);
 		passwordFld.setVisible(true);
-		confirmPasswordFld.setVisible(true);
-		managePasswordBtn.setVisible(false);
+		passwordFld.setRequiredIndicatorVisible(true);
+		resetPasswordBtn.setVisible(false);
 
 		useLdapFld.addClickListener(new ComponentEventListener<ClickEvent<Checkbox>>() {
 
@@ -306,26 +306,40 @@ public class ApplicationUserForm extends FormView {
 		personLookUpFld.setValue(person);
 
 		passwordFld.setVisible(false);
-		confirmPasswordFld.setVisible(false);
 
-		managePasswordBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+		String email = PersonInformationServiceFacade.get(UI.getCurrent())
+				.getEmail(person == null ? null : person.getId());
+		emailFld.setValue(email);
+
+		boolean smtpEnabled = ConfigurationServiceFacade.get(UI.getCurrent()).isSmtpEnabled();
+		if (!smtpEnabled || StringUtils.isBlank(email)) {
+			passwordFld.setVisible(true);
+		}
+
+		resetPasswordBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
 			private static final long serialVersionUID = 5305893476437089439L;
 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
-				String email = emailFld.getValue();
-				try {
-					boolean smtpEnabled = ConfigurationServiceFacade.get(UI.getCurrent()).isSmtpEnabled();
-					if (!smtpEnabled || StringUtils.isBlank(email)) {
-						// new ResetPasswordLayout(applicationUser.getId());
-					} else {
-						resetPasswordAndSendMail();
+				ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+				confirmationDialog.buildConfirmation(new ComponentEventListener<ClickEvent<Button>>() {
+
+					private static final long serialVersionUID = -6794951712583905213L;
+
+					@Override
+					public void onComponentEvent(ClickEvent<Button> event) {
+						if (!smtpEnabled || StringUtils.isBlank(email)) {
+							// new ResetPasswordLayout(applicationUser.getId());
+						} else {
+							try {
+								resetPasswordAndSendMail();
+							} catch (FrameworkException e) {
+								e.printStackTrace();
+							}
+						}
 					}
-				} catch (FrameworkException e) {
-					logger.error(e.getMessage(), e);
-					// new MessageWindowHandler(e);
-				}
+				});
 			}
 		});
 
@@ -352,7 +366,7 @@ public class ApplicationUserForm extends FormView {
 		applicationUser = ApplicationUserServiceFacade.get(UI.getCurrent()).resetUserPassword(applicationUser.getId(),
 				sessionHolder.getApplicationUser().getId());
 		setFormValues(applicationUser);
-		// NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
+		NotificationBuilder.buildSuccess(SystemProperty.UPDATE_SUCCESSFULL);
 	}
 
 	private void setPersonInfo() throws FrameworkException {
@@ -387,7 +401,7 @@ public class ApplicationUserForm extends FormView {
 		vo.setUseLdap(useLdapFld.getValue());
 		if (applicationUser == null) {
 			vo.setPassword(passwordFld.getValue());
-			vo.setPasswordConfirm(confirmPasswordFld.getValue());
+			// vo.setPasswordConfirm(confirmPasswordFld.getValue());
 		}
 		return vo;
 	}

@@ -32,14 +32,27 @@ public class PersonInformation extends MappedSuperClass {
 	private static final long serialVersionUID = -1557214385825706822L;
 
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
 
-	@FilterFieldProperties(fieldProperties = {
-			@FilterFieldProperty(fieldProperty = PersonInformationProperty.PERSON_FIRST_NAME, referencedFieldProperty = PersonProperty.FIRST_NAME),
-			@FilterFieldProperty(fieldProperty = PersonInformationProperty.PERSON_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
+	@FilterFieldProperties(
+			fieldProperties = {
+					@FilterFieldProperty(
+							fieldProperty = PersonInformationProperty.PERSON_FIRST_NAME,
+							referencedFieldProperty = PersonProperty.FIRST_NAME),
+					@FilterFieldProperty(
+							fieldProperty = PersonInformationProperty.PERSON_LAST_NAME,
+							referencedFieldProperty = PersonProperty.LAST_NAME),
+					@FilterFieldProperty(
+							fieldProperty = PersonInformationProperty.PERSON,
+							referencedFieldProperty = PersonProperty.ID) })
 	@ManyToOne
 	@JoinColumn(name = CxodeTables.PERSON_INFORMATION.COLUMNS.PERSON_ID)
 	private Person person;
@@ -57,19 +70,19 @@ public class PersonInformation extends MappedSuperClass {
 
 	@Column(name = CxodeTables.PERSON_INFORMATION.COLUMNS.SECONDARY_CONTACT_NUMBER)
 	private String secondaryContactNumber;
-	
+
 	@Column(name = CxodeTables.PERSON_INFORMATION.COLUMNS.STREET_ADDRESS)
 	private String streetAddress;
-	
+
 	@Column(name = CxodeTables.PERSON_INFORMATION.COLUMNS.CITY)
 	private String city;
-	
+
 	@Column(name = CxodeTables.PERSON_INFORMATION.COLUMNS.STATE)
 	private String state;
-	
+
 	@Column(name = CxodeTables.PERSON_INFORMATION.COLUMNS.POSTAL_CODE)
 	private String postalCode;
-	
+
 	@ManyToOne()
 	@JoinColumn(name = CxodeTables.PERSON_INFORMATION.COLUMNS.COUNTRY_ID)
 	private Country country;
@@ -264,6 +277,5 @@ public class PersonInformation extends MappedSuperClass {
 			return false;
 		return true;
 	}
-
 
 }

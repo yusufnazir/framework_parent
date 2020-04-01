@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class CountryRepository extends GenericRepository implements ICountryRepo
 					.collect(Collectors.toList());
 			return (List<R>) list;
 		}
-		return null;
+		return new ArrayList<R>();
 	}
 
 }

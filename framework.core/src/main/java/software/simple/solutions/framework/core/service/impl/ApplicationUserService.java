@@ -87,11 +87,16 @@ public class ApplicationUserService extends SuperService implements IApplication
 					Arg.build().key(ApplicationUserProperty.USERNAME));
 		}
 
-		if (vo.isNew() && !vo.getUseLdap()) {
-			SecurityValidation securityValidation = validatePasswords(vo.getPassword(), vo.getPasswordConfirm());
-			if (!securityValidation.isSuccess()) {
-				throw ExceptionBuilder.VALIDATION_EXCEPTION.build(SystemMessageProperty.PASSWORD_VALIDATION,
-						vo.getLocale(), Arg.build().key(securityValidation.getMessageKey()));
+		if (vo.isNew()) {
+			if (!vo.getUseLdap()) {
+				boolean smtpEnabled = configurationService.isSmtpEnabled();
+				if (!smtpEnabled) {
+					SecurityValidation securityValidation = validatePasswords(vo.getPassword(), vo.getPassword());
+					if (!securityValidation.isSuccess()) {
+						throw ExceptionBuilder.VALIDATION_EXCEPTION.build(securityValidation.getMessageKey(),
+								vo.getLocale(), Arg.build());
+					}
+				}
 			}
 		}
 
@@ -107,9 +112,6 @@ public class ApplicationUserService extends SuperService implements IApplication
 			applicationUser = getById(ApplicationUser.class, vo.getId());
 		}
 		applicationUser.setUsername(vo.getUsername().toLowerCase());
-		// applicationUser.setUpdatedDate(vo.getUpdatedDate());
-		// applicationUser.setUpdatedByUser(get(ApplicationUser.class,
-		// vo.getUpdatedBy()));
 
 		applicationUser.setActive(vo.getActive());
 		applicationUser.setResetPassword(vo.getResetPassword());

@@ -26,7 +26,12 @@ public class RelationType extends MappedSuperClass {
 	private static final long serialVersionUID = 6967413018329190354L;
 
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
@@ -40,8 +45,8 @@ public class RelationType extends MappedSuperClass {
 	@Column(name = CxodeTables.RELATION_TYPE_.COLUMNS.REQUIRES_RELATED_TO_)
 	private Boolean requiresRelatedTo;
 
-	@Column(name = CxodeTables.RELATION_TYPE_.COLUMNS.KEY_)
-	private String key;
+	@Column(name = CxodeTables.ROLE_VIEW.COLUMNS.ACTIVE)
+	private Boolean active;
 
 	public Long getId() {
 		return id;
@@ -75,24 +80,24 @@ public class RelationType extends MappedSuperClass {
 		this.requiresRelatedTo = requiresRelatedTo;
 	}
 
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	@Override
 	public Boolean getActive() {
-		// TODO Auto-generated method stub
-		return null;
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	@Override
-	public void setActive(Boolean active) {
-		// TODO Auto-generated method stub
+	public String getCaption() {
+		StringBuilder caption = new StringBuilder();
+		if (code != null && code.length() > 0) {
+			caption.append("[").append(code).append("]");
+		}
+		if (name != null && name.length() > 0) {
+			caption.append(" ").append(name);
+		}
 
+		return caption.toString();
 	}
-
 }

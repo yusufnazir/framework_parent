@@ -17,6 +17,8 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @ServiceRepository(claz = ILanguageRepository.class)
 public class LanguageService extends SuperService implements ILanguageService {
 
+	private static final long serialVersionUID = 8257067876014070925L;
+
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
 

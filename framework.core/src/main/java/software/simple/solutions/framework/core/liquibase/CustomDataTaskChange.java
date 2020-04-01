@@ -1,35 +1,87 @@
 package software.simple.solutions.framework.core.liquibase;
 
+import java.io.ByteArrayInputStream;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import liquibase.change.custom.CustomTaskChange;
+import liquibase.database.Database;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.CustomChangeException;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.SetupException;
+import liquibase.exception.ValidationErrors;
+import liquibase.resource.ResourceAccessor;
 
 public abstract class CustomDataTaskChange implements CustomTaskChange {
 
+	public static final Logger logger = LogManager.getLogger(CustomDataTaskChange.class);
+
+	protected JdbcConnection connection;
+
+	@Override
+	public void execute(Database database) throws CustomChangeException {
+		connection = (JdbcConnection) database.getConnection();
+
+		try {
+			handleUpdate();
+			connection.commit();
+		} catch (DatabaseException | SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void handleUpdate() throws DatabaseException, SQLException {
+	}
+
+	@Override
+	public String getConfirmationMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setUp() throws SetupException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setFileOpener(ResourceAccessor resourceAccessor) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public ValidationErrors validate(Database database) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	protected void setData(PreparedStatement prepareStatement, int parameterIndex, Object x) throws SQLException {
 		if (x == null) {
-			prepareStatement.setNull(parameterIndex, Types.VARCHAR);
+			prepareStatement.setNull(parameterIndex, Types.NULL);
 		} else {
 			if (x instanceof String) {
-				if (((String) x).trim().isEmpty()) {
-					prepareStatement.setNull(parameterIndex, Types.VARCHAR);
+				if (x.toString().trim().isEmpty()) {
+					prepareStatement.setNull(parameterIndex, Types.NULL);
 				} else {
 					prepareStatement.setString(parameterIndex, (String) x);
 				}
 			} else if (x instanceof Long) {
-				if ((long) x == -1) {
-					prepareStatement.setNull(parameterIndex, Types.NUMERIC);
-				} else {
-					prepareStatement.setLong(parameterIndex, (long) x);
-				}
+				prepareStatement.setLong(parameterIndex, (long) x);
 			} else if (x instanceof Boolean) {
-				if ((boolean) x) {
-					prepareStatement.setNull(parameterIndex, Types.BOOLEAN);
-				} else {
-					prepareStatement.setBoolean(parameterIndex, (boolean) x);
-				}
+				prepareStatement.setBoolean(parameterIndex, (boolean) x);
+			} else if (x instanceof Date) {
+				prepareStatement.setDate(parameterIndex, new java.sql.Date(((Date) x).getTime()));
+			} else if (x instanceof byte[]) {
+				prepareStatement.setBinaryStream(parameterIndex, new ByteArrayInputStream((byte[]) x),
+						((byte[]) x).length);
 			} else {
 				prepareStatement.setObject(parameterIndex, x);
 			}

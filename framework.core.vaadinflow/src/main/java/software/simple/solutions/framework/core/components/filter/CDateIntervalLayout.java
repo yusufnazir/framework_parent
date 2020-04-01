@@ -6,19 +6,16 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-import software.simple.solutions.framework.core.constants.DateConstant;
-import software.simple.solutions.framework.core.constants.DateResolution;
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.pojo.DateInterval;
 import software.simple.solutions.framework.core.pojo.Interval;
 import software.simple.solutions.framework.core.util.PropertyResolver;
-import software.simple.solutions.framework.core.web.IField;
 import software.simple.solutions.framework.core.web.Listing;
 import software.simple.solutions.framework.core.web.components.CComboBox;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 
-public class CDateIntervalLayout extends CustomField<DateInterval> implements Interval<LocalDate>, IField {
+public class CDateIntervalLayout extends CustomField<DateInterval> implements Interval<LocalDate> {
 
 	private static final long serialVersionUID = -4895709684731728860L;
 
@@ -29,7 +26,6 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 	private CPopupDateField toDateFld;
 	private CPopupDateField fromDateFld;
 	private CComboBox operatorSelect;
-	private boolean isThisRequired = false;
 
 	public CDateIntervalLayout() {
 		buildMainLayout();
@@ -50,22 +46,23 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 	}
 
 	private void registerOperatorSelectListeners() {
-//		operatorSelect.addValueChangeListener(new ValueChangeListener<ComboItem>() {
-//
-//			private static final long serialVersionUID = -3130632054347002584L;
-//
-//			@Override
-//			public void valueChange(ValueChangeEvent<ComboItem> event) {
-//				String op = CDateIntervalLayout.this.operatorSelect.getItemCaption();
-//				if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
-//					CDateIntervalLayout.this.toDateFld.setVisible(true);
-//				} else {
-//					CDateIntervalLayout.this.toDateFld.setVisible(false);
-//					CDateIntervalLayout.this.toDateFld.setValue(null);
-//				}
-//
-//			}
-//		});
+		// operatorSelect.addValueChangeListener(new
+		// ValueChangeListener<ComboItem>() {
+		//
+		// private static final long serialVersionUID = -3130632054347002584L;
+		//
+		// @Override
+		// public void valueChange(ValueChangeEvent<ComboItem> event) {
+		// String op = CDateIntervalLayout.this.operatorSelect.getItemCaption();
+		// if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
+		// CDateIntervalLayout.this.toDateFld.setVisible(true);
+		// } else {
+		// CDateIntervalLayout.this.toDateFld.setVisible(false);
+		// CDateIntervalLayout.this.toDateFld.setValue(null);
+		// }
+		//
+		// }
+		// });
 	}
 
 	private void initOperatorSelect() {
@@ -109,13 +106,6 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 		return this.mainLayout;
 	}
 
-	public void setDefault() {
-		fromDateFld.setDefault();
-		toDateFld.setDefault();
-		operatorSelect.setDefault();
-		isThisRequired = false;
-	}
-
 	@Override
 	public String getOperator() {
 		return operatorSelect.getItemId();
@@ -147,7 +137,6 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 		}
 	}
 
-	@Override
 	public void setCaptionByKey(String caption) {
 		super.setLabel(PropertyResolver.getPropertyValueByLocale(caption, UI.getCurrent().getLocale()));
 	}
@@ -165,19 +154,6 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 	}
 
 	@Override
-	public boolean isThisRequired() {
-		return isThisRequired;
-	}
-
-	@Override
-	public void setRequired() {
-		operatorSelect.setRequired();
-		fromDateFld.setRequired();
-		toDateFld.setRequired();
-		isThisRequired = true;
-	}
-
-	@Override
 	public DateInterval getValue() {
 		return new DateInterval(getFrom(), getTo(), getOperator());
 	}
@@ -191,7 +167,7 @@ public class CDateIntervalLayout extends CustomField<DateInterval> implements In
 	@Override
 	protected void setPresentationValue(DateInterval newPresentationValue) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

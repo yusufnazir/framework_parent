@@ -7,6 +7,7 @@ public class MailTemplateProperty {
 	public static final String NAME = "entity.mail.template.name";
 	public static final String DESCRIPTION = "entity.mail.template.description";
 	public static final String ACTIVE = "entity.mail.template.active";
+	public static final String LANGUAGE = "entity.mail.template.language";
 	
 	public static final String FROM = "entity.mail.template.from";
 	public static final String TO = "entity.mail.template.to";

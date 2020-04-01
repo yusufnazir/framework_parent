@@ -16,34 +16,14 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortUtils;
 import software.simple.solutions.framework.core.web.IField;
 
-@CssImport(value = "styles/paging-combobox.css", themeFor = "vaadin-combo-box")
-public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable<CComboBox> {
+//@CssImport(value = "styles/paging-combobox.css", themeFor = "vaadin-combo-box")
+public class CComboBox extends ComboBox<ComboItem> implements Comparable<CComboBox> {
 	private static final long serialVersionUID = -6297946915884259838L;
-	private boolean isThisRequired = false;
 
 	public CComboBox() {
+		getElement().setAttribute("theme", "small");
 		setItemLabelGenerator(ComboItem::getCaption);
 		setPlaceholder(PropertyResolver.getPropertyValueByLocale("system.select.an.item", UI.getCurrent().getLocale()));
-	}
-
-	public void setRequired() {
-		this.isThisRequired = true;
-	}
-
-	/**
-	 * Set the default style, not required, not error.
-	 */
-	public void setDefault() {
-		this.isThisRequired = false;
-	}
-
-	@Override
-	public boolean isThisRequired() {
-		return this.isThisRequired;
-	}
-
-	public void setThisRequired(boolean isThisRequired) {
-		this.isThisRequired = isThisRequired;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,15 +41,6 @@ public class CComboBox extends ComboBox<ComboItem> implements IField, Comparable
 		return getValue().getCaption();
 	}
 
-	@Override
-	public void setReadOnly(boolean readOnly) {
-		super.setReadOnly(readOnly);
-		if (readOnly) {
-			setDefault();
-		}
-	}
-
-	@Override
 	public void setCaptionByKey(String key) {
 		super.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 	}

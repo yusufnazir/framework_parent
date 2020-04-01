@@ -1,15 +1,21 @@
 package software.simple.solutions.framework.core.web.view;
 
+import java.util.Locale;
+
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
+import software.simple.solutions.framework.core.constants.MailTemplateReference;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.MailTemplate;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.LanguageProperty;
 import software.simple.solutions.framework.core.properties.MailTemplateProperty;
 import software.simple.solutions.framework.core.service.facade.MailTemplateServiceFacade;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.MailTemplateVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 import software.simple.solutions.framework.core.web.FilterView;
@@ -33,8 +39,30 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 
 	@Override
 	public void setUpCustomColumns() {
-		addContainerProperty(MailTemplate::getName, MailTemplateProperty.NAME);
-		addContainerProperty(MailTemplate::getDescription, MailTemplateProperty.DESCRIPTION);
+		addContainerProperty(new ValueProvider<MailTemplate, String>() {
+
+			private static final long serialVersionUID = 7111050492953727954L;
+
+			@Override
+			public String apply(MailTemplate mailTemplate) {
+				String iso3Language = UI.getCurrent().getLocale().getISO3Language();
+				return PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+						MailTemplateReference.NAME + mailTemplate.getId(), new Locale(iso3Language), null,
+						mailTemplate.getName());
+			}
+		}, MailTemplateProperty.NAME);
+		addContainerProperty(new ValueProvider<MailTemplate, String>() {
+
+			private static final long serialVersionUID = -4567965540731845203L;
+
+			@Override
+			public String apply(MailTemplate mailTemplate) {
+				String iso3Language = UI.getCurrent().getLocale().getISO3Language();
+				return PropertyResolver.getPropertyValueByLocale(ReferenceKey.MAIL_TEMPLATE,
+						MailTemplateReference.DESCRIPTION + mailTemplate.getId(), new Locale(iso3Language), null,
+						mailTemplate.getName());
+			}
+		}, MailTemplateProperty.DESCRIPTION);
 	}
 
 	/**

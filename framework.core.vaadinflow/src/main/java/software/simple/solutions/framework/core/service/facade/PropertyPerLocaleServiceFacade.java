@@ -30,4 +30,10 @@ public class PropertyPerLocaleServiceFacade extends SuperServiceFacade<IProperty
 	public List<PropertyPerLocale> findAllButProperty() throws FrameworkException {
 		return service.findAllButProperty();
 	}
+
+	@Override
+	public PropertyPerLocale getByUniqueKeys(Long languageId, String referenceKey, String referenceId)
+			throws FrameworkException {
+		return service.getByUniqueKeys(languageId, referenceKey, referenceId);
+	}
 }

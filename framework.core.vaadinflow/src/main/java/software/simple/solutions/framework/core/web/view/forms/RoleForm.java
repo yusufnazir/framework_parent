@@ -5,7 +5,6 @@ import com.vaadin.flow.router.Route;
 import software.simple.solutions.framework.core.components.select.RoleCategorySelect;
 import software.simple.solutions.framework.core.entities.Role;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.properties.RoleCategoryProperty;
 import software.simple.solutions.framework.core.properties.RoleProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.RoleVO;
@@ -51,12 +50,15 @@ public class RoleForm extends FormView {
 
 		codeFld = formGrid.add(CTextField.class, RoleProperty.CODE);
 		codeFld.setMaxWidth("400px");
+		codeFld.setRequiredIndicatorVisible(true);
 
 		nameFld = formGrid.add(CTextField.class, RoleProperty.NAME);
 		nameFld.setMaxWidth("400px");
+		nameFld.setRequiredIndicatorVisible(true);
 
-		roleCategoryFld = formGrid.add(RoleCategorySelect.class, RoleCategoryProperty.ROLE_CATEGORY);
+		roleCategoryFld = formGrid.add(RoleCategorySelect.class, RoleProperty.CATEGORY);
 		roleCategoryFld.setMaxWidth("400px");
+		roleCategoryFld.setRequiredIndicatorVisible(true);
 
 		descriptionFld = formGrid.add(CTextArea.class, RoleProperty.DESCRIPTION);
 		descriptionFld.setMaxWidth("400px");
@@ -81,8 +83,8 @@ public class RoleForm extends FormView {
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		nameFld.setRequired();
-		codeFld.setRequired();
+		nameFld.setRequiredIndicatorVisible(true);
+		codeFld.setRequiredIndicatorVisible(true);
 		activeFld.setValue(true);
 	}
 

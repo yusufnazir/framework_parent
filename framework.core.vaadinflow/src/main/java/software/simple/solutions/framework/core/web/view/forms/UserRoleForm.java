@@ -43,9 +43,11 @@ public class UserRoleForm extends FormView {
 
 		userFld = formGrid.add(ApplicationUserLookUpField.class, UserRoleProperty.USER);
 		userFld.setMaxWidth("400px");
+		userFld.setRequiredIndicatorVisible(true);
 
 		roleFld = formGrid.add(RoleLookUpField.class, UserRoleProperty.ROLE);
 		roleFld.setMaxWidth("400px");
+		roleFld.setRequiredIndicatorVisible(true);
 
 		activeFld = formGrid.add(CCheckBox.class, UserRoleProperty.ACTIVE);
 

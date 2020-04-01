@@ -55,5 +55,8 @@
 
 	<include file="create-data-relation-types.xml"
 		relativeToChangelogFile="true" />
+		
+	<include file="create-data-countries.xml"
+		relativeToChangelogFile="true" />
 
 </databaseChangeLog>

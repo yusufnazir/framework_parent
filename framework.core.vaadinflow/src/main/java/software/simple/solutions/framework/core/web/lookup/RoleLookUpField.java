@@ -1,7 +1,7 @@
 package software.simple.solutions.framework.core.web.lookup;
 
 import software.simple.solutions.framework.core.entities.Role;
-import software.simple.solutions.framework.core.web.LookUpField;
+import software.simple.solutions.framework.core.web.components.LookUpField;
 import software.simple.solutions.framework.core.web.view.RoleView;
 
 public class RoleLookUpField extends LookUpField<Long, Role> {

@@ -15,6 +15,8 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.google.common.collect.ComparisonChain;
+
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.constants.CxodeTables;
 import software.simple.solutions.framework.core.properties.MenuProperty;
@@ -26,7 +28,7 @@ import software.simple.solutions.framework.core.properties.ViewProperty;
 @Table(name = CxodeTables.MENU.NAME)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
-public class Menu extends MappedSuperClass {
+public class Menu extends MappedSuperClass implements Comparable<Menu> {
 
 	private static final long serialVersionUID = -720087732122778727L;
 
@@ -169,6 +171,11 @@ public class Menu extends MappedSuperClass {
 		}
 
 		return caption.toString();
+	}
+
+	@Override
+	public int compareTo(Menu o) {
+		return ComparisonChain.start().compare(this.getId(), o.getId()).result();
 	}
 
 }

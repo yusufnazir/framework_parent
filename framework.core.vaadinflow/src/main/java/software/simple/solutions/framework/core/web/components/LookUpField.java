@@ -1,4 +1,4 @@
-package software.simple.solutions.framework.core.web;
+package software.simple.solutions.framework.core.web.components;
 
 import java.util.Map;
 
@@ -33,9 +33,9 @@ import software.simple.solutions.framework.core.service.IMenuService;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
-import software.simple.solutions.framework.core.web.components.CButton;
-import software.simple.solutions.framework.core.web.components.CDialog;
-import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.AbstractBaseView;
+import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
+import software.simple.solutions.framework.core.web.ViewUtil;
 import software.simple.solutions.framework.core.web.lookup.LookUpHolder;
 
 public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> {

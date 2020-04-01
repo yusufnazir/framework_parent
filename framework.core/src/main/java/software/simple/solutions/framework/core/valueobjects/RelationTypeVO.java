@@ -21,7 +21,6 @@ public class RelationTypeVO extends SuperVO {
 
 	private String code;
 	private String name;
-	private String key;
 
 	public Long getId() {
 		return id;
@@ -69,14 +68,6 @@ public class RelationTypeVO extends SuperVO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 }

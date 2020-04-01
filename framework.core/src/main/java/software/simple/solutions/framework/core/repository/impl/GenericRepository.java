@@ -128,7 +128,7 @@ public class GenericRepository implements IGenericRepository {
 	public <T> List<T> createListNativeQuery(String queryString, ConcurrentMap<String, Object> paramMap,
 			PagingSetting pagingSetting) throws FrameworkException {
 		if (StringUtils.isBlank(queryString)) {
-			return null;
+			return new ArrayList<T>();
 		}
 		javax.persistence.Query nativeQuery = entityManager.createNativeQuery(queryString);
 		if ((paramMap != null) && (!paramMap.isEmpty())) {

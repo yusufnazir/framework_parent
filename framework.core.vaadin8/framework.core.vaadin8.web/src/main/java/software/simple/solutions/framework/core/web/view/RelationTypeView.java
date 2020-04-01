@@ -68,7 +68,6 @@ public class RelationTypeView extends BasicTemplate<Role> {
 		private CGridLayout formGrid;
 		private CTextField codeFld;
 		private CTextField nameFld;
-		private CTextArea keyFld;
 
 		private RelationType relationType;
 
@@ -90,9 +89,6 @@ public class RelationTypeView extends BasicTemplate<Role> {
 
 			nameFld = formGrid.addField(CTextField.class, RoleProperty.NAME, 0, 1);
 
-			keyFld = formGrid.addField(CTextArea.class, RoleProperty.DESCRIPTION, 1, 0, 1, 2);
-			keyFld.setRows(2);
-
 			return formGrid;
 		}
 
@@ -102,7 +98,6 @@ public class RelationTypeView extends BasicTemplate<Role> {
 			relationType = (RelationType) entity;
 			codeFld.setValue(relationType.getCode());
 			nameFld.setValue(relationType.getName());
-			keyFld.setValue(relationType.getKey());
 
 			return relationType;
 		}
@@ -121,7 +116,6 @@ public class RelationTypeView extends BasicTemplate<Role> {
 
 			vo.setCode(codeFld.getValue());
 			vo.setName(nameFld.getValue());
-			vo.setKey(keyFld.getValue());
 			return vo;
 		}
 	}

@@ -7,18 +7,16 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-import software.simple.solutions.framework.core.constants.DateConstant;
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.pojo.DateTimeInterval;
 import software.simple.solutions.framework.core.pojo.Interval;
 import software.simple.solutions.framework.core.util.PropertyResolver;
-import software.simple.solutions.framework.core.web.IField;
 import software.simple.solutions.framework.core.web.Listing;
 import software.simple.solutions.framework.core.web.components.CComboBox;
 import software.simple.solutions.framework.core.web.components.CPopupDateTimeField;
 
-public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> implements Interval<LocalTime>, IField {
+public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> implements Interval<LocalTime> {
 
 	private static final long serialVersionUID = -4895709684731728860L;
 
@@ -29,7 +27,6 @@ public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> imple
 	private CPopupDateTimeField toDateFld;
 	private CPopupDateTimeField fromDateFld;
 	private CComboBox operatorSelect;
-	private boolean isThisRequired = false;
 
 	public CDateTimeIntervalLayout() {
 		buildMainLayout();
@@ -43,27 +40,28 @@ public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> imple
 	}
 
 	private void registerListeners() {
-//		registerOperatorSelectListeners();
+		// registerOperatorSelectListeners();
 	}
 
-//	private void registerOperatorSelectListeners() {
-//		operatorSelect.addValueChangeListener(new ValueChangeListener<ComboItem>() {
-//
-//			private static final long serialVersionUID = -3130632054347002584L;
-//
-//			@Override
-//			public void valueChange(ValueChangeEvent<ComboItem> event) {
-//				String op = CDateTimeIntervalLayout.this.operatorSelect.getItemCaption();
-//				if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
-//					CDateTimeIntervalLayout.this.toDateFld.setVisible(true);
-//				} else {
-//					CDateTimeIntervalLayout.this.toDateFld.setVisible(false);
-//					CDateTimeIntervalLayout.this.toDateFld.setValue(null);
-//				}
-//
-//			}
-//		});
-//	}
+	// private void registerOperatorSelectListeners() {
+	// operatorSelect.addValueChangeListener(new
+	// ValueChangeListener<ComboItem>() {
+	//
+	// private static final long serialVersionUID = -3130632054347002584L;
+	//
+	// @Override
+	// public void valueChange(ValueChangeEvent<ComboItem> event) {
+	// String op = CDateTimeIntervalLayout.this.operatorSelect.getItemCaption();
+	// if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
+	// CDateTimeIntervalLayout.this.toDateFld.setVisible(true);
+	// } else {
+	// CDateTimeIntervalLayout.this.toDateFld.setVisible(false);
+	// CDateTimeIntervalLayout.this.toDateFld.setValue(null);
+	// }
+	//
+	// }
+	// });
+	// }
 
 	private void initOperatorSelect() {
 		Listing.getDateOperatorSelect(this.operatorSelect);
@@ -102,13 +100,6 @@ public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> imple
 		return this.mainLayout;
 	}
 
-	public void setDefault() {
-		fromDateFld.setDefault();
-		toDateFld.setDefault();
-		operatorSelect.setDefault();
-		isThisRequired = false;
-	}
-
 	@Override
 	public String getOperator() {
 		return operatorSelect.getItemId();
@@ -140,34 +131,20 @@ public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> imple
 		}
 	}
 
-	@Override
 	public void setCaptionByKey(String caption) {
 		super.setLabel(PropertyResolver.getPropertyValueByLocale(caption, UI.getCurrent().getLocale()));
 	}
 
 	public void setValue(LocalDateTime from, LocalDateTime to, String operator) {
-//		fromDateFld.setValue(from);
-//		toDateFld.setValue(to);
+		// fromDateFld.setValue(from);
+		// toDateFld.setValue(to);
 		operatorSelect.setValue(new ComboItem(operator));
 	}
 
 	public void setValue(DateTimeInterval dateTimeInterval) {
-//		fromDateFld.setValue(dateTimeInterval.getFrom());
-//		toDateFld.setValue(dateTimeInterval.getTo());
+		// fromDateFld.setValue(dateTimeInterval.getFrom());
+		// toDateFld.setValue(dateTimeInterval.getTo());
 		operatorSelect.setValue(new ComboItem(dateTimeInterval.getOperator()));
-	}
-
-	@Override
-	public boolean isThisRequired() {
-		return isThisRequired;
-	}
-
-	@Override
-	public void setRequired() {
-		operatorSelect.setRequired();
-		fromDateFld.setRequired();
-		toDateFld.setRequired();
-		isThisRequired = true;
 	}
 
 	@Override
@@ -179,12 +156,12 @@ public class CDateTimeIntervalLayout extends CustomField<DateTimeInterval> imple
 	@Override
 	protected void setPresentationValue(DateTimeInterval newPresentationValue) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-//	@Override
-//	public DateTimeInterval getValue() {
-//		return new DateTimeInterval(getFrom(), getTo(), getOperator());
-//	}
+	// @Override
+	// public DateTimeInterval getValue() {
+	// return new DateTimeInterval(getFrom(), getTo(), getOperator());
+	// }
 
 }

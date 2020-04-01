@@ -7,4 +7,5 @@ public class RoleProperty {
 	public static final String ACTIVE = "entity.role.active";
 	public static final String DESCRIPTION = "entity.role.description";
 	public static final String NAME = "entity.role.name";
+	public static final String CATEGORY = "entity.role.category";
 }

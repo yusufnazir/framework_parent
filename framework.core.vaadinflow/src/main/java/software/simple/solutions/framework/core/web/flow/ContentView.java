@@ -67,6 +67,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 	private BehaviorSubject<LookUpHolder> lookUpFieldLinkObserver;
 	private BehaviorSubject<LookUpHolder> lookUpFieldSelectObserver;
 	private Tab parentViewTab;
+	private Tab previousSelectedTab;
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
@@ -174,6 +175,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 
 			@Override
 			public void onComponentEvent(SelectedChangeEvent event) {
+				previousSelectedTab = event.getPreviousTab();
 				Tab selectedTab = event.getSelectedTab();
 				if (selectedTab != null) {
 					contentLayout.getChildren().forEach(p -> p.setVisible(false));
@@ -262,6 +264,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 
 					@Override
 					public void onComponentEvent(ClickEvent<Icon> event) {
+						subTabSheet.setSelectedTab(previousSelectedTab);
 						subTabSheet.remove(tab);
 						createdSubMenusTabs.remove(tab);
 						contentLayout.remove(view);
@@ -285,6 +288,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 					@SuppressWarnings("unchecked")
 					@Override
 					public void accept(Object selectedEntity) throws Exception {
+						subTabSheet.setSelectedTab(previousSelectedTab);
 						subTabSheet.remove(tab);
 						createdSubMenusTabs.remove(tab);
 						lookUpMenusTabMap.remove(tab);

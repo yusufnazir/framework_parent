@@ -47,6 +47,10 @@ public class RoleService extends SuperService implements IRoleService {
 			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					Arg.build().key(RoleProperty.NAME));
 		}
+		if (vo.getRoleCategoryId()==null) {
+			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.FIELD_IS_REQUIRED,
+					Arg.build().key(RoleProperty.CATEGORY));
+		}
 
 		Role role = new Role();
 		if (vo.isNew()) {

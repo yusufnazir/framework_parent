@@ -2,7 +2,6 @@ package software.simple.solutions.framework.core.components.filter;
 
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 
 import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.pojo.ComboItem;
@@ -10,12 +9,11 @@ import software.simple.solutions.framework.core.pojo.Interval;
 import software.simple.solutions.framework.core.pojo.LongInterval;
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
-import software.simple.solutions.framework.core.web.IField;
 import software.simple.solutions.framework.core.web.Listing;
 import software.simple.solutions.framework.core.web.components.CComboBox;
 import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
 
-public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> implements Interval<Long>, IField {
+public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> implements Interval<Long> {
 
 	private static final long serialVersionUID = -4895709684731728860L;
 
@@ -26,7 +24,6 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	private CDiscreetNumberField toFld;
 	private CDiscreetNumberField fromFld;
 	private CComboBox operatorSelect;
-	private boolean isThisRequired = false;
 
 	public CDiscreetNumberIntervalLayout() {
 		buildMainLayout();
@@ -46,26 +43,27 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	}
 
 	private void registerOperatorSelectListeners() {
-//		this.operatorSelect.addValueChangeListener(new ValueChangeListener<ComboItem>() {
-//			private static final long serialVersionUID = 6673313240019183079L;
-//
-//			public void valueChange(ValueChangeEvent<ComboItem> event) {
-//				String op = operatorSelect.getItemCaption();
-//				if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
-//					CDiscreetNumberIntervalLayout.this.toFld.setVisible(true);
-//				} else {
-//					CDiscreetNumberIntervalLayout.this.toFld.setVisible(false);
-//					CDiscreetNumberIntervalLayout.this.toFld.setLongValue(null);
-//				}
-//			}
-//		});
+		// this.operatorSelect.addValueChangeListener(new
+		// ValueChangeListener<ComboItem>() {
+		// private static final long serialVersionUID = 6673313240019183079L;
+		//
+		// public void valueChange(ValueChangeEvent<ComboItem> event) {
+		// String op = operatorSelect.getItemCaption();
+		// if ((op != null) && (Operator.BE.equalsIgnoreCase(op))) {
+		// CDiscreetNumberIntervalLayout.this.toFld.setVisible(true);
+		// } else {
+		// CDiscreetNumberIntervalLayout.this.toFld.setVisible(false);
+		// CDiscreetNumberIntervalLayout.this.toFld.setLongValue(null);
+		// }
+		// }
+		// });
 
 	}
 
 	private void initOperatorSelect() {
 		Listing.getNumberOperatorSelect(this.operatorSelect);
 		this.operatorSelect.setValue(new ComboItem(Operator.EQ));
-//		operatorSelect.setEmptySelectionAllowed(false);
+		// operatorSelect.setEmptySelectionAllowed(false);
 	}
 
 	public void setTo(Long value) {
@@ -94,27 +92,22 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 		this.operatorSelect.setWidth("50px");
 		this.operatorSelect.setHeight("-1px");
 		this.mainLayout.add(this.operatorSelect);
-//		mainLayout.setComponentAlignment(operatorSelect, Alignment.MIDDLE_LEFT);
+		// mainLayout.setComponentAlignment(operatorSelect,
+		// Alignment.MIDDLE_LEFT);
 
 		this.fromFld = new CDiscreetNumberField();
 		this.fromFld.setWidth("-1px");
 		this.fromFld.setHeight("-1px");
 		this.mainLayout.add(this.fromFld);
-//		mainLayout.setComponentAlignment(fromFld, Alignment.MIDDLE_LEFT);
+		// mainLayout.setComponentAlignment(fromFld, Alignment.MIDDLE_LEFT);
 
 		this.toFld = new CDiscreetNumberField();
 		this.toFld.setWidth("-1px");
 		this.toFld.setHeight("-1px");
 		this.mainLayout.add(this.toFld);
-//		mainLayout.setComponentAlignment(toFld, Alignment.MIDDLE_LEFT);
+		// mainLayout.setComponentAlignment(toFld, Alignment.MIDDLE_LEFT);
 
 		return this.mainLayout;
-	}
-
-	public void setDefault() {
-		this.operatorSelect.setDefault();
-		this.fromFld.setDefault();
-		this.toFld.setDefault();
 	}
 
 	@Override
@@ -136,13 +129,6 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 		return fromFld;
 	}
 
-	public void clear() {
-		if (!isReadOnly()) {
-			setDefault();
-		}
-	}
-
-	@Override
 	public void setCaptionByKey(String caption) {
 		super.setLabel(PropertyResolver.getPropertyValueByLocale(caption, getLocale()));
 	}
@@ -173,19 +159,6 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	}
 
 	@Override
-	public boolean isThisRequired() {
-		return isThisRequired;
-	}
-
-	@Override
-	public void setRequired() {
-		fromFld.setRequired();
-		toFld.setRequired();
-		operatorSelect.setRequired();
-		this.isThisRequired = true;
-	}
-
-	@Override
 	protected LongInterval generateModelValue() {
 		// TODO Auto-generated method stub
 		return null;
@@ -194,7 +167,7 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	@Override
 	protected void setPresentationValue(LongInterval newPresentationValue) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

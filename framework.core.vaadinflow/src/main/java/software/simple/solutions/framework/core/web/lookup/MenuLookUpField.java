@@ -1,7 +1,7 @@
 package software.simple.solutions.framework.core.web.lookup;
 
 import software.simple.solutions.framework.core.entities.Menu;
-import software.simple.solutions.framework.core.web.LookUpField;
+import software.simple.solutions.framework.core.web.components.LookUpField;
 import software.simple.solutions.framework.core.web.view.MenuView;
 
 public class MenuLookUpField extends LookUpField<Long, Menu> {

@@ -18,7 +18,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 	private static final long serialVersionUID = -204573107078009299L;
 
 	private CButton saveBtn;
-	private CButton cancelBtn;
+//	private CButton cancelBtn;
 	private CButton editBtn;
 	private CButton backBtn;
 	private CButton deleteBtn;
@@ -84,7 +84,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		saveBtn.setVisible(saveEnabled);
 		if (saveEnabled && !saveHidden) {
 			saveBtn.setVisible(true);
-			cancelBtn.setVisible(true);
+//			cancelBtn.setVisible(true);
 			editBtn.setVisible(false);
 		}
 	}
@@ -94,7 +94,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		saveBtn.setVisible(saveEnabled);
 		if (saveEnabled && !saveHidden) {
 			saveBtn.setVisible(true);
-			cancelBtn.setVisible(false);
+//			cancelBtn.setVisible(false);
 			editBtn.setVisible(false);
 		}
 	}
@@ -103,7 +103,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		Boolean saveEnabled = (actionState.getUpdateEnabled());
 		if (saveEnabled && !saveHidden) {
 			saveBtn.setVisible(false);
-			cancelBtn.setVisible(false);
+//			cancelBtn.setVisible(false);
 			editBtn.setVisible(true);
 		}
 	}
@@ -216,7 +216,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 	public void setSaveDisabled() {
 		saveBtn.setVisible(false);
 		saveBtn.setVisible(false);
-		cancelBtn.setVisible(false);
+//		cancelBtn.setVisible(false);
 		editBtn.setVisible(false);
 	}
 
@@ -260,10 +260,10 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		backBtn.setVisible(false);
 	}
 
-	public void setCancelDisabled() {
-		cancelBtn.setVisible(false);
-		cancelBtn.setVisible(false);
-	}
+//	public void setCancelDisabled() {
+//		cancelBtn.setVisible(false);
+//		cancelBtn.setVisible(false);
+//	}
 
 	public void setInfoDisabled() {
 		infoMenuBtn.setVisible(false);
@@ -294,7 +294,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		deleteBtn.setVisible(false);
 		restoreBtn.setVisible(false);
 		saveBtn.setVisible(false);
-		cancelBtn.setVisible(false);
+//		cancelBtn.setVisible(false);
 		editBtn.setVisible(false);
 
 		backBtn.setVisible(true);
@@ -360,10 +360,10 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		add(saveBtn);
 		// saveBtn.setDescription(PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_SAVE));
 
-		cancelBtn = new CButton();
-		cancelBtn.setIcon(FontAwesome.Solid.TIMES_CIRCLE.create());
-		cancelBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
-		add(cancelBtn);
+//		cancelBtn = new CButton();
+//		cancelBtn.setIcon(FontAwesome.Solid.TIMES_CIRCLE.create());
+//		cancelBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+//		add(cancelBtn);
 		// cancelBtn.setDescription(
 		// PropertyResolver.getPropertyValueByLocale(SystemProperty.SYSTEM_DESCRIPTION_CANCEL_EDIT));
 
@@ -459,7 +459,7 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 
 	public void hideSave() {
 		saveBtn.setVisible(false);
-		cancelBtn.setVisible(false);
+//		cancelBtn.setVisible(false);
 		editBtn.setVisible(false);
 		saveHidden = true;
 	}
@@ -592,12 +592,16 @@ public class ActionBar extends HorizontalLayout implements SearchEvent {
 		this.auditBtn.addClickListener(listener);
 	}
 
-	public void setActionCancel(ComponentEventListener<ClickEvent<Button>> listener) {
-		this.cancelBtn.addClickListener(listener);
-	}
+//	public void setActionCancel(ComponentEventListener<ClickEvent<Button>> listener) {
+//		this.cancelBtn.addClickListener(listener);
+//	}
 
 	public void setActionEdit(ComponentEventListener<ClickEvent<Button>> listener) {
 		this.editBtn.addClickListener(listener);
+	}
+	
+	public void setActionInfo(ComponentEventListener<ClickEvent<Button>> listener) {
+		this.infoMenuBtn.addClickListener(listener);
 	}
 
 }

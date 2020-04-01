@@ -63,5 +63,15 @@ public class Gender extends MappedSuperClass {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String getCaption() {
+		StringBuilder caption = new StringBuilder();
+		if (name != null && name.length() > 0) {
+			caption.append(" ").append(name);
+		}
+
+		return caption.toString();
+	}
 
 }

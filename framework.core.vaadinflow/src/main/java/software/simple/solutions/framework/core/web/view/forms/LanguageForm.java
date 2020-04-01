@@ -47,10 +47,13 @@ public class LanguageForm extends FormView {
 		formCard.setMaxWidth("600px");
 
 		codeFld = formGrid.add(CTextField.class, LanguageProperty.CODE);
+		codeFld.setRequiredIndicatorVisible(true);
 
 		nameFld = formGrid.add(CTextField.class, LanguageProperty.NAME);
+		nameFld.setRequiredIndicatorVisible(true);
 
 		descriptionFld = formGrid.add(CTextArea.class, LanguageProperty.DESCRIPTION);
+		descriptionFld.setRequiredIndicatorVisible(true);
 
 		activeFld = formGrid.add(CCheckBox.class, LanguageProperty.ACTIVE);
 
@@ -71,8 +74,8 @@ public class LanguageForm extends FormView {
 
 	@Override
 	public void handleNewForm() throws FrameworkException {
-		nameFld.setRequired();
-		codeFld.setRequired();
+		nameFld.setRequiredIndicatorVisible(true);
+		codeFld.setRequiredIndicatorVisible(true);
 		activeFld.setValue(true);
 	}
 

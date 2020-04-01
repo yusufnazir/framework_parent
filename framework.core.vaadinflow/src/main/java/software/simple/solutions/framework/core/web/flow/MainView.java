@@ -3,6 +3,8 @@ package software.simple.solutions.framework.core.web.flow;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +72,8 @@ import software.simple.solutions.framework.core.web.flow.applayout.CustomLeftSub
 @Push
 @PreserveOnRefresh
 @CssImport(value = "./styles/my-custom-dialog.css", themeFor = "vaadin-dialog-overlay")
+// @CssImport(value = "./styles/my-custom-combo-box.css", themeFor =
+// "vaadin-combo-box")
 public class MainView extends AppLayoutRouterLayout
 // implements BeforeEnterObserver
 {
@@ -215,25 +219,33 @@ public class MainView extends AppLayoutRouterLayout
 	        + "}"
 	        + ""
 	        + "vaadin-custom-field::before {"
-	        + "content: none;"
+	        	+ "content: none;"
 	        + "}"
+//	        + ""
+//	        + "vaadin-email-field::before {"
+//	        	+ "content: none;"
+//	        + "}"
+//	        + ""
+//	        + "vaadin-text-field::before {"
+//	        	+ "content: none;"
+//	        + "}"
 	        + ""
 	        + ".my-custom-label {"
-	        + "align-self: flex-start;"
-	        + "color: var(--lumo-secondary-text-color);"
-	        + "font-weight: 500;"
-	        + "font-size: var(--lumo-font-size-s);"
-	        + "margin-left: calc(var(--lumo-border-radius-m) / 4);"
-	        + "transition: color 0.2s;"
-	        + "line-height: 1;"
-	        + "padding-bottom: 0.5em;"
-	        + "overflow: hidden;"
-	        + "white-space: nowrap;"
-	        + "text-overflow: ellipsis;"
-	        + "position: relative;"
-	        + "max-width: 100%;"
-	        + "box-sizing: border-box;"
-	        + "padding-top: var(--lumo-space-m);"
+		        + "align-self: flex-start;"
+		        + "color: var(--lumo-secondary-text-color);"
+		        + "font-weight: 500;"
+		        + "font-size: var(--lumo-font-size-s);"
+		        + "margin-left: calc(var(--lumo-border-radius-m) / 4);"
+		        + "transition: color 0.2s;"
+		        + "line-height: 1;"
+		        + "padding-bottom: 0.5em;"
+		        + "overflow: hidden;"
+		        + "white-space: nowrap;"
+		        + "text-overflow: ellipsis;"
+		        + "position: relative;"
+		        + "max-width: 100%;"
+		        + "box-sizing: border-box;"
+		        + "padding-top: var(--lumo-space-m);"
 	        + "}"
 	        + ""
 	        ;
@@ -352,6 +364,7 @@ public class MainView extends AppLayoutRouterLayout
 					logger.error(e.getMessage(), e);
 				}
 				if (menus != null) {
+					Collections.sort(menus, Comparator.comparing(Menu::getIndex));
 					for (Menu menu : menus) {
 						if (menu.getParentMenu() == null && menu.getView() == null) {
 							com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon icon = null;

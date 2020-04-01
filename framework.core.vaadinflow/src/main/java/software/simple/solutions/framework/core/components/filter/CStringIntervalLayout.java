@@ -78,6 +78,7 @@ public class CStringIntervalLayout extends CustomField<StringInterval> implement
 		mainLayout.setPadding(false);
 
 		operatorSelect = new CComboBox();
+		operatorSelect.getElement().setAttribute("theme", "small");
 		operatorSelect.setWidth("50px");
 		mainLayout.add(operatorSelect);
 		// mainLayout.setComponentAlignment(operatorSelect,

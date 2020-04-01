@@ -99,7 +99,9 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 								if (entityFile != null) {
 									StreamResource resource = new StreamResource("profile-image.jpg",
 											() -> new ByteArrayInputStream(entityFile.getFileObject()));
-									image.setSrc(resource);
+									if(resource!=null){
+										image.setSrc(resource);
+									}
 								}
 							}
 						} catch (FrameworkException e) {

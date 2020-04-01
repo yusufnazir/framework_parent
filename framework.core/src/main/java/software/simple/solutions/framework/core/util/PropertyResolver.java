@@ -64,10 +64,10 @@ public class PropertyResolver {
 				message = messageFormat.format(arguments.toArray());
 			}
 			if (message == null) {
-				if (defaultValue == null) {
-					message = "NoKey: [" + key + "]";
-					logger.error("NoKey: CODE [" + key + "] LOCALE [" + locale + "]");
-				} else {
+				if (defaultValue != null) {
+//					message = "NoKey: [" + key + "]";
+//					logger.error("NoKey: CODE [" + key + "] LOCALE [" + locale + "]");
+//				} else {
 					message = defaultValue;
 				}
 			}

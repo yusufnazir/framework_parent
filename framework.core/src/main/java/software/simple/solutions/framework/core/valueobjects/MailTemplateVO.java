@@ -26,6 +26,8 @@ public class MailTemplateVO extends SuperVO {
 	private String to;
 	private String subject;
 	private String message;
+	private String languageCode;
+	private Long languageId;
 
 	public Boolean getActive() {
 		return active;
@@ -113,6 +115,22 @@ public class MailTemplateVO extends SuperVO {
 
 	public void setDescriptionInterval(StringInterval descriptionInterval) {
 		this.descriptionInterval = descriptionInterval;
+	}
+
+	public String getLanguageCode() {
+		return languageCode;
+	}
+
+	public void setLanguageCode(String languageCode) {
+		this.languageCode = languageCode;
+	}
+
+	public Long getLanguageId() {
+		return languageId;
+	}
+
+	public void setLanguageId(Long languageId) {
+		this.languageId = languageId;
 	}
 
 }

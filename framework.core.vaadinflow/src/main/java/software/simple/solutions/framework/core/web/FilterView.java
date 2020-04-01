@@ -38,6 +38,7 @@ import software.simple.solutions.framework.core.web.components.CPasswordField;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextArea;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.LookUpField;
 
 public abstract class FilterView extends HorizontalLayout implements Filterable, Eraseable, Referenceable, IView {
 
