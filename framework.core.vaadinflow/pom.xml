@@ -163,11 +163,11 @@
 			<version>1.0.0</version>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>software.cxode</groupId>
 			<artifactId>flowquickpopup</artifactId>
 			<version>1.0.2-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.vaadin.tatu</groupId>

@@ -55,8 +55,14 @@
 
 	<include file="create-data-relation-types.xml"
 		relativeToChangelogFile="true" />
-		
+
 	<include file="create-data-countries.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-currencies.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-nationalities.xml"
 		relativeToChangelogFile="true" />
 
 </databaseChangeLog>

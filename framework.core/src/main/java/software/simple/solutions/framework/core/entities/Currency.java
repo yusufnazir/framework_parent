@@ -15,7 +15,9 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.constants.CxodeTables;
+import software.simple.solutions.framework.core.properties.CurrencyProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -29,20 +31,25 @@ public class Currency extends MappedSuperClass {
 	private static final Logger logger = LogManager.getLogger(Currency.class);
 
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
 
+	@FilterFieldProperty(fieldProperty = CurrencyProperty.CODE)
 	@Column(name = CxodeTables.CURRENCY.COLUMNS.CODE)
 	private String code;
 
+	@FilterFieldProperty(fieldProperty = CurrencyProperty.NAME)
 	@Column(name = CxodeTables.CURRENCY.COLUMNS.NAME)
 	private String name;
 
-	@Column(name = CxodeTables.CURRENCY.COLUMNS.DESCRIPTION)
-	private String description;
-
+	@FilterFieldProperty(fieldProperty = CurrencyProperty.ACTIVE)
 	@Column(name = CxodeTables.CURRENCY.COLUMNS.ACTIVE)
 	private Boolean active;
 
@@ -68,14 +75,6 @@ public class Currency extends MappedSuperClass {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public Long getId() {
@@ -104,11 +103,6 @@ public class Currency extends MappedSuperClass {
 			if (other.code != null)
 				return false;
 		} else if (!code.equals(other.code))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
 			return false;
 		if (id == null) {
 			if (other.id != null)

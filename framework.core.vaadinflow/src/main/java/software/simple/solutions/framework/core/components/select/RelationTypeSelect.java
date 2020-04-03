@@ -27,7 +27,7 @@ public class RelationTypeSelect extends CComboBox {
 		List<ComboItem> items;
 		try {
 			items = relationTypeService.getForListing(RelationType.class, true);
-			items.stream().forEach(p -> p.setName(PropertyResolver.getPropertyValueByLocale(ReferenceKey.RELATION_TYPE_,
+			items.stream().forEach(p -> p.setName(PropertyResolver.getPropertyValueByLocale(ReferenceKey.RELATION_TYPE,
 					p.getId().toString(), UI.getCurrent().getLocale(), null, p.getName())));
 			setItems(items);
 		} catch (FrameworkException e) {

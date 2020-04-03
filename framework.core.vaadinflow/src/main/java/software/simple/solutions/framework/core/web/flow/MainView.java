@@ -305,8 +305,10 @@ public class MainView extends AppLayoutRouterLayout
 			/* ... */});
 
 		MenuBar menuBar = new MenuBar();
+		Image imageField = new Image("img/profile-pic-300px.jpg", "profile-image");
+		imageField.addClassName("applayout-profile-image");
 		Icon icon = new Icon(VaadinIcon.USER);
-		MenuItem userProfileMenu = menuBar.addItem(icon);
+		MenuItem userProfileMenu = menuBar.addItem(imageField);
 
 		Button logoutBtn = new Button(
 				PropertyResolver.getPropertyValueByLocale(SystemProperty.LOGIN_BUTTON_LOGIN, ui.getLocale()));

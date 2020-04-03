@@ -27,7 +27,7 @@ public class RelationTypeView extends BasicTemplate<RelationType> {
 		setServiceClass(RelationTypeServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(RelationTypeForm.class);
-		setParentReferenceKey(ReferenceKey.RELATION_TYPE_);
+		setParentReferenceKey(ReferenceKey.RELATION_TYPE);
 		setEditRoute(Routes.RELATION_TYPE_EDIT);
 	}
 

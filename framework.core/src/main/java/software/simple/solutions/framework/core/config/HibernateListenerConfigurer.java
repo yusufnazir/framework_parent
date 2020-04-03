@@ -1,5 +1,7 @@
 package software.simple.solutions.framework.core.config;
 
+import java.util.TimeZone;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;

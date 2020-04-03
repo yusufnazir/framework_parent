@@ -172,7 +172,7 @@ public class MailTemplateForm extends FormView {
 			}
 		});
 		languageFld.setValue(UI.getCurrent().getLocale().getISO3Language().toLowerCase());
-
+		
 		createTabs();
 
 		return mailTemplate;

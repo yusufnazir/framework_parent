@@ -41,8 +41,6 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 	public void setUpCustomColumns() {
 		addContainerProperty(new ValueProvider<MailTemplate, String>() {
 
-			private static final long serialVersionUID = 7111050492953727954L;
-
 			@Override
 			public String apply(MailTemplate mailTemplate) {
 				String iso3Language = UI.getCurrent().getLocale().getISO3Language();
@@ -52,8 +50,6 @@ public class MailTemplateView extends BasicTemplate<MailTemplate> {
 			}
 		}, MailTemplateProperty.NAME);
 		addContainerProperty(new ValueProvider<MailTemplate, String>() {
-
-			private static final long serialVersionUID = -4567965540731845203L;
 
 			@Override
 			public String apply(MailTemplate mailTemplate) {

@@ -22,7 +22,11 @@ public class ReferenceKey {
 	public static final String MAIL_TEMPLATE = CxodeTables.MAIL_TEMPLATE.NAME;
 	public static final String PERSON_INFORMATION = CxodeTables.PERSON_INFORMATION.NAME;
 	public static final String PERSON_EMERGENCY_CONTACT = CxodeTables.PERSON_EMERGENCY_CONTACT.NAME;
-	public static final String RELATION_TYPE_ = CxodeTables.RELATION_TYPE_.NAME;
+	public static final String RELATION_TYPE = CxodeTables.RELATION_TYPE.NAME;
+	public static final String CURRENCY = CxodeTables.CURRENCY.NAME;
+	public static final String COUNTRY = CxodeTables.COUNTRY.NAME;
+	public static final String NATIONALITY = CxodeTables.NATIONALITY.NAME;
+	public static final String HOLIDAY = CxodeTables.HOLIDAY.NAME;
 
 	public static final String LOGIN_SUCCESSFULL = "LOGIN_SUCCESSFULL";
 	

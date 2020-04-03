@@ -36,6 +36,7 @@ import software.simple.solutions.framework.core.web.components.CComboBox;
 import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.web.components.CPasswordField;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
+import software.simple.solutions.framework.core.web.components.CSplitDateField;
 import software.simple.solutions.framework.core.web.components.CTextArea;
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.LookUpField;
@@ -193,7 +194,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 			((LookUpField) component).setCaptionByKey(key);
 			((LookUpField) component).setReferenceKeys(referenceKeys);
 		} else if (component instanceof CTextField) {
-//			((HasSize) component).setWidth("300px");
+			// ((HasSize) component).setWidth("300px");
 			((CTextField) component).setCaptionByKey(key);
 		} else if (component instanceof CTextArea) {
 			((HasSize) component).setWidth("300px");
@@ -216,6 +217,9 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 			((HasSize) component).setWidth("150px");
 		} else if (component instanceof CCheckBox) {
 			((HasSize) component).setWidth("-1px");
+		} else if (component instanceof CSplitDateField) {
+			((CSplitDateField) component)
+					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 		} else {
 			((HasSize) component).setWidth("-1px");
 		}

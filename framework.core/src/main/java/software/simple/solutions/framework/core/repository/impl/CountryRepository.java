@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+
 import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.framework.core.entities.Country;
@@ -39,6 +45,66 @@ public class CountryRepository extends GenericRepository implements ICountryRepo
 			return (List<R>) list;
 		}
 		return new ArrayList<R>();
+	}
+
+	@Override
+	public Boolean isAlpha2Unique(String alpha2, Long id) throws FrameworkException {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<?> criteria = builder.createQuery(Country.class);
+		Root<?> from = criteria.from(Country.class);
+
+		Predicate equal = builder.equal(from.get("alpha2"), alpha2);
+		Predicate notEqual = builder.notEqual(from.get("id"), id);
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		predicates.add(equal);
+		if (id != null) {
+			predicates.add(notEqual);
+		}
+
+		criteria.where(predicates.toArray(new Predicate[predicates.size()]));
+		criteria.select((Selection) builder.count(from));
+		Long count = (Long) entityManager.createQuery(criteria).getSingleResult();
+		return (count == null || count.compareTo(0L) == 0);
+	}
+
+	@Override
+	public Boolean isAlpha3Unique(String alpha3, Long id) throws FrameworkException {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<?> criteria = builder.createQuery(Country.class);
+		Root<?> from = criteria.from(Country.class);
+
+		Predicate equal = builder.equal(from.get("alpha3"), alpha3);
+		Predicate notEqual = builder.notEqual(from.get("id"), id);
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		predicates.add(equal);
+		if (id != null) {
+			predicates.add(notEqual);
+		}
+
+		criteria.where(predicates.toArray(new Predicate[predicates.size()]));
+		criteria.select((Selection) builder.count(from));
+		Long count = (Long) entityManager.createQuery(criteria).getSingleResult();
+		return (count == null || count.compareTo(0L) == 0);
+	}
+
+	@Override
+	public Boolean isNameUnique(String name, Long id) throws FrameworkException {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<?> criteria = builder.createQuery(Country.class);
+		Root<?> from = criteria.from(Country.class);
+
+		Predicate equal = builder.equal(from.get("name"), name);
+		Predicate notEqual = builder.notEqual(from.get("id"), id);
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		predicates.add(equal);
+		if (id != null) {
+			predicates.add(notEqual);
+		}
+
+		criteria.where(predicates.toArray(new Predicate[predicates.size()]));
+		criteria.select((Selection) builder.count(from));
+		Long count = (Long) entityManager.createQuery(criteria).getSingleResult();
+		return (count == null || count.compareTo(0L) == 0);
 	}
 
 }

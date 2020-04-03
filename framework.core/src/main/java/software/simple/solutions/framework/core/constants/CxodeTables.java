@@ -64,7 +64,7 @@ public class CxodeTables {
 
 		}
 	}
-	
+
 	public final class COUNTRY {
 
 		public static final String NAME = "COUNTRIES_";
@@ -86,11 +86,7 @@ public class CxodeTables {
 			public static final String ID = "ID_";
 			public static final String CODE = "CODE_";
 			public static final String NAME = "NAME_";
-			public static final String DESCRIPTION = "DESCRIPTION_";
-			public static final String VALUE = "VALUE_";
-			public static final String BIG_VALUE = "BIG_VALUE_";
 			public static final String ACTIVE = "ACTIVE_";
-			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}
 	}
 
@@ -135,6 +131,21 @@ public class CxodeTables {
 			public static final String TO = "TO_";
 			public static final String SUBJECT = "SUBJECT_";
 			public static final String MESSAGE = "MESSAGE_";
+			public static final String ACTIVE = "ACTIVE_";
+		}
+	}
+	
+	public final class HOLIDAY {
+
+		public static final String NAME = "HOLIDAYS_";
+
+		public final class COLUMNS {
+			public static final String ID = "ID_";
+			public static final String NAME = "NAME_";
+			public static final String DATE = "DATE_";
+			public static final String DAY = "DAY_";
+			public static final String MONTH = "MONTH_";
+			public static final String YEAR = "YEAR_";
 			public static final String ACTIVE = "ACTIVE_";
 		}
 	}
@@ -231,6 +242,17 @@ public class CxodeTables {
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}
 	}
+	
+	public final class NATIONALITY {
+
+		public static final String NAME = "NATIONALITIES_";
+
+		public final class COLUMNS {
+			public static final String ID = "ID_";
+			public static final String NAME = "NAME_";
+			public static final String ACTIVE = "ACTIVE_";
+		}
+	}
 
 	public final class PERSON {
 
@@ -249,7 +271,7 @@ public class CxodeTables {
 			public static final String SOFT_DELETE = "SOFT_DELETE_";
 		}
 	}
-	
+
 	public final class PERSON_EMERGENCY_CONTACT {
 
 		public static final String NAME = "PERSON_EMERGENCY_CONTACTS_";
@@ -320,7 +342,7 @@ public class CxodeTables {
 			public static final String CODE = "CODE_";
 			public static final String ACTIVE = "ACTIVE_";
 			public static final String LOCALE_ID = "LOCALE_ID_";
-//			public static final String PROPERTY_ID = "PROPERTY_ID_";
+			// public static final String PROPERTY_ID = "PROPERTY_ID_";
 			public static final String REFERENCE_KEY = "REFERENCE_KEY_";
 			public static final String REFERENCE_ID = "REFERENCE_ID_";
 			public static final String VALUE = "VALUE_";
@@ -328,7 +350,7 @@ public class CxodeTables {
 		}
 	}
 
-	public final class RELATION_TYPE_ {
+	public final class RELATION_TYPE {
 
 		public static final String NAME = "RELATION_TYPES_";
 

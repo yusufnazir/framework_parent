@@ -13,7 +13,9 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.constants.CxodeTables;
+import software.simple.solutions.framework.core.properties.CountryProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -36,16 +38,20 @@ public class Country extends MappedSuperClass {
 	@Column(name = ID_)
 	private Long id;
 
+	@FilterFieldProperty(fieldProperty = CountryProperty.ALPHA2)
 	@Column(name = CxodeTables.COUNTRY.COLUMNS.ALPHA2)
 	private String alpha2;
 
+	@FilterFieldProperty(fieldProperty = CountryProperty.ALPHA3)
 	@Column(name = CxodeTables.COUNTRY.COLUMNS.ALPHA3)
 	private String alpha3;
 
+	@FilterFieldProperty(fieldProperty = CountryProperty.NAME)
 	@Column(name = CxodeTables.COUNTRY.COLUMNS.NAME)
 	private String name;
 
-	@Column(name = CxodeTables.CURRENCY.COLUMNS.ACTIVE)
+	@FilterFieldProperty(fieldProperty = CountryProperty.ACTIVE)
+	@Column(name = CxodeTables.COUNTRY.COLUMNS.ACTIVE)
 	private Boolean active;
 
 	public Long getId() {

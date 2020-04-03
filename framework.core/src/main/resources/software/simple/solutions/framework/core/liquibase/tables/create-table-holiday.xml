@@ -1,0 +1,48 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1585792047493">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="HOLIDAYS_" />
+			</not>
+		</preConditions>
+		<createTable tableName="HOLIDAYS_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="DATE_" type="DATE" />
+			<column name="DAY_" type="BIGINT" />
+			<column name="MONTH_" type="BIGINT" />
+			<column name="YEAR_" type="BIGINT" />
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1585792051505">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="HOLIDAYS_AUD" />
+			</not>
+		</preConditions>
+		<createTable tableName="HOLIDAYS_AUD">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="DATE_" type="DATE" />
+			<column name="DAY_" type="BIGINT" />
+			<column name="MONTH_" type="BIGINT" />
+			<column name="YEAR_" type="BIGINT" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

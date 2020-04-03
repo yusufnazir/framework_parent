@@ -16,7 +16,7 @@
 			<column name="ACTIVE_" type="BIT(1)" />
 
 			<column name="CODE_" type="VARCHAR(255)" />
-			<column name="DATE_OF_BIRTH_" type="date" />
+			<column name="DATE_OF_BIRTH_" type="DATE" />
 			<column name="FIRST_NAME_" type="VARCHAR(255)" />
 			<column name="LAST_NAME_" type="VARCHAR(255)" />
 			<column name="MIDDLE_NAME_" type="VARCHAR(255)" />
@@ -42,7 +42,7 @@
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="ACTIVE_" type="BIT(1)" />
 			<column name="CODE_" type="VARCHAR(255)" />
-			<column name="DATE_OF_BIRTH_" type="date" />
+			<column name="DATE_OF_BIRTH_" type="DATE" />
 			<column name="FIRST_NAME_" type="VARCHAR(255)" />
 			<column name="LAST_NAME_" type="VARCHAR(255)" />
 			<column name="MIDDLE_NAME_" type="VARCHAR(255)" />

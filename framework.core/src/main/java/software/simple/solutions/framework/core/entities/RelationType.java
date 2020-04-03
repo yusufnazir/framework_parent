@@ -18,7 +18,7 @@ import software.simple.solutions.framework.core.constants.CxodeTables;
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
 @Entity
-@Table(name = CxodeTables.RELATION_TYPE_.NAME)
+@Table(name = CxodeTables.RELATION_TYPE.NAME)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
 public class RelationType extends MappedSuperClass {
@@ -36,13 +36,13 @@ public class RelationType extends MappedSuperClass {
 	@Column(name = ID_)
 	private Long id;
 
-	@Column(name = CxodeTables.RELATION_TYPE_.COLUMNS.CODE)
+	@Column(name = CxodeTables.RELATION_TYPE.COLUMNS.CODE)
 	private String code;
 
-	@Column(name = CxodeTables.RELATION_TYPE_.COLUMNS.NAME)
+	@Column(name = CxodeTables.RELATION_TYPE.COLUMNS.NAME)
 	private String name;
 
-	@Column(name = CxodeTables.RELATION_TYPE_.COLUMNS.REQUIRES_RELATED_TO_)
+	@Column(name = CxodeTables.RELATION_TYPE.COLUMNS.REQUIRES_RELATED_TO_)
 	private Boolean requiresRelatedTo;
 
 	@Column(name = CxodeTables.ROLE_VIEW.COLUMNS.ACTIVE)

@@ -105,4 +105,13 @@
 	<include file="create-table-person-emergency-contact.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-currency.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-nationality.xml"
+		relativeToChangelogFile="true" />
+		
+	<include file="create-table-holiday.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>
