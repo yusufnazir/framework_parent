@@ -24,11 +24,15 @@ import software.simple.solutions.framework.core.util.SessionHolder;
 @PreserveOnRefresh
 @CssImport(value = "./styles/my-custom-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport(value = "./styles/my-custom-menu-bar.css", themeFor = "vaadin-menu-bar")
+@CssImport(value = "./styles/my-custom-menu-bar-button.css", themeFor = "vaadin-menu-bar-button")
 @CssImport(value = "./styles/my-custom-combo-box-styles.css", themeFor = "vaadin-combo-box")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+@CssImport(value = "./styles/my-custom-vaadin-sub-tab.css")
 public class MainView extends Composite<VerticalLayout> implements RouterLayout {
 
-	// @formatter:off
+	private static final long serialVersionUID = 8111279702273562027L;
+
+		// @formatter:off
 		private String styles = ".applayout-profile-image { "
 		        + "width: 50px;"
 		        + "height: 50px;"

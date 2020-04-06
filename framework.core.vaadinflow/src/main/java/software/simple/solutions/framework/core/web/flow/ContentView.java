@@ -147,10 +147,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 					for (Menu menu : subMenus) {
 						Tab subMenuTab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
 								menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
-						subMenuTab.getStyle().set("background", "#f3d512");
-						subMenuTab.getStyle().set("border-top-left-radius", "50%");
-						subMenuTab.getStyle().set("border-top-right-radius", "5%");
-						subMenuTab.getStyle().set("margin-right", "1px");
+						subMenuTab.addClassName("my-custom-sub-tab");
 						subMenuTab.setVisible(false);
 						subTabSheet.add(subMenuTab);
 						SimpleSolutionsMenuItem simpleSolutionsMenuItem = new SimpleSolutionsMenuItem(menu);
@@ -187,9 +184,15 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 
 	public void initialize() {
 		mainBar = new HorizontalLayout();
+		mainBar.setWidth("100%");
+		mainBar.getStyle().set("padding-top", "5px");
+		mainBar.getStyle().set("padding-bottom", "5px");
+		mainBar.getStyle().set("border-bottom", "2px solid var(--lumo-primary-color)");
+		mainBar.getStyle().set("background", "var(--paper-light-green-100)");
 		add(mainBar);
 
 		userMenuBar = new MenuBar();
+		userMenuBar.setThemeName("user-menubar-theme");
 		mainBar.add(userMenuBar);
 
 		menuBar = new MenuBar();
@@ -237,7 +240,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				userProfileMenu.getElement().getStyle().set("background", "none");
 
 				Button logoutBtn = new Button(PropertyResolver
-						.getPropertyValueByLocale(SystemProperty.LOGIN_BUTTON_LOGIN, UI.getCurrent().getLocale()));
+						.getPropertyValueByLocale(SystemProperty.BUTTON_LOGOUT, UI.getCurrent().getLocale()));
 				userProfileMenu.getSubMenu().add(logoutBtn);
 				logoutBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
@@ -246,8 +249,11 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 					@Override
 					public void onComponentEvent(ClickEvent<Button> event) {
 						// UI.getCurrent().getPage().executeJs("window.location.href=''");
-						UI.getCurrent().getPage().reload();
-						VaadinSession.getCurrent().close();
+						// UI.getCurrent().getPage().reload();
+						// VaadinSession.getCurrent().close();
+
+						VaadinSession.getCurrent().getSession().invalidate();
+						UI.getCurrent().getPage().executeJs("window.location.href=''");
 					}
 				});
 			}
@@ -288,13 +294,6 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 					contentLayout.getChildren().forEach(p -> p.setVisible(false));
 					if (createdSubMenusTabs.containsKey(selectedTab)) {
 						AbstractBaseView abstractBaseView = createdSubMenusTabs.get(selectedTab);
-						// Optional<Component> optional =
-						// contentLayout.getChildren()
-						// .filter(p -> ((AbstractBaseView)
-						// p).getViewDetail().getMenu().getId()
-						// .compareTo(abstractBaseView.getViewDetail().getMenu().getId())
-						// == 0)
-						// .findFirst();
 						Optional<Component> optional = contentLayout.getChildren().filter(p -> ((AbstractBaseView) p)
 								.getViewDetail().getUuid().equalsIgnoreCase(abstractBaseView.getViewDetail().getUuid()))
 								.findFirst();
@@ -370,41 +369,6 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				menuItem.addClickListener(new MenuItemClick(forName, route));
 			}
 		}
-		// if (menu.getParentMenu() != null &&
-		// menu.getParentMenu().getId().compareTo(parent.getId()) == 0) {
-		// if (menu.getView() == null) {
-		// MenuItem menuItem =
-		// menuBar.addItem(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
-		// menu.getId().toString(), UI.getCurrent().getLocale(), null,
-		// menu.getName()));
-		// menuBar.addItem(menuItem);
-		// }
-		// else {
-		// String viewClassName = menu.getView().getViewClassName();
-		// Class<? extends Component> forName = null;
-		// try {
-		// forName = (Class<? extends Component>)
-		// Class.forName(viewClassName);
-		// Route route = forName.getAnnotation(Route.class);
-		// if (route != null) {
-		// String value = route.value();
-		// sessionHolder.addRouteMenu(value, menu.getId());
-		// // RouteConfiguration.forSessionScope().setRoute(value,
-		// // forName, MainView.class);
-		// }
-		// } catch (ClassNotFoundException e) {
-		// logger.error(e.getMessage(), e);
-		// }
-		// com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon
-		// icon = null;
-		// if (menu.getIcon() != null) {
-		// icon = FontAwesome.Solid.valueOf(menu.getIcon()).create();
-		// }
-		// CustomLeftClickableItem leftClickableItem = menuClicked(menu,
-		// forName, icon);
-		// customLeftSubmenu.getSubmenuContainer().add(leftClickableItem);
-		// }
-		// }
 	}
 
 	private void setUpFieldSelectObservable() {
@@ -426,10 +390,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.setVisible(false);
 				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
 						UI.getCurrent().getLocale(), menu.getName()));
-				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
-				tab.getStyle().set("border-top-left-radius", "50%");
-				tab.getStyle().set("border-top-right-radius", "5%");
-				tab.getStyle().set("margin-right", "1px");
+				tab.addClassName("my-custom-sub-tab");
 				Icon icon = VaadinIcon.CLOSE_CIRCLE.create();
 				icon.addClickListener(new ComponentEventListener<ClickEvent<Icon>>() {
 
@@ -490,10 +451,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.setVisible(false);
 				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
 						UI.getCurrent().getLocale(), menu.getName()));
-				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
-				tab.getStyle().set("border-top-left-radius", "50%");
-				tab.getStyle().set("border-top-right-radius", "5%");
-				tab.getStyle().set("margin-right", "1px");
+				tab.addClassName("my-custom-sub-tab");
 				Icon icon = VaadinIcon.CLOSE_CIRCLE.create();
 				icon.addClickListener(new ComponentEventListener<ClickEvent<Icon>>() {
 

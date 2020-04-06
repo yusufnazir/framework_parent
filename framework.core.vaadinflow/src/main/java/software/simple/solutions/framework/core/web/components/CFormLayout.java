@@ -45,6 +45,9 @@ public class CFormLayout extends FormLayout {
 				} else if (component instanceof CCheckBox) {
 					((CCheckBox) component)
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+				} else if (component instanceof CustomCheckBox) {
+					((CustomCheckBox) component)
+							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 				} else if (component instanceof CPasswordField) {
 					((CPasswordField) component)
 							.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));

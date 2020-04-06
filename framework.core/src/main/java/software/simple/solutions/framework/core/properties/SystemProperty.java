@@ -44,6 +44,7 @@ public class SystemProperty {
 	public static final String LOGIN_BUTTON_LOGIN = "system.button.login";
 	public static final String LOGIN_WELCOME = "system.login.welcome";
 	public static final String LOGIN_REGISTER_HERE = "system.login.register.here";
+	public static final String BUTTON_LOGOUT = "system.button.logout";
 
 	public static final String SYSTEM_DESCRIPTION_FILTER = "system.description.filter";
 	public static final String SYSTEM_DESCRIPTION_SEARCH = "system.description.search";

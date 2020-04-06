@@ -44,10 +44,10 @@ import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.FormView;
 import software.simple.solutions.framework.core.web.components.CButton;
-import software.simple.solutions.framework.core.web.components.CCheckBox;
 import software.simple.solutions.framework.core.web.components.CFormLayout;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.CustomCheckBox;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.routing.Routes;
@@ -66,7 +66,7 @@ public class PersonForm extends FormView {
 	private CTextField middleNameFld;
 	private CPopupDateField dateOfBirthFld;
 	private GenderSelect genderFld;
-	private CCheckBox activeFld;
+	private CustomCheckBox activeFld;
 	private HorizontalLayout mainLayout;
 
 	private List<ComboItem> genderListing;
@@ -201,7 +201,7 @@ public class PersonForm extends FormView {
 
 		genderFld = formGrid.add(GenderSelect.class, GenderProperty.GENDER);
 
-		activeFld = formGrid.add(CCheckBox.class, PersonProperty.ACTIVE);
+		activeFld = formGrid.add(CustomCheckBox.class, PersonProperty.ACTIVE);
 
 		return personInfoCard;
 	}
