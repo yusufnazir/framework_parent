@@ -47,6 +47,7 @@ import software.simple.solutions.framework.core.web.routing.Routes;
  */
 @Route(value = Routes.LOGIN, layout = MainView.class)
 @CssImport(value = "./styles/shared-styles.css")
+@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class LoginView extends FlexLayout implements BeforeEnterObserver {
 
 	private static final String CENTER_LOGIN_LAYOUT = "center-login-layout";
@@ -56,7 +57,6 @@ public class LoginView extends FlexLayout implements BeforeEnterObserver {
 	private UI ui;
 
 	public LoginView() {
-
 		setWidth("100%");
 		setHeight("100%");
 		getElement().getStyle().set("background-image", "url('images/dynamic-style.png')");

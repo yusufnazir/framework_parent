@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.web.flow;
 
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -10,6 +11,7 @@ import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.util.SessionHolder;
 
 @Route(value = "", layout = MainView.class)
+@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class HomeView extends VerticalLayout implements BeforeEnterObserver {
 
 	private static final long serialVersionUID = 4918285431578284653L;

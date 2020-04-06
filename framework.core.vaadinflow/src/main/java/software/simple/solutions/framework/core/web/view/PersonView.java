@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.function.ValueProvider;
@@ -36,6 +37,7 @@ import software.simple.solutions.framework.core.web.view.forms.PersonForm;
 
 @Route(value = Routes.PERSON, layout = MainView.class)
 @SupportedPrivileges(extraPrivileges = { Privileges.PERSON_SHOW_GENDER, Privileges.PERSON_SHOW_DOB })
+@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class PersonView extends BasicTemplate<Person> {
 
 	private static final long serialVersionUID = 6503015064562511801L;

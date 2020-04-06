@@ -16,7 +16,6 @@ import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
-import software.simple.solutions.framework.core.web.lookup.RelationTypeLookUpField;
 import software.simple.solutions.framework.core.web.routing.Routes;
 
 @Route(value = Routes.PERSON_EMERGENCY_CONTACT_EDIT, layout = MainView.class)

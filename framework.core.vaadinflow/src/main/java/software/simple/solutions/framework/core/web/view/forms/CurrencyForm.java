@@ -5,7 +5,6 @@ import com.vaadin.flow.router.Route;
 import software.simple.solutions.framework.core.entities.Currency;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.CurrencyProperty;
-import software.simple.solutions.framework.core.properties.MenuProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.CurrencyVO;
 import software.simple.solutions.framework.core.web.FormView;

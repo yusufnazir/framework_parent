@@ -1,10 +1,14 @@
 package software.simple.solutions.framework.core.web.flow;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +20,11 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -25,17 +32,21 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.Menu;
+import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PopUpMode;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IMenuService;
+import software.simple.solutions.framework.core.service.facade.MenuServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
@@ -49,6 +60,29 @@ import software.simple.solutions.framework.core.web.components.CButton;
 import software.simple.solutions.framework.core.web.lookup.LookUpHolder;
 
 public class ContentView extends VerticalLayout implements BeforeEnterObserver {
+
+	private final class MenuItemClick implements ComponentEventListener<ClickEvent<MenuItem>> {
+		private static final long serialVersionUID = -105533134396024106L;
+
+		private Class<? extends Component> forName;
+		private Route route;
+
+		public MenuItemClick(Class<? extends Component> forName, Route route) {
+			this.forName = forName;
+			this.route = route;
+		}
+
+		@Override
+		public void onComponentEvent(ClickEvent<MenuItem> event) {
+			if (forName != null) {
+				resetTabs();
+				if (route != null) {
+					String value = route.value();
+					UI.getCurrent().navigate(value);
+				}
+			}
+		}
+	}
 
 	private static final long serialVersionUID = -7294083435850906760L;
 
@@ -68,6 +102,11 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 	private BehaviorSubject<LookUpHolder> lookUpFieldSelectObserver;
 	private Tab parentViewTab;
 	private Tab previousSelectedTab;
+	private HorizontalLayout mainBar;
+	private MenuBar menuBar;
+	private List<Menu> menus;
+
+	private MenuBar userMenuBar;
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
@@ -129,7 +168,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 			}
 		}
 	}
-	
+
 	private void handleSelectedEntity(EntitySelect entitySelect) {
 		selectedEntity = entitySelect.getEntity();
 		if (entitySelect.getEntity() == null) {
@@ -146,7 +185,74 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 		}
 	}
 
-	private void initialize() {
+	public void initialize() {
+		mainBar = new HorizontalLayout();
+		add(mainBar);
+
+		userMenuBar = new MenuBar();
+		mainBar.add(userMenuBar);
+
+		menuBar = new MenuBar();
+		mainBar.add(menuBar);
+
+		BehaviorSubject<Boolean> loginSuccessfullObserver = BehaviorSubject.create();
+		sessionHolder.addReferenceKey(ReferenceKey.LOGIN_SUCCESSFULL, loginSuccessfullObserver);
+		loginSuccessfullObserver.subscribe(new Consumer<Boolean>() {
+
+			@Override
+			public void accept(Boolean t) throws Exception {
+				setUpMenu();
+				setUpUserMenu();
+			}
+
+			private void setUpMenu() {
+				sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
+				MenuServiceFacade menuServiceFacade = MenuServiceFacade.get(UI.getCurrent());
+				try {
+					menus = menuServiceFacade.findAuthorizedMenusByType(sessionHolder.getSelectedRole().getId(),
+							Arrays.asList(MenuType.HEAD_MENU, MenuType.CHILD));
+					if (menus != null) {
+						Collections.sort(menus, Comparator.comparing(Menu::getIndex));
+						for (Menu menu : menus) {
+							if (menu.getType().compareTo(MenuType.HEAD_MENU) == 0) {
+								MenuItem menuItem = menuBar.addItem(PropertyResolver.getPropertyValueByLocale(
+										ReferenceKey.MENU, menu.getId().toString(), UI.getCurrent().getLocale(), null,
+										menu.getName()));
+								getChildrens(menuItem, menu);
+							}
+						}
+					}
+				} catch (FrameworkException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+
+			private void setUpUserMenu() {
+				Image imageField = new Image("img/profile-pic-300px.jpg", "profile-image");
+				imageField.getStyle().set("border-radius", "50%");
+				imageField.getStyle().set("height", "var(--lumo-size-s)");
+				imageField.getStyle().set("border", "2px solid var(--lumo-primary-color)");
+				imageField.addClassName("applayout-profile-image");
+				MenuItem userProfileMenu = userMenuBar.addItem(imageField);
+				userProfileMenu.getElement().getStyle().set("background", "none");
+
+				Button logoutBtn = new Button(PropertyResolver
+						.getPropertyValueByLocale(SystemProperty.LOGIN_BUTTON_LOGIN, UI.getCurrent().getLocale()));
+				userProfileMenu.getSubMenu().add(logoutBtn);
+				logoutBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+					private static final long serialVersionUID = -5897232278349546260L;
+
+					@Override
+					public void onComponentEvent(ClickEvent<Button> event) {
+						// UI.getCurrent().getPage().executeJs("window.location.href=''");
+						UI.getCurrent().getPage().reload();
+						VaadinSession.getCurrent().close();
+					}
+				});
+			}
+		});
+
 		tabBar = new HorizontalLayout();
 		CButton returnToSearchBtn = new CButton();
 		returnToSearchBtn.getStyle().set("border", "1px solid");
@@ -166,6 +272,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 		});
 
 		subTabSheet = new Tabs();
+		subTabSheet.getStyle().set("box-shadow", "none");
 		tabBar.add(subTabSheet);
 		add(tabBar);
 
@@ -234,6 +341,72 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 		setUpFieldSelectObservable();
 	}
 
+	private void getChildrens(MenuItem parentMenuItem, Menu parent) {
+		List<Menu> list = menus.stream()
+				.filter(p -> (p.getParentMenu() != null && p.getParentMenu().getId().compareTo(parent.getId()) == 0))
+				.collect(Collectors.toList());
+		if (list != null) {
+			for (Menu menu : list) {
+				View view = menu.getView();
+				Class<? extends Component> forName = null;
+				Route route = null;
+				if (view != null) {
+					String viewClassName = view.getViewClassName();
+					try {
+						forName = (Class<? extends Component>) Class.forName(viewClassName);
+						route = forName.getAnnotation(Route.class);
+						if (route != null) {
+							String value = route.value();
+							sessionHolder.addRouteMenu(value, menu.getId());
+						}
+					} catch (ClassNotFoundException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
+				MenuItem menuItem = parentMenuItem.getSubMenu().addItem(PropertyResolver.getPropertyValueByLocale(
+						ReferenceKey.MENU, menu.getId().toString(), UI.getCurrent().getLocale(), null, menu.getName()));
+				getChildrens(menuItem, menu);
+				menuItem.addClickListener(new MenuItemClick(forName, route));
+			}
+		}
+		// if (menu.getParentMenu() != null &&
+		// menu.getParentMenu().getId().compareTo(parent.getId()) == 0) {
+		// if (menu.getView() == null) {
+		// MenuItem menuItem =
+		// menuBar.addItem(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
+		// menu.getId().toString(), UI.getCurrent().getLocale(), null,
+		// menu.getName()));
+		// menuBar.addItem(menuItem);
+		// }
+		// else {
+		// String viewClassName = menu.getView().getViewClassName();
+		// Class<? extends Component> forName = null;
+		// try {
+		// forName = (Class<? extends Component>)
+		// Class.forName(viewClassName);
+		// Route route = forName.getAnnotation(Route.class);
+		// if (route != null) {
+		// String value = route.value();
+		// sessionHolder.addRouteMenu(value, menu.getId());
+		// // RouteConfiguration.forSessionScope().setRoute(value,
+		// // forName, MainView.class);
+		// }
+		// } catch (ClassNotFoundException e) {
+		// logger.error(e.getMessage(), e);
+		// }
+		// com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon
+		// icon = null;
+		// if (menu.getIcon() != null) {
+		// icon = FontAwesome.Solid.valueOf(menu.getIcon()).create();
+		// }
+		// CustomLeftClickableItem leftClickableItem = menuClicked(menu,
+		// forName, icon);
+		// customLeftSubmenu.getSubmenuContainer().add(leftClickableItem);
+		// }
+		// }
+	}
+
 	private void setUpFieldSelectObservable() {
 		sessionHolder.addReferenceKey(ReferenceKey.LOOKUP_FIELD_SELECT_OBSERVEABLE, lookUpFieldSelectObserver);
 		lookUpFieldSelectObserver.subscribe(new Consumer<LookUpHolder>() {
@@ -251,8 +424,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.executeSearch();
 				contentLayout.add(view);
 				view.setVisible(false);
-				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
-						menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
+				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
+						UI.getCurrent().getLocale(), menu.getName()));
 				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
 				tab.getStyle().set("border-top-left-radius", "50%");
 				tab.getStyle().set("border-top-right-radius", "5%");
@@ -315,8 +488,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				view.executeSearch();
 				contentLayout.add(view);
 				view.setVisible(false);
-				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU,
-						menu.getId(), UI.getCurrent().getLocale(), menu.getName()));
+				Tab tab = new Tab(PropertyResolver.getPropertyValueByLocale(ReferenceKey.MENU, menu.getId(),
+						UI.getCurrent().getLocale(), menu.getName()));
 				tab.getStyle().set("background", "rgb(231, 233, 255) none repeat scroll 0% 0%");
 				tab.getStyle().set("border-top-left-radius", "50%");
 				tab.getStyle().set("border-top-right-radius", "5%");
@@ -344,8 +517,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 			}
 		});
 	}
-	
-	public void resetTabs(){
+
+	public void resetTabs() {
 		handleSelectedEntity(new EntitySelect());
 		Set<Tab> keySet = lookUpMenusTabMap.keySet();
 		for (Tab tab : keySet) {
@@ -354,6 +527,10 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 		lookUpMenusTabMap.clear();
 		subMenusTabMap.keySet().stream().forEach(p -> createdSubMenusTabs.remove(p));
 		subTabSheet.setSelectedTab(parentViewTab);
+	}
+
+	public boolean shouldReset() {
+		return (menus == null || menus.isEmpty());
 	}
 
 }

@@ -47,7 +47,6 @@ import software.simple.solutions.framework.core.web.components.CFormLayout;
 import software.simple.solutions.framework.core.web.components.CPopupDateField;
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.ConfirmationDialog;
-import software.simple.solutions.framework.core.web.components.EditEmailField;
 import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;

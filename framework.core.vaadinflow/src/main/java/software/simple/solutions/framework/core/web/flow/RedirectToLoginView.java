@@ -3,7 +3,6 @@ package software.simple.solutions.framework.core.web.flow;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Route;
 
 //@Route(value = "")
 public class RedirectToLoginView extends Div implements BeforeEnterObserver {

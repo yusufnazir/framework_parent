@@ -26,9 +26,9 @@ import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 import software.simple.solutions.framework.core.web.DetailsWindow;
 import software.simple.solutions.framework.core.web.components.CButton;
-import software.simple.solutions.framework.core.web.components.CVerticalLayout;
 import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.web.components.CTextField;
+import software.simple.solutions.framework.core.web.components.CVerticalLayout;
 import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 
 @CxodeConfigurationComponent(order = 3, captionKey = ConfigurationProperty.PASSWORD_SECURITY_CONFIGURATION)

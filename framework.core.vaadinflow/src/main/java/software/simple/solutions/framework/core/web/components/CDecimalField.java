@@ -1,12 +1,8 @@
 package software.simple.solutions.framework.core.web.components;
 
-import java.math.BigDecimal;
-
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 
-import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.IField;
 
