@@ -47,10 +47,10 @@
 		author="yusuf (generated)" id="1585536455657">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<columnExists tableName="ROLES_" columnName="ROLE_CATEGORY_ID_" />
+				<columnExists tableName="roles_" columnName="ROLE_CATEGORY_ID_" />
 			</not>
 		</preConditions>
-		<addColumn tableName="ROLES_">
+		<addColumn tableName="roles_">
 			<column name="ROLE_CATEGORY_ID_" type="BIGINT"></column>
 		</addColumn>
 	</changeSet>
@@ -59,10 +59,10 @@
 		author="yusuf (generated)" id="1585536453650">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<columnExists tableName="ROLES_AUD" columnName="ROLE_CATEGORY_ID_" />
+				<columnExists tableName="roles_aud" columnName="ROLE_CATEGORY_ID_" />
 			</not>
 		</preConditions>
-		<addColumn tableName="ROLES_AUD">
+		<addColumn tableName="roles_aud">
 			<column name="ROLE_CATEGORY_ID_" type="BIGINT"></column>
 		</addColumn>
 	</changeSet>
