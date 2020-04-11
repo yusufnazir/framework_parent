@@ -6,10 +6,10 @@
 		author="yusuf (generated)" id="1585535270863">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="ROLES_" />
+				<tableExists tableName="roles_" />
 			</not>
 		</preConditions>
-		<createTable tableName="ROLES_">
+		<createTable tableName="roles_">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
@@ -24,10 +24,10 @@
 		author="yusuf (generated)" id="1585535272870">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="ROLES_AUD" />
+				<tableExists tableName="roles_aud" />
 			</not>
 		</preConditions>
-		<createTable tableName="ROLES_AUD">
+		<createTable tableName="roles_aud">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>

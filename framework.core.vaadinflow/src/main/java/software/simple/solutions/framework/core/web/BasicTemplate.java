@@ -730,10 +730,12 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		Boolean viewContentUpdated = getViewContentUpdated();
 		doForBack();
 
-		Map<String, List<String>> parameters = location.getQueryParameters().getParameters();
-		QueryParameters queryParameters = new QueryParameters(parameters);
-		location = new Location(location.getPath());
-		UI.getCurrent().getPage().getHistory().replaceState(null, location);
+		if(location!=null && location.getQueryParameters()!=null){
+			Map<String, List<String>> parameters = location.getQueryParameters().getParameters();
+			QueryParameters queryParameters = new QueryParameters(parameters);
+			location = new Location(location.getPath());
+			UI.getCurrent().getPage().getHistory().replaceState(null, location);
+		}
 	}
 
 	private void doForBack() {

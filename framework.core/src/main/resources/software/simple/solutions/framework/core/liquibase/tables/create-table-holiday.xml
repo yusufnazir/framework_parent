@@ -6,10 +6,10 @@
 		author="simplesolutions" id="1585792047493">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="HOLIDAYS_" />
+				<tableExists tableName="holidays_" />
 			</not>
 		</preConditions>
-		<createTable tableName="HOLIDAYS_">
+		<createTable tableName="holidays_">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
@@ -25,10 +25,10 @@
 		author="simplesolutions" id="1585792051505">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="HOLIDAYS_AUD" />
+				<tableExists tableName="holidays_aud" />
 			</not>
 		</preConditions>
-		<createTable tableName="HOLIDAYS_AUD">
+		<createTable tableName="holidays_aud">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>

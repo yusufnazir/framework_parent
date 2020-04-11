@@ -19,7 +19,7 @@ public class CComboBox extends ComboBox<ComboItem> implements Comparable<CComboB
 	private static final long serialVersionUID = -6297946915884259838L;
 
 	public CComboBox() {
-		getElement().setAttribute("theme", "small");
+		getElement().setAttribute("theme", "medium");
 		setItemLabelGenerator(ComboItem::getCaption);
 		setPlaceholder(PropertyResolver.getPropertyValueByLocale("system.select.an.item", UI.getCurrent().getLocale()));
 	}

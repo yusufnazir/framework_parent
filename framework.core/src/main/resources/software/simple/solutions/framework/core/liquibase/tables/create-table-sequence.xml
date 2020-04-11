@@ -7,10 +7,10 @@
 		author="simplesolutions" id="1538430449815">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="SEQUENCES_" />
+				<tableExists tableName="sequences_" />
 			</not>
 		</preConditions>
-		<createTable tableName="SEQUENCES_">
+		<createTable tableName="sequences_">
 			<column name="PK_NAME" type="VARCHAR(255)">
 				<constraints primaryKey="true" nullable="false" />
 			</column>

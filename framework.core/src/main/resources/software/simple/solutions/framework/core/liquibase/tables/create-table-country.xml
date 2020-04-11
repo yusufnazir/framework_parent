@@ -6,10 +6,10 @@
 		author="simplesolutions" id="1577923983168">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="COUNTRIES_" />
+				<tableExists tableName="countries_" />
 			</not>
 		</preConditions>
-		<createTable tableName="COUNTRIES_">
+		<createTable tableName="countries_">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
@@ -24,10 +24,10 @@
 		author="simplesolutions" id="1577923988104">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="COUNTRIES_AUD" />
+				<tableExists tableName="countries_aud" />
 			</not>
 		</preConditions>
-		<createTable tableName="COUNTRIES_AUD">
+		<createTable tableName="countries_aud">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
