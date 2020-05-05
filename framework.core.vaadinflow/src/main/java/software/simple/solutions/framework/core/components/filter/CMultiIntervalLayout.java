@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.components.filter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.vaadin.flow.component.UI;
@@ -43,19 +44,20 @@ public class CMultiIntervalLayout extends CustomField<MultiStringInterval> imple
 	}
 
 	private void registerOperatorSelectListeners() {
-//		this.operatorSelect.addValueChangeListener(new ValueChangeListener<ComboItem>() {
-//			private static final long serialVersionUID = 6673313240019183079L;
-//
-//			public void valueChange(ValueChangeEvent<ComboItem> event) {
-//			}
-//		});
+		// this.operatorSelect.addValueChangeListener(new
+		// ValueChangeListener<ComboItem>() {
+		// private static final long serialVersionUID = 6673313240019183079L;
+		//
+		// public void valueChange(ValueChangeEvent<ComboItem> event) {
+		// }
+		// });
 
 	}
 
 	private void initOperatorSelect() {
 		Listing.getMultiStringOperatorSelect(this.operatorSelect);
 		this.operatorSelect.setValue(new ComboItem(Operator.IN));
-//		operatorSelect.setEmptySelectionAllowed(false);
+		// operatorSelect.setEmptySelectionAllowed(false);
 	}
 
 	public void setFrom(Set<String> value) {
@@ -80,14 +82,16 @@ public class CMultiIntervalLayout extends CustomField<MultiStringInterval> imple
 		operatorSelect.setWidth("50px");
 		operatorSelect.setHeight("-1px");
 		mainLayout.add(operatorSelect);
-//		mainLayout.setComponentAlignment(operatorSelect, Alignment.MIDDLE_LEFT);
+		// mainLayout.setComponentAlignment(operatorSelect,
+		// Alignment.MIDDLE_LEFT);
 
 		multiSelectFld = new CMultiComboBox();
 		multiSelectFld.setWidth("100%");
 		multiSelectFld.setHeight("-1px");
 		mainLayout.add(multiSelectFld);
-//		mainLayout.setComponentAlignment(multiSelectFld, Alignment.MIDDLE_LEFT);
-//		mainLayout.setExpandRatio(multiSelectFld, 1);
+		// mainLayout.setComponentAlignment(multiSelectFld,
+		// Alignment.MIDDLE_LEFT);
+		// mainLayout.setExpandRatio(multiSelectFld, 1);
 
 		return this.mainLayout;
 	}
@@ -104,14 +108,14 @@ public class CMultiIntervalLayout extends CustomField<MultiStringInterval> imple
 
 	@Override
 	public Set<String> getTo() {
-		return null;
+		return new HashSet<String>();
 	}
 
 	@Override
 	public Set<String> getFrom() {
-		Set<String> value = this.multiSelectFld.getValue();
+		Set<String> value = (Set<String>) this.multiSelectFld.getValue();
 		if (value == null || value.isEmpty()) {
-			return null;
+			return new HashSet<String>();
 		}
 		return value;
 	}
@@ -168,7 +172,7 @@ public class CMultiIntervalLayout extends CustomField<MultiStringInterval> imple
 	@Override
 	protected void setPresentationValue(MultiStringInterval newPresentationValue) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

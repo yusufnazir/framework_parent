@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541811277148">
+		author="simplesolutions" id="1586731996634">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="persons_" />
@@ -22,11 +22,13 @@
 			<column name="MIDDLE_NAME_" type="VARCHAR(255)" />
 			<column name="PLACE_OF_BIRTH_" type="VARCHAR(255)" />
 			<column name="GENDER_ID_" type="BIGINT" />
+			<column name="SOUNDEX_FIRST_NAME" type="VARCHAR(255)" />
+			<column name="SOUNDEX_LAST_NAME" type="VARCHAR(255)" />
 
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1541811293710">
+		author="simplesolutions" id="1586731998641">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="persons_aud" />
@@ -48,8 +50,58 @@
 			<column name="MIDDLE_NAME_" type="VARCHAR(255)" />
 			<column name="PLACE_OF_BIRTH_" type="VARCHAR(255)" />
 			<column name="GENDER_ID_" type="BIGINT" />
+			<column name="SOUNDEX_FIRST_NAME" type="VARCHAR(255)" />
+			<column name="SOUNDEX_LAST_NAME" type="VARCHAR(255)" />
 
 		</createTable>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1586732030648">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="persons_" columnName="SOUNDEX_FIRST_NAME" />
+			</not>
+		</preConditions>
+		<addColumn tableName="persons_">
+			<column name="SOUNDEX_FIRST_NAME" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1586732056653">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="persons_aud" columnName="SOUNDEX_FIRST_NAME" />
+			</not>
+		</preConditions>
+		<addColumn tableName="persons_aud">
+			<column name="SOUNDEX_FIRST_NAME" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1586732068656">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="persons_" columnName="SOUNDEX_LAST_NAME" />
+			</not>
+		</preConditions>
+		<addColumn tableName="persons_">
+			<column name="SOUNDEX_LAST_NAME" type="VARCHAR(255)" />
+		</addColumn>
+	</changeSet>
+	
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="yusuf (generated)" id="1586732064655">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="persons_aud" columnName="SOUNDEX_LAST_NAME" />
+			</not>
+		</preConditions>
+		<addColumn tableName="persons_aud">
+			<column name="SOUNDEX_LAST_NAME" type="VARCHAR(255)" />
+		</addColumn>
 	</changeSet>
 
 </databaseChangeLog>

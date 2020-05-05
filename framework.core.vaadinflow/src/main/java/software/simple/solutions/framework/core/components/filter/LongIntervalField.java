@@ -7,13 +7,12 @@ import software.simple.solutions.framework.core.constants.Operator;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.pojo.Interval;
 import software.simple.solutions.framework.core.pojo.LongInterval;
-import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.Listing;
 import software.simple.solutions.framework.core.web.components.CComboBox;
-import software.simple.solutions.framework.core.web.components.CDiscreetNumberField;
+import software.simple.solutions.framework.core.web.components.LongField;
 
-public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> implements Interval<Long> {
+public class LongIntervalField extends CustomField<LongInterval> implements Interval<Long> {
 
 	private static final long serialVersionUID = -4895709684731728860L;
 
@@ -21,11 +20,11 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	public static final String OPERATOR = "_operator";
 
 	private HorizontalLayout mainLayout;
-	private CDiscreetNumberField toFld;
-	private CDiscreetNumberField fromFld;
+	private LongField toFld;
+	private LongField fromFld;
 	private CComboBox operatorSelect;
 
-	public CDiscreetNumberIntervalLayout() {
+	public LongIntervalField() {
 		buildMainLayout();
 		add(this.mainLayout);
 		setStaticProperties();
@@ -67,11 +66,11 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	}
 
 	public void setTo(Long value) {
-		toFld.setValue(NumberUtil.getInteger(value));
+		toFld.setValue(value);
 	}
 
 	public void setFrom(Long value) {
-		fromFld.setValue(NumberUtil.getInteger(value));
+		fromFld.setValue(value);
 	}
 
 	public void setOperator(String operator) {
@@ -95,13 +94,13 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 		// mainLayout.setComponentAlignment(operatorSelect,
 		// Alignment.MIDDLE_LEFT);
 
-		this.fromFld = new CDiscreetNumberField();
+		this.fromFld = new LongField();
 		this.fromFld.setWidth("-1px");
 		this.fromFld.setHeight("-1px");
 		this.mainLayout.add(this.fromFld);
 		// mainLayout.setComponentAlignment(fromFld, Alignment.MIDDLE_LEFT);
 
-		this.toFld = new CDiscreetNumberField();
+		this.toFld = new LongField();
 		this.toFld.setWidth("-1px");
 		this.toFld.setHeight("-1px");
 		this.mainLayout.add(this.toFld);
@@ -117,15 +116,15 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 
 	@Override
 	public Long getTo() {
-		return toFld.getLongValue();
+		return toFld.getValue();
 	}
 
 	@Override
 	public Long getFrom() {
-		return fromFld.getLongValue();
+		return fromFld.getValue();
 	}
 
-	public CDiscreetNumberField getFromNumberFld() {
+	public LongField getFromNumberFld() {
 		return fromFld;
 	}
 
@@ -142,14 +141,14 @@ public class CDiscreetNumberIntervalLayout extends CustomField<LongInterval> imp
 	}
 
 	public void setValue(Long from, Long to, String operator) {
-		fromFld.setValue(NumberUtil.getInteger(from));
-		toFld.setValue(NumberUtil.getInteger(to));
+		fromFld.setValue(from);
+		toFld.setValue(to);
 		operatorSelect.setValue(new ComboItem(operator));
 	}
 
 	public void setValue(LongInterval interval) {
-		fromFld.setValue(NumberUtil.getInteger(interval.getFrom()));
-		toFld.setValue(NumberUtil.getInteger(interval.getTo()));
+		fromFld.setValue(interval.getFrom());
+		toFld.setValue(interval.getTo());
 		operatorSelect.setValue(new ComboItem(interval.getOperator()));
 	}
 

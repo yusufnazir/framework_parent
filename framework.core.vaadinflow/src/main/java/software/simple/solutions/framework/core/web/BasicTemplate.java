@@ -22,6 +22,7 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon;
 import com.github.appreciated.card.Card;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
@@ -77,6 +78,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SessionHolder;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
+import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 import software.simple.solutions.framework.core.web.components.Table;
 import software.simple.solutions.framework.core.web.routing.Routes;
 
@@ -577,6 +579,44 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		} catch (SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException e) {
 			throw ExceptionBuilder.FRAMEWORK_EXCEPTION.build(SystemMessageProperty.COULD_NOT_CREATE_VIEW, e);
 		}
+		formView.getPushEntityToFormSubject().subscribe(new Consumer<Object>() {
+
+			@Override
+			public void accept(Object source) throws Exception {
+				Menu menu = getViewDetail().getMenu();
+				View view = menu.getView();
+				Class<? extends Component> forName = null;
+				Route route = null;
+				if (view != null) {
+					String viewClassName = view.getViewClassName();
+					try {
+						forName = (Class<? extends Component>) Class.forName(viewClassName);
+						route = forName.getAnnotation(Route.class);
+						if (route != null) {
+							Map<String, String> qpm = new HashMap<String, String>();
+							qpm.put("id", ((MappedSuperClass) source).getId().toString());
+							QueryParameters simple = QueryParameters.simple(qpm);
+							if (location != null) {
+								location = new Location(location.getPath(), simple);
+								UI.getCurrent().getPage().getHistory().pushState(null, location);
+								String value = route.value();
+								UI.getCurrent().navigate(value, simple);
+							}
+						}
+					} catch (ClassNotFoundException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+		});
+		formView.getByPassValidationSubject().subscribe(new Consumer<Object>() {
+
+			@Override
+			public void accept(Object source) throws Exception {
+				doForSaveByPassValidation();
+			}
+		});
+
 		formView.setReferenceKeys(getReferenceKeys());
 		formView.setParentEntity(getParentEntity());
 		if (getParentReferenceKey() != null
@@ -730,7 +770,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		Boolean viewContentUpdated = getViewContentUpdated();
 		doForBack();
 
-		if(location!=null && location.getQueryParameters()!=null){
+		if (location != null && location.getQueryParameters() != null) {
 			Map<String, List<String>> parameters = location.getQueryParameters().getParameters();
 			QueryParameters queryParameters = new QueryParameters(parameters);
 			location = new Location(location.getPath());
@@ -866,35 +906,7 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
-				// resetErrorContent();
-				try {
-					Boolean valid = validate();
-					if (valid) {
-						formUpdate();
-						switch (getPopUpMode()) {
-						case POPUP: {
-							setPopUpEntity(entity);
-							// getPopUpWindow().setData(true);
-							// getPopUpWindow().close();
-						}
-							break;
-						case TAB:
-							break;
-						default:
-							break;
-						}
-						// NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
-					} else {
-						// Notification.show(formView.getValidationMessage(),
-						// Type.ERROR_MESSAGE);
-					}
-					actionBar.authorizeSave();
-				} catch (FrameworkException e) {
-					actionBar.authorizeSave();
-					logger.error(e.getMessage(), e);
-					updateErrorContent(e);
-					// new MessageWindowHandler(e);
-				}
+				handleForSaveClicked();
 			}
 		});
 
@@ -1276,16 +1288,20 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 		@Override
 		public void onComponentEvent(ComponentEvent<Button> event) {
+			setUpForm(selectedEntity);
+		}
+	}
+
+	public void setUpForm(Object selectedEntity) {
+		setSelectedEntity(selectedEntity);
+		try {
+			selectedEntity = superService.get(entityClass, ((MappedSuperClass) selectedEntity).getId());
 			setSelectedEntity(selectedEntity);
-			try {
-				selectedEntity = superService.get(entityClass, ((MappedSuperClass) selectedEntity).getId());
-				setSelectedEntity(selectedEntity);
-				switchToForm(selectedEntity, false);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-				updateErrorContent(e);
-				// new MessageWindowHandler(e);
-			}
+			switchToForm(selectedEntity, false);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			updateErrorContent(e);
+			// new MessageWindowHandler(e);
 		}
 	}
 
@@ -1583,6 +1599,43 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 
 	public BehaviorSubject<Object> getLookUpSelectedObserver() {
 		return lookUpSelectedObserver;
+	}
+
+	public void handleForSaveClicked() {
+		// resetErrorContent();
+		try {
+			Boolean valid = validate();
+			if (valid) {
+				doForSaveByPassValidation();
+			} else {
+				// Notification.show(formView.getValidationMessage(),
+				// Type.ERROR_MESSAGE);
+			}
+			actionBar.authorizeSave();
+		} catch (FrameworkException e) {
+			actionBar.authorizeSave();
+			logger.error(e.getMessage(), e);
+			updateErrorContent(e);
+			// new MessageWindowHandler(e);
+		}
+	}
+
+	public void doForSaveByPassValidation() throws FrameworkException {
+		formUpdate();
+		switch (getPopUpMode()) {
+		case POPUP: {
+			setPopUpEntity(entity);
+			// getPopUpWindow().setData(true);
+			// getPopUpWindow().close();
+		}
+			break;
+		case TAB:
+			break;
+		default:
+			break;
+		}
+		NotificationBuilder.buildSuccess(PropertyResolver.getPropertyValueByLocale(SystemProperty.UPDATE_SUCCESSFULL,
+				UI.getCurrent().getLocale()));
 	}
 
 }

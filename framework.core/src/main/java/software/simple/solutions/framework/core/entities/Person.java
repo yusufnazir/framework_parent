@@ -35,7 +35,12 @@ public class Person extends MappedSuperClass {
 
 	@FilterFieldProperty(fieldProperty = PersonProperty.ID)
 	@Id
-	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
+	@TableGenerator(
+			name = "table",
+			table = "sequences_",
+			pkColumnName = "PK_NAME",
+			valueColumnName = "PK_VALUE",
+			initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
 	private Long id;
@@ -68,6 +73,12 @@ public class Person extends MappedSuperClass {
 	@FilterFieldProperty(fieldProperty = PersonProperty.ACTIVE)
 	@Column(name = CxodeTables.PERSON.COLUMNS.ACTIVE)
 	private Boolean active;
+
+	@Column(name = "SOUNDEX_FIRST_NAME")
+	private String soundexFirstName;
+
+	@Column(name = "SOUNDEX_LAST_NAME")
+	private String soundexLastName;
 
 	@Transient
 	private Long age;
@@ -169,6 +180,41 @@ public class Person extends MappedSuperClass {
 		this.id = id;
 	}
 
+	public String getSoundexFirstName() {
+		return soundexFirstName;
+	}
+
+	public void setSoundexFirstName(String soundexFirstName) {
+		this.soundexFirstName = soundexFirstName;
+	}
+
+	public String getSoundexLastName() {
+		return soundexLastName;
+	}
+
+	public void setSoundexLastName(String soundexLastName) {
+		this.soundexLastName = soundexLastName;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
+		result = prime * result + ((age == null) ? 0 : age.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((middleName == null) ? 0 : middleName.hashCode());
+		result = prime * result + ((placeOfBirth == null) ? 0 : placeOfBirth.hashCode());
+		result = prime * result + ((soundexFirstName == null) ? 0 : soundexFirstName.hashCode());
+		result = prime * result + ((soundexLastName == null) ? 0 : soundexLastName.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -182,6 +228,11 @@ public class Person extends MappedSuperClass {
 			if (other.active != null)
 				return false;
 		} else if (!active.equals(other.active))
+			return false;
+		if (age == null) {
+			if (other.age != null)
+				return false;
+		} else if (!age.equals(other.age))
 			return false;
 		if (code == null) {
 			if (other.code != null)
@@ -222,6 +273,16 @@ public class Person extends MappedSuperClass {
 			if (other.placeOfBirth != null)
 				return false;
 		} else if (!placeOfBirth.equals(other.placeOfBirth))
+			return false;
+		if (soundexFirstName == null) {
+			if (other.soundexFirstName != null)
+				return false;
+		} else if (!soundexFirstName.equals(other.soundexFirstName))
+			return false;
+		if (soundexLastName == null) {
+			if (other.soundexLastName != null)
+				return false;
+		} else if (!soundexLastName.equals(other.soundexLastName))
 			return false;
 		return true;
 	}

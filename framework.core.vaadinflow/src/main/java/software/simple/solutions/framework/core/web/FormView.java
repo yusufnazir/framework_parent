@@ -13,6 +13,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.server.VaadinSession;
 
+import io.reactivex.subjects.PublishSubject;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -33,6 +34,8 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	private String validationMessage;
 	private Object parentEntity;
 	private Object selectedEntity;
+	private PublishSubject<Object> pushEntityToFormSubject;
+	private PublishSubject<Boolean> byPassValidationSubject;
 
 	public FormView() {
 		super();
@@ -41,6 +44,8 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 		referenceKeys = new ConcurrentHashMap<String, Object>();
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
 		validationMessage = "system.notif.validation.error";
+		pushEntityToFormSubject = PublishSubject.create();
+		byPassValidationSubject = PublishSubject.create();
 	}
 
 	@Override
@@ -161,4 +166,21 @@ public abstract class FormView extends VerticalLayout implements IView, IForm, I
 	public void setReferenceKeys(Map<String, Object> referenceKeys) {
 		this.referenceKeys = referenceKeys;
 	}
+
+	public PublishSubject<Object> getPushEntityToFormSubject() {
+		return pushEntityToFormSubject;
+	}
+
+	public void setPushEntityToFormSubject(PublishSubject<Object> pushEntityToFormSubject) {
+		this.pushEntityToFormSubject = pushEntityToFormSubject;
+	}
+
+	public PublishSubject<Boolean> getByPassValidationSubject() {
+		return byPassValidationSubject;
+	}
+
+	public void setByPassValidationSubject(PublishSubject<Boolean> byPassValidationSubject) {
+		this.byPassValidationSubject = byPassValidationSubject;
+	}
+
 }

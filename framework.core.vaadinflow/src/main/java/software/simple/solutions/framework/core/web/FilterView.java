@@ -13,6 +13,7 @@ import com.github.appreciated.css.grid.sizes.Length;
 import com.github.appreciated.css.grid.sizes.MinMax;
 import com.github.appreciated.css.grid.sizes.Repeat.RepeatMode;
 import com.github.appreciated.layout.FlexibleGridLayout;
+import com.github.appreciated.layout.GridLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -22,7 +23,7 @@ import com.vaadin.flow.server.VaadinSession;
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CDateTimeIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CDecimalNumberIntervalLayout;
-import software.simple.solutions.framework.core.components.filter.CDiscreetNumberIntervalLayout;
+import software.simple.solutions.framework.core.components.filter.LongIntervalField;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.constants.Constants;
@@ -50,7 +51,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 	protected SessionHolder sessionHolder;
 	private ViewDetail viewDetail;
 	private Object parentEntity;
-	private FlexibleGridLayout layout;
+//	private FlexibleGridLayout layout;
+	private GridLayout gridLayout;
 
 	public FilterView() {
 		referenceKeys = new HashMap<String, Object>();
@@ -60,16 +62,19 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		// .withTemplateColumns(new Flex(1),new Flex(1),new Flex(1))
 		// .withPadding(true).withSpacing(true)
 		// .withOverflow(GridLayoutComponent.Overflow.AUTO);
+		
+		gridLayout = new GridLayout();
 
-		layout = new FlexibleGridLayout()
-				.withColumns(RepeatMode.AUTO_FILL, new MinMax(new Length("250px"), new Flex(1)))
-				.withAutoRows(new Length("-1px")).withPadding(true).withSpacing(true)
-				.withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE).withOverflow(GridLayoutComponent.Overflow.AUTO);
+//		layout = new FlexibleGridLayout()
+//				.withColumns(RepeatMode.AUTO_FILL, new MinMax(new Length("250px"), new Flex(1)))
+//				.withAutoRows(new Length("-1px")).withPadding(true).withSpacing(true)
+//				.withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE).withOverflow(GridLayoutComponent.Overflow.AUTO);
 
-		layout.setSizeFull();
-		layout.setSpacing(true);
+		gridLayout.setSizeFull();
+		gridLayout.setSpacing(true);
+		gridLayout.setMargin(true);
 		setSizeFull();
-		add(layout);
+		add(gridLayout);
 	}
 
 	@Override
@@ -179,8 +184,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		try {
 			component = (Component) componentClass.newInstance();
 			setUpComponent(component, key);
-			layout.add(component);
-			layout.setRowAlign(component, RowAlign.STRETCH);
+			gridLayout.add(component);
+			gridLayout.setRowAlign(component, RowAlign.STRETCH);
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -208,7 +213,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 		} else if (component instanceof CPopupDateField || component instanceof CDateIntervalLayout
 				|| component instanceof CDateTimeIntervalLayout || component instanceof CDecimalNumberIntervalLayout
-				|| component instanceof CDiscreetNumberIntervalLayout) {
+				|| component instanceof LongIntervalField) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
 			// ((HasSize) component).setWidth("300px");

@@ -1,8 +1,10 @@
 package software.simple.solutions.framework.core.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 
 public interface IPersonService extends ISuperService {
 
@@ -11,5 +13,8 @@ public interface IPersonService extends ISuperService {
 	void updatePersonMobileNumber(Long personId, String mobileNumber) throws FrameworkException;
 
 	void createPersonImage(Person person) throws FrameworkException;
+
+	List<Person> listBySoundex(String firstName, String lastName, LocalDate dateOfBirth, Long genderId)
+			throws FrameworkException;
 
 }

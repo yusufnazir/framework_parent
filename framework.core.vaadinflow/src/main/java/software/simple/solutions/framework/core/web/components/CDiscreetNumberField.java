@@ -1,13 +1,12 @@
 package software.simple.solutions.framework.core.web.components;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.textfield.IntegerField;
 
 import software.simple.solutions.framework.core.util.NumberUtil;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortUtils;
 
-public class CDiscreetNumberField extends IntegerField implements Comparable<CDiscreetNumberField> {
+public class CDiscreetNumberField extends LongField implements Comparable<LongField> {
 
 	private static final long serialVersionUID = 4976419156408287054L;
 
@@ -17,7 +16,7 @@ public class CDiscreetNumberField extends IntegerField implements Comparable<CDi
 
 	public void setLongValue(Long value) {
 		if (value != null) {
-			setValue(value.intValue());
+			setValue(value);
 		}
 	}
 
@@ -34,7 +33,7 @@ public class CDiscreetNumberField extends IntegerField implements Comparable<CDi
 	}
 
 	@Override
-	public int compareTo(CDiscreetNumberField o) {
+	public int compareTo(LongField o) {
 		return SortUtils.compareTo(getValue(), o.getValue());
 	}
 

@@ -15,7 +15,10 @@ import com.github.appreciated.card.Card;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -32,11 +35,11 @@ import software.simple.solutions.framework.core.constants.ReferenceKey;
 import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.GenderProperty;
 import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IFileService;
+import software.simple.solutions.framework.core.service.facade.PersonServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
@@ -51,6 +54,8 @@ import software.simple.solutions.framework.core.web.components.CustomCheckBox;
 import software.simple.solutions.framework.core.web.components.Panel;
 import software.simple.solutions.framework.core.web.flow.MainView;
 import software.simple.solutions.framework.core.web.routing.Routes;
+import software.simple.solutions.framework.core.web.view.person.SoundexPersonGrid;
+import software.simple.solutions.framework.core.web.view.person.SoundexPersonSelected;
 
 @Route(value = Routes.PERSON_EDIT, layout = MainView.class)
 public class PersonForm extends FormView {
@@ -68,12 +73,10 @@ public class PersonForm extends FormView {
 	private GenderSelect genderFld;
 	private CustomCheckBox activeFld;
 	private HorizontalLayout mainLayout;
-
-	private List<ComboItem> genderListing;
 	private Person person;
-
 	private Panel personInfoCard;
-
+	private Panel personSoundexCard;
+	private SoundexPersonGrid soundexPersonGrid;
 	private VerticalLayout personMainLayout;
 
 	// @formatter:off
@@ -181,6 +184,10 @@ public class PersonForm extends FormView {
 		personInfoCard = createPersonLayout();
 		personInfoCard.setWidthFull();
 		personMainLayout.add(personInfoCard);
+
+		personSoundexCard = createPersonSoundexLayout();
+		personSoundexCard.setWidthFull();
+		personMainLayout.add(personSoundexCard);
 	}
 
 	private Panel createPersonLayout() {
@@ -204,6 +211,49 @@ public class PersonForm extends FormView {
 		activeFld = formGrid.add(CustomCheckBox.class, PersonProperty.ACTIVE);
 
 		return personInfoCard;
+	}
+
+	private Panel createPersonSoundexLayout() {
+		personSoundexCard = new Panel();
+		personSoundexCard.setHeaderKey(PersonProperty.PERSON_SOUNDEX);
+
+		Div content = new Div();
+		content.setMaxWidth("800px");
+		content.getElement().setProperty("innerHTML", PropertyResolver.getPropertyValueByLocale(
+				PersonProperty.PERSON_SOUNDEX_USE_THIS_EXPLANATION, UI.getCurrent().getLocale()));
+		content.getStyle().set("font-size", "var(--lumo-font-size-m)");
+		content.getStyle().set("color", "var(--lumo-primary-text-color)");
+		content.getStyle().set("padding", "15px");
+		personSoundexCard.add(content);
+
+		Button continueBtn = new Button();
+		continueBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		continueBtn.setText(
+				PropertyResolver.getPropertyValueByLocale(SystemProperty.BUTTON_CONTINUE, UI.getCurrent().getLocale()));
+		personSoundexCard.add(continueBtn);
+		continueBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = -8124155574758924440L;
+
+			@Override
+			public void onComponentEvent(ClickEvent<Button> event) {
+				getByPassValidationSubject().onNext(Boolean.TRUE);
+			}
+		});
+
+		soundexPersonGrid = new SoundexPersonGrid();
+		soundexPersonGrid.setMaxWidth("800px");
+		personSoundexCard.add(soundexPersonGrid);
+		personSoundexCard.setVisible(false);
+		soundexPersonGrid.setSoundexPersonSelected(new SoundexPersonSelected() {
+
+			@Override
+			public void selected(Person person) {
+				getPushEntityToFormSubject().onNext(person);
+			}
+		});
+
+		return personSoundexCard;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -260,6 +310,22 @@ public class PersonForm extends FormView {
 		lastNameFld.setRequiredIndicatorVisible(true);
 		dateOfBirthFld.setRequiredIndicatorVisible(true);
 		genderFld.setRequiredIndicatorVisible(true);
+	}
+
+	@Override
+	public boolean validate() throws FrameworkException {
+		if (person == null) {
+			personSoundexCard.setVisible(false);
+			PersonServiceFacade personServiceFacade = PersonServiceFacade.get(UI.getCurrent());
+			List<Person> persons = personServiceFacade.listBySoundex(firstNameFld.getValue(), lastNameFld.getValue(),
+					dateOfBirthFld.getValue(), genderFld.getItemId());
+			if (persons != null && !persons.isEmpty()) {
+				personSoundexCard.setVisible(true);
+				soundexPersonGrid.build(persons);
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -11,7 +11,7 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CDecimalNumberIntervalLayout;
-import software.simple.solutions.framework.core.components.filter.CDiscreetNumberIntervalLayout;
+import software.simple.solutions.framework.core.components.filter.LongIntervalField;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -111,8 +111,8 @@ public class CFormLayout extends FormLayout {
 			((CDecimalNumberIntervalLayout) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
 			((CStringIntervalLayout) component).setWidth("300px");
-		} else if (component instanceof CDiscreetNumberIntervalLayout) {
-			((CDiscreetNumberIntervalLayout) component).setWidth("300px");
+		} else if (component instanceof LongIntervalField) {
+			((LongIntervalField) component).setWidth("300px");
 		} else if (component instanceof ActiveSelect) {
 			((ActiveSelect) component).setWidth("150px");
 		} else if (component instanceof CCheckBox) {

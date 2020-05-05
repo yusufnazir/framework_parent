@@ -61,6 +61,7 @@ import software.simple.solutions.framework.core.web.components.CDiscreetNumberFi
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.CVerticalLayout;
 import software.simple.solutions.framework.core.web.components.ConfirmationDialog;
+import software.simple.solutions.framework.core.web.components.LongField;
 import software.simple.solutions.framework.core.web.components.NotificationBuilder;
 
 @CxodeConfigurationComponent(order = 1, captionKey = ConfigurationProperty.APPLICATION_CONFIGURATION)
@@ -77,8 +78,8 @@ public class SystemConfiguration extends CVerticalLayout {
 	private CCheckBox consolidateRoleFld;
 	private Upload upload;
 	private MemoryBuffer buffer;
-	private CDiscreetNumberField applicationLogoHeight;
-	private CDiscreetNumberField applicationLogoWidth;
+	private LongField applicationLogoHeight;
+	private LongField applicationLogoWidth;
 	private CCheckBox enableRegistrationFld;
 	private RoleSelect defaultUserRoleFld;
 	private CComboBox homeViewFld;
@@ -109,25 +110,29 @@ public class SystemConfiguration extends CVerticalLayout {
 		VerticalLayout logoImageLayout = add(VerticalLayout.class, ConfigurationProperty.APPLICATION_LOGO);
 		logoImageLayout.add(horizontalLayout);
 
-		applicationLogoHeight = add(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
-		applicationLogoHeight.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Integer>>() {
+		applicationLogoHeight = add(LongField.class, ConfigurationProperty.APPLICATION_LOGO_HEIGHT);
+		applicationLogoHeight.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Long>>() {
+
+			private static final long serialVersionUID = -7717540533350627622L;
 
 			@Override
-			public void valueChanged(ValueChangeEvent<Integer> event) {
+			public void valueChanged(ValueChangeEvent<Long> event) {
 				applicationLogoImage.setHeight("40px");
-				Long height = applicationLogoHeight.getLongValue();
+				Long height = applicationLogoHeight.getValue();
 				if (height != null && height.compareTo(0L) > 0) {
 					applicationLogoImage.setHeight(height + "px");
 				}
 			}
 		});
-		applicationLogoWidth = add(CDiscreetNumberField.class, ConfigurationProperty.APPLICATION_LOGO_WIDTH);
-		applicationLogoWidth.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Integer>>() {
+		applicationLogoWidth = add(LongField.class, ConfigurationProperty.APPLICATION_LOGO_WIDTH);
+		applicationLogoWidth.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Long>>() {
+
+			private static final long serialVersionUID = -6850874905981866291L;
 
 			@Override
-			public void valueChanged(ValueChangeEvent<Integer> event) {
+			public void valueChanged(ValueChangeEvent<Long> event) {
 				applicationLogoImage.setWidth("200px");
-				Long width = applicationLogoWidth.getLongValue();
+				Long width = applicationLogoWidth.getValue();
 				if (width != null && width.compareTo(0L) > 0) {
 					applicationLogoImage.setWidth(width + "px");
 				}
@@ -138,6 +143,8 @@ public class SystemConfiguration extends CVerticalLayout {
 		upload = new Upload(buffer);
 		logoImageLayout.add(upload);
 		upload.addStartedListener(new ComponentEventListener<StartedEvent>() {
+
+			private static final long serialVersionUID = -4672684896019399283L;
 
 			@Override
 			public void onComponentEvent(StartedEvent event) {
@@ -155,9 +162,13 @@ public class SystemConfiguration extends CVerticalLayout {
 		});
 		upload.addSucceededListener(new ComponentEventListener<SucceededEvent>() {
 
+			private static final long serialVersionUID = 2861092642251126763L;
+
 			@Override
 			public void onComponentEvent(SucceededEvent event) {
 				StreamResource streamResource = new StreamResource(buffer.getFileName(), new InputStreamFactory() {
+
+					private static final long serialVersionUID = 3770920867790873114L;
 
 					@Override
 					public InputStream createInputStream() {
@@ -171,6 +182,8 @@ public class SystemConfiguration extends CVerticalLayout {
 		persistBtn = add(CButton.class, SystemProperty.SYSTEM_BUTTON_SUBMIT);
 		persistBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
 		persistBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+			private static final long serialVersionUID = -5673489640580679529L;
 
 			@Override
 			public void onComponentEvent(ClickEvent<Button> event) {
@@ -345,6 +358,8 @@ public class SystemConfiguration extends CVerticalLayout {
 				StreamResource streamResource = new StreamResource(UUID.randomUUID().toString(),
 						new InputStreamFactory() {
 
+							private static final long serialVersionUID = -6742344212844201694L;
+
 							@Override
 							public InputStream createInputStream() {
 								try {
@@ -366,10 +381,10 @@ public class SystemConfiguration extends CVerticalLayout {
 				applicationLogoImage.setSrc(streamResource);
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO_HEIGHT:
-				applicationLogoHeight.setLongValue(configuration.getLong() == null ? 40L : configuration.getLong());
+				applicationLogoHeight.setValue(configuration.getLong() == null ? 40L : configuration.getLong());
 				break;
 			case ConfigurationProperty.APPLICATION_LOGO_WIDTH:
-				applicationLogoWidth.setLongValue(configuration.getLong() == null ? 200L : configuration.getLong());
+				applicationLogoWidth.setValue(configuration.getLong() == null ? 200L : configuration.getLong());
 				break;
 			default:
 				break;

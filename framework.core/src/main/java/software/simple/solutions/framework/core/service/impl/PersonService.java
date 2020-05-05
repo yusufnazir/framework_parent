@@ -1,7 +1,10 @@
 package software.simple.solutions.framework.core.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.codec.language.Soundex;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,9 @@ public class PersonService extends SuperService implements IPersonService {
 
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private IPersonRepository personRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -78,6 +84,9 @@ public class PersonService extends SuperService implements IPersonService {
 		person.setGender(get(Gender.class, vo.getGenderId()));
 		person.setDateOfBirth(vo.getDateOfBirth());
 		person.setActive(vo.getActive());
+		Soundex soundex = new Soundex();
+		person.setSoundexFirstName(soundex.soundex(vo.getFirstName()));
+		person.setSoundexLastName(soundex.soundex(vo.getLastName()));
 		person = saveOrUpdate(person, vo.isNew());
 		if (vo.isNew()) {
 			createPersonImage(person);
@@ -115,6 +124,19 @@ public class PersonService extends SuperService implements IPersonService {
 		personInformationVO.setPersonId(personId);
 		personInformationVO.setPrimaryContactNumber(mobileNumber);
 		personInformationService.updatePersonMobileNumber(personInformationVO);
+	}
+
+	@Override
+	public List<Person> listBySoundex(String firstName, String lastName, LocalDate dateOfBirth, Long genderId)
+			throws FrameworkException {
+		if (StringUtils.isBlank(firstName) || StringUtils.isBlank(lastName) || dateOfBirth == null
+				|| genderId == null) {
+			return new ArrayList<>();
+		}
+		Soundex soundex = new Soundex();
+		String soundexFirstName = soundex.soundex(firstName);
+		String soundexLastName = soundex.soundex(lastName);
+		return personRepository.listBySoundex(soundexFirstName, soundexLastName, dateOfBirth, genderId);
 	}
 
 }

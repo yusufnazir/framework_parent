@@ -1,5 +1,8 @@
 package software.simple.solutions.framework.core.service.facade;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.vaadin.flow.component.UI;
 
 import software.simple.solutions.framework.core.entities.Person;
@@ -31,6 +34,10 @@ public class PersonServiceFacade extends SuperServiceFacade<IPersonService> impl
 	@Override
 	public void createPersonImage(Person person) throws FrameworkException {
 		service.createPersonImage(person);
+	}
+
+	public List<Person> listBySoundex(String firstName, String lastName, LocalDate dateOfBirth, Long genderId) throws FrameworkException {
+		return service.listBySoundex(firstName, lastName, dateOfBirth, genderId);
 	}
 
 }

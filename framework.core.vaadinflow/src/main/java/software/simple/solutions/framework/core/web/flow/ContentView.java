@@ -239,8 +239,8 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 				MenuItem userProfileMenu = userMenuBar.addItem(imageField);
 				userProfileMenu.getElement().getStyle().set("background", "none");
 
-				Button logoutBtn = new Button(PropertyResolver
-						.getPropertyValueByLocale(SystemProperty.BUTTON_LOGOUT, UI.getCurrent().getLocale()));
+				Button logoutBtn = new Button(PropertyResolver.getPropertyValueByLocale(SystemProperty.BUTTON_LOGOUT,
+						UI.getCurrent().getLocale()));
 				userProfileMenu.getSubMenu().add(logoutBtn);
 				logoutBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
@@ -330,8 +330,25 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 		menuSelectedObserver.subscribe(new Consumer<Menu>() {
 
 			@Override
-			public void accept(Menu t) throws Exception {
-
+			public void accept(Menu menu) throws Exception {
+				View view = menu.getView();
+				Class<? extends Component> forName = null;
+				Route route = null;
+				if (view != null) {
+					String viewClassName = view.getViewClassName();
+					try {
+						forName = (Class<? extends Component>) Class.forName(viewClassName);
+						route = forName.getAnnotation(Route.class);
+						if (route != null) {
+							String value = route.value();
+							sessionHolder.addRouteMenu(value, menu.getId());
+							resetTabs();
+							UI.getCurrent().navigate(value);
+						}
+					} catch (ClassNotFoundException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
 			}
 		});
 

@@ -13,6 +13,9 @@ public class PersonProperty {
 	public static final String IMAGE = "model.person.image";
 	public static final String GENDER = "model.person.gender";
 	public static final String AGE = "model.person.age";
+	public static final String PERSON_SOUNDEX = "entity.person.label.soundex";
+	public static final String PERSON_SOUNDEX_USE_THIS = "entity.person.label.soundex.use.this";
+	public static final String PERSON_SOUNDEX_USE_THIS_EXPLANATION = "entity.person.label.soundex.use.this.explanation";
 	
 	public static final String PERSONAL_INFORMATION_TAB = "tab.personal.information";
 	public static final String CONTACT_INFORMATION_TAB = "tab.person.contact.information";

@@ -6,11 +6,12 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.util.SortUtils;
 import software.simple.solutions.framework.core.web.IField;
 
-public class CMultiComboBox extends MultiselectComboBox<String> implements IField, Comparable<CMultiComboBox> {
+public class CMultiComboBox<T> extends MultiselectComboBox<T> implements IField, Comparable<CMultiComboBox<T>> {
 	private static final long serialVersionUID = -6297946915884259838L;
 	private boolean isThisRequired = false;
 
 	public CMultiComboBox() {
+		super();
 	}
 
 	public void setRequired() {

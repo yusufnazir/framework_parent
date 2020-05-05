@@ -16,6 +16,7 @@ public class ActiveSelect extends CComboBox {
 	public static final Boolean IN_ACTIVE = false;
 
 	public ActiveSelect() {
+		getElement().setAttribute("theme", "small");
 		List<ComboItem> comboItems = new ArrayList<ComboItem>();
 		comboItems.add(new ComboItem(ACTIVE,
 				PropertyResolver.getPropertyValueByLocale("system.item.status.active", UI.getCurrent().getLocale())));
