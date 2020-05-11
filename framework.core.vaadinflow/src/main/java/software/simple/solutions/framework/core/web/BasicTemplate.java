@@ -731,6 +731,9 @@ public abstract class BasicTemplate<T> extends AbstractBaseView implements GridT
 		filterPanel.setHeight("-1px");
 		filterPanel.setWidth("100%");
 		filterPanel.add(filterView);
+		filterPanel.getElement().getStyle().set("overflow", "auto");
+		filterPanel.getElement().getStyle().set("box-shadow",
+				"var(--lumo-box-shadow-s, var(--material-shadow-elevation-2dp))");
 		// filterPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SystemProperty.SEARCH_FILTER,
 		// UI.getCurrent().getLocale()));
 		filterAndResultLayout.add(filterPanel);

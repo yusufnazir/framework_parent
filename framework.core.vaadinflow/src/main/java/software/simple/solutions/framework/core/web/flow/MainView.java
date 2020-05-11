@@ -25,14 +25,15 @@ import software.simple.solutions.framework.core.util.SessionHolder;
 @CssImport(value = "./styles/my-custom-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport(value = "./styles/my-custom-menu-bar.css", themeFor = "vaadin-menu-bar")
 @CssImport(value = "./styles/my-custom-menu-bar-button.css", themeFor = "vaadin-menu-bar-button")
-//@CssImport(value = "./styles/my-custom-combo-box-styles.css", themeFor = "vaadin-combo-box")
+@CssImport(value = "./styles/my-custom-combo-box-styles.css", themeFor = "vaadin-combo-box")
+@CssImport(value = "./styles/my-custom-date-picker-styles.css", themeFor = "vaadin-date-picker")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 @CssImport(value = "./styles/my-custom-vaadin-sub-tab.css")
 public class MainView extends Composite<VerticalLayout> implements RouterLayout {
 
 	private static final long serialVersionUID = 8111279702273562027L;
 
-		// @formatter:off
+	// @formatter:off
 		private String styles = ".applayout-profile-image { "
 		        + "width: 50px;"
 		        + "height: 50px;"
@@ -44,16 +45,16 @@ public class MainView extends Composite<VerticalLayout> implements RouterLayout 
 		        + "vaadin-custom-field::before {"
 		        	+ "content: none;"
 		        + "}"
-//		        + ""
-//		        + "vaadin-email-field::before {"
-//		        	+ "content: none;"
-//		        + "}"
-//		        + ""
-//		        + "vaadin-text-field::before {"
-//		        	+ "content: none;"
-//		        + "}"
 		        + ""
-		        + ".my-custom-label {"
+		        + "vaadin-email-field::before {"
+		        	+ "content: none;"
+		        + "}"
+		        + ""
+		        + "vaadin-text-field::before {"
+		        	+ "content: none;"
+		        + "}"
+		        + ""
+		        + ".my-custom-caption-label {"
 			        + "align-self: flex-start;"
 			        + "color: var(--lumo-secondary-text-color);"
 			        + "font-weight: 500;"
@@ -70,6 +71,21 @@ public class MainView extends Composite<VerticalLayout> implements RouterLayout 
 			        + "box-sizing: border-box;"
 			        + "padding-top: var(--lumo-space-m);"
 		        + "}"
+		        + ".my-custom-caption-label::after {"
+		        	+ "content: var(--lumo-required-field-indicator, \"•\");"
+	        		+ "transition: opacity 0.2s;"
+	        		+ "opacity: 0;"
+	        		+ "color: var(--lumo-primary-text-color);"
+	        		+ "position: relative;"
+	        		+ "padding-right: 1em;"
+	        		+ "width: 1em;"
+	        		+ "text-align: center;"
+	        		+ "display: inline-block;"
+	        		+ "}"
+		        + ""
+		        + ".my-custom-caption-label-required::after {"
+	        		+ "opacity: 1;"
+	        		+ "}"
 		        + ""
 		        ;
 		// @formatter:on

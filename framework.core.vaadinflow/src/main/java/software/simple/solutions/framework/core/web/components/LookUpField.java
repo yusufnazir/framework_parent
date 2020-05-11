@@ -7,13 +7,18 @@ import org.apache.logging.log4j.Logger;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.HasValue.ValueChangeEvent;
+import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.GeneratedVaadinDialog;
 import com.vaadin.flow.component.dialog.GeneratedVaadinDialog.OpenedChangeEvent;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
@@ -37,8 +42,11 @@ import software.simple.solutions.framework.core.web.AbstractBaseView;
 import software.simple.solutions.framework.core.web.SimpleSolutionsMenuItem;
 import software.simple.solutions.framework.core.web.ViewUtil;
 import software.simple.solutions.framework.core.web.lookup.LookUpHolder;
+import software.simple.solutions.framework.core.web.lookup.ValueHolderField;
 
-public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> {
+public class LookUpField<E, T extends IMappedSuperClass> extends Composite<Div> implements HasSize
+// extends CustomField<T>
+{
 
 	private static final long serialVersionUID = -6953072556831688132L;
 
@@ -60,28 +68,39 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 	private CTextField textField;
 	private Map<String, Object> referenceKeys;
 	private boolean popUpMode = false;
+	private Label caption;
+	private ValueHolderField<T> valueHolderField;
+
+	private HorizontalLayout mainLayout;
 
 	public LookUpField() {
 		super();
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
-		getElement().getStyle().set("--lumo-text-field-size", "0");
+		getElement().getStyle().set("--lumo-text-field-size", "var(--lumo-size-s)");
 		getElement().getStyle().set("display", "inline");
-		HorizontalLayout horizontalLayout = new HorizontalLayout();
-		horizontalLayout.setSpacing(false);
-		add(horizontalLayout);
+
+		caption = new Label();
+		caption.addClassName("my-custom-caption-label");
+		valueHolderField = new ValueHolderField<>();
+
+		mainLayout = new HorizontalLayout();
+		mainLayout.setSpacing(false);
+
+		getContent().add(caption, mainLayout);
 
 		textField = new CTextField();
 		textField.setReadOnly(true);
 		textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-		textField.getStyle().set("--lumo-text-field-size", "1.4rem");
-		horizontalLayout.add(textField);
+		textField.getStyle().set("--lumo-text-field-size", "var(--lumo-size-s)");
+		mainLayout.add(textField);
 		textField.setWidth("100%");
 
 		lookUpBtn = new CButton();
 		lookUpBtn.setIcon(new Icon(VaadinIcon.ELLIPSIS_DOTS_H));
 		lookUpBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
 		lookUpBtn.getStyle().set("border", "1px solid");
-		horizontalLayout.add(lookUpBtn);
+		lookUpBtn.getStyle().set("--lumo-button-size", "var(--lumo-size-s)");
+		mainLayout.add(lookUpBtn);
 		lookUpBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
 			private static final long serialVersionUID = 6165251315142630780L;
@@ -142,8 +161,9 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		anchorBtn.setIcon(new Icon(VaadinIcon.LINK));
 		anchorBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
 		anchorBtn.getStyle().set("border", "1px solid");
+		anchorBtn.getStyle().set("--lumo-button-size", "var(--lumo-size-s)");
 		anchorBtn.setVisible(false);
-		horizontalLayout.add(anchorBtn);
+		mainLayout.add(anchorBtn);
 		anchorBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
 			private static final long serialVersionUID = 7585289128374363839L;
@@ -171,7 +191,8 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		clearUpBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
 		clearUpBtn.setIcon(new Icon(VaadinIcon.CLOSE));
 		clearUpBtn.getStyle().set("border", "1px solid");
-		horizontalLayout.add(clearUpBtn);
+		clearUpBtn.getStyle().set("--lumo-button-size", "var(--lumo-size-s)");
+		mainLayout.add(clearUpBtn);
 		clearUpBtn.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 
 			private static final long serialVersionUID = 7585289128374363839L;
@@ -216,6 +237,21 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		}
 	}
 
+	public void setValue(T value) {
+		entity = value;
+		if (value == null) {
+			valueHolderField.setValue(value);
+			textField.setValue("...");
+			clearUpBtn.setVisible(false);
+			anchorBtn.setVisible(false);
+		} else {
+			valueHolderField.setValue(value);
+			textField.setValue(((IMappedSuperClass) value).getCaption());
+			clearUpBtn.setVisible(true);
+			anchorBtn.setVisible(true);
+		}
+	}
+
 	public void setViewClass(Class<?> viewClass) {
 		this.viewClass = viewClass;
 	}
@@ -248,22 +284,20 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 	}
 
 	public void setCaptionByKey(String key) {
-		setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
+		caption.setText(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
 	}
 
-	@Override
 	public void clear() {
 		if (entity == null) {
 			setValue(null);
 		}
 	}
 
-	@Override
 	public void setEnabled(boolean enabled) {
 		clearUpBtn.setEnabled(enabled);
 		lookUpBtn.setEnabled(enabled);
 	}
-	
+
 	public void disableForParent() {
 		setEnabled(false);
 		anchorBtn.setEnabled(false);
@@ -285,23 +319,40 @@ public class LookUpField<E, T extends IMappedSuperClass> extends CustomField<T> 
 		this.popUpMode = popUpMode;
 	}
 
-	@Override
-	protected T generateModelValue() {
-		return (T) entity;
+	public void addValueChangeListener(ValueChangeListener<ValueChangeEvent<T>> valueChangeListener) {
+		valueHolderField.addValueChangeListener(valueChangeListener);
 	}
 
 	@Override
-	protected void setPresentationValue(T value) {
-		entity = value;
-		if (value == null) {
-			textField.setValue("...");
-			clearUpBtn.setVisible(false);
-			anchorBtn.setVisible(false);
+	public void setWidth(String width) {
+		mainLayout.setWidth(width);
+	}
+
+	public void setRequiredIndicatorVisible(boolean b) {
+		if (b) {
+			caption.addClassName("my-custom-caption-label-required");
 		} else {
-			textField.setValue(((IMappedSuperClass) value).getCaption());
-			clearUpBtn.setVisible(true);
-			anchorBtn.setVisible(true);
+			caption.removeClassName("my-custom-caption-label-required");
 		}
 	}
+
+	// @Override
+	// protected T generateModelValue() {
+	// return (T) entity;
+	// }
+
+	// @Override
+	// protected void setPresentationValue(T value) {
+	// entity = value;
+	// if (value == null) {
+	// textField.setValue("...");
+	// clearUpBtn.setVisible(false);
+	// anchorBtn.setVisible(false);
+	// } else {
+	// textField.setValue(((IMappedSuperClass) value).getCaption());
+	// clearUpBtn.setVisible(true);
+	// anchorBtn.setVisible(true);
+	// }
+	// }
 
 }

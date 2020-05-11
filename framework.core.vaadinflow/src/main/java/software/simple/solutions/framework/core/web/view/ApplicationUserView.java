@@ -335,6 +335,8 @@ public class ApplicationUserView extends BasicTemplate<ApplicationUser> {
 			personInfoLayout.setVisible(false);
 			personLookUpFld.addValueChangeListener(new ValueChangeListener<ValueChangeEvent<Person>>() {
 
+				private static final long serialVersionUID = 3798217052004909083L;
+
 				@Override
 				public void valueChanged(ValueChangeEvent<Person> event) {
 					person = event.getValue();

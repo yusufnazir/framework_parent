@@ -13,5 +13,4 @@ public class PersonLookUpField extends LookUpField<Long, Person> {
 		setEntityClass(Person.class);
 		setViewClass(PersonView.class);
 	}
-
 }

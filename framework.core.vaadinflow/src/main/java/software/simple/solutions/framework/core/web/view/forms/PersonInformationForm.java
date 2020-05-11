@@ -1,11 +1,13 @@
 package software.simple.solutions.framework.core.web.view.forms;
 
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 
 import software.simple.solutions.framework.core.components.select.CountrySelect;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.entities.PersonInformation;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.PersonEmergencyContactProperty;
 import software.simple.solutions.framework.core.properties.PersonInformationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.valueobjects.PersonInformationVO;
@@ -51,9 +53,8 @@ public class PersonInformationForm extends FormView {
 		formGrid = new CFormLayout();
 		formCard.add(formGrid);
 		formCard.setMaxWidth("800px");
-
+		
 		personLookUpField = formGrid.add(PersonLookUpField.class, PersonInformationProperty.PERSON);
-
 		primaryEmailFld = formGrid.add(CEmailField.class, PersonInformationProperty.PRIMARY_EMAIL);
 		secondaryEmailFld = formGrid.add(CEmailField.class, PersonInformationProperty.SECONDARY_EMAIL);
 		primaryContactNumberFld = formGrid.add(CTextField.class, PersonInformationProperty.PRIMARY_CONTACT_NUMBER);

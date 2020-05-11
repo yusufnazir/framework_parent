@@ -1,5 +1,6 @@
 package software.simple.solutions.framework.core.web.view.forms;
 
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 
 import software.simple.solutions.framework.core.components.select.RelationTypeSelect;
@@ -45,7 +46,13 @@ public class PersonEmergencyContactForm extends FormView {
 		formCard.add(formGrid);
 		formCard.setMaxWidth("400px");
 
-		personLookUpField = formGrid.add(PersonLookUpField.class, PersonEmergencyContactProperty.PERSON);
+		personLookUpField = new PersonLookUpField();
+		personLookUpField.setCaptionByKey(PersonEmergencyContactProperty.PERSON);
+		
+		HorizontalLayout horizontalLayout = formGrid.add(HorizontalLayout.class, PersonEmergencyContactProperty.PERSON);
+		horizontalLayout.add(personLookUpField);
+		horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.END);
+		horizontalLayout.setVerticalComponentAlignment(Alignment.END, personLookUpField);
 		personLookUpField.setRequiredIndicatorVisible(true);
 		nameFld = formGrid.add(CTextField.class, PersonEmergencyContactProperty.NAME);
 		nameFld.setRequiredIndicatorVisible(true);

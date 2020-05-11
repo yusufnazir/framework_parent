@@ -40,6 +40,7 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.constants.MenuType;
 import software.simple.solutions.framework.core.constants.ReferenceKey;
+import software.simple.solutions.framework.core.entities.IMappedSuperClass;
 import software.simple.solutions.framework.core.entities.Menu;
 import software.simple.solutions.framework.core.entities.View;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -444,7 +445,7 @@ public class ContentView extends VerticalLayout implements BeforeEnterObserver {
 						createdSubMenusTabs.remove(tab);
 						lookUpMenusTabMap.remove(tab);
 						contentLayout.remove(view);
-						lookUpHolder.getLookUpField().setValue(selectedEntity);
+						lookUpHolder.getLookUpField().setValue((IMappedSuperClass) selectedEntity);
 					}
 				});
 			}

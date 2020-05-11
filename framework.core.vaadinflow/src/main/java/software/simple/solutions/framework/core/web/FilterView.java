@@ -1,19 +1,15 @@
 package software.simple.solutions.framework.core.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.appreciated.css.grid.GridLayoutComponent;
-import com.github.appreciated.css.grid.GridLayoutComponent.RowAlign;
-import com.github.appreciated.css.grid.sizes.Flex;
-import com.github.appreciated.css.grid.sizes.Length;
-import com.github.appreciated.css.grid.sizes.MinMax;
-import com.github.appreciated.css.grid.sizes.Repeat.RepeatMode;
-import com.github.appreciated.layout.FlexibleGridLayout;
-import com.github.appreciated.layout.GridLayout;
+import com.github.appreciated.css.grid.interfaces.TemplateRowsAndColsUnit;
+import com.github.appreciated.css.grid.sizes.Auto;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -23,8 +19,8 @@ import com.vaadin.flow.server.VaadinSession;
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CDateTimeIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CDecimalNumberIntervalLayout;
-import software.simple.solutions.framework.core.components.filter.LongIntervalField;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
+import software.simple.solutions.framework.core.components.filter.LongIntervalField;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.ExceptionBuilder;
@@ -41,6 +37,7 @@ import software.simple.solutions.framework.core.web.components.CSplitDateField;
 import software.simple.solutions.framework.core.web.components.CTextArea;
 import software.simple.solutions.framework.core.web.components.CTextField;
 import software.simple.solutions.framework.core.web.components.LookUpField;
+import software.simple.solutions.framework.core.web.components.Table;
 
 public abstract class FilterView extends HorizontalLayout implements Filterable, Eraseable, Referenceable, IView {
 
@@ -51,10 +48,12 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 	protected SessionHolder sessionHolder;
 	private ViewDetail viewDetail;
 	private Object parentEntity;
-//	private FlexibleGridLayout layout;
-	private GridLayout gridLayout;
+	// private FlexibleGridLayout layout;
+	// private GridLayout gridLayout;
+	private Table gridLayout;
 
 	public FilterView() {
+		getElement().getStyle().set("overflow", "auto");
 		referenceKeys = new HashMap<String, Object>();
 		sessionHolder = (SessionHolder) VaadinSession.getCurrent().getAttribute(Constants.SESSION_HOLDER);
 		setSpacing(true);
@@ -62,17 +61,19 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		// .withTemplateColumns(new Flex(1),new Flex(1),new Flex(1))
 		// .withPadding(true).withSpacing(true)
 		// .withOverflow(GridLayoutComponent.Overflow.AUTO);
-		
-		gridLayout = new GridLayout();
 
-//		layout = new FlexibleGridLayout()
-//				.withColumns(RepeatMode.AUTO_FILL, new MinMax(new Length("250px"), new Flex(1)))
-//				.withAutoRows(new Length("-1px")).withPadding(true).withSpacing(true)
-//				.withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE).withOverflow(GridLayoutComponent.Overflow.AUTO);
+		gridLayout = new Table(4, 4);
+		// gridLayout = new GridLayout();
 
-		gridLayout.setSizeFull();
-		gridLayout.setSpacing(true);
-		gridLayout.setMargin(true);
+		// layout = new FlexibleGridLayout()
+		// .withColumns(RepeatMode.AUTO_FILL, new MinMax(new Length("250px"),
+		// new Flex(1)))
+		// .withAutoRows(new Length("-1px")).withPadding(true).withSpacing(true)
+		// .withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE).withOverflow(GridLayoutComponent.Overflow.AUTO);
+
+		gridLayout.setSizeUndefined();
+		// gridLayout.setSpacing(true);
+		// gridLayout.setMargin(true);
 		setSizeFull();
 		add(gridLayout);
 	}
@@ -184,8 +185,8 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		try {
 			component = (Component) componentClass.newInstance();
 			setUpComponent(component, key);
-			gridLayout.add(component);
-			gridLayout.setRowAlign(component, RowAlign.STRETCH);
+			gridLayout.add(component, column, row);
+			// gridLayout.setRowAlign(component, RowAlign.STRETCH);
 		} catch (InstantiationException | IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -195,7 +196,7 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 
 	private void setUpComponent(Component component, String key) {
 		if (component instanceof LookUpField) {
-			((HasSize) component).setWidth("-1px");
+			((HasSize) component).setWidth("300px");
 			((LookUpField) component).setCaptionByKey(key);
 			((LookUpField) component).setReferenceKeys(referenceKeys);
 		} else if (component instanceof CTextField) {
@@ -208,18 +209,25 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		} else if (component instanceof CDiscreetNumberField) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CComboBox) {
-			// ((HasSize) component).setWidth("300px");
+			((HasSize) component).setWidth("300px");
 			((CComboBox) component)
 					.setLabel(PropertyResolver.getPropertyValueByLocale(key, UI.getCurrent().getLocale()));
-		} else if (component instanceof CPopupDateField || component instanceof CDateIntervalLayout
-				|| component instanceof CDateTimeIntervalLayout || component instanceof CDecimalNumberIntervalLayout
-				|| component instanceof LongIntervalField) {
+		} else if (component instanceof LongIntervalField) {
+			((HasSize) component).setWidth("300px");
+			((LongIntervalField) component).setCaptionByKey(key);
+		} else if (component instanceof CDateTimeIntervalLayout) {
+			((HasSize) component).setWidth("300px");
+			((CDateTimeIntervalLayout) component).setCaptionByKey(key);
+		} else if (component instanceof CDateIntervalLayout) {
+			((HasSize) component).setWidth("300px");
+			((CDateIntervalLayout) component).setCaptionByKey(key);
+		} else if (component instanceof CPopupDateField || component instanceof CDecimalNumberIntervalLayout) {
 			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CStringIntervalLayout) {
-			// ((HasSize) component).setWidth("300px");
+			((HasSize) component).setWidth("300px");
 			((CStringIntervalLayout) component).setCaptionByKey(key);
 		} else if (component instanceof ActiveSelect) {
-			((HasSize) component).setWidth("150px");
+			((HasSize) component).setWidth("300px");
 		} else if (component instanceof CCheckBox) {
 			((HasSize) component).setWidth("-1px");
 		} else if (component instanceof CSplitDateField) {
@@ -248,25 +256,14 @@ public abstract class FilterView extends HorizontalLayout implements Filterable,
 		this.parentEntity = parentEntity;
 	}
 
-	public class FlexibleGridLayoutExample extends HorizontalLayout {
-		public FlexibleGridLayoutExample() {
-			FlexibleGridLayout layout = new FlexibleGridLayout().withColumns(RepeatMode.AUTO_FILL, new Flex(1))
-					// .withAutoRows(new Flex(1))
-					// .withItems(
-					// new ExampleCard(), new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard(), new ExampleCard(),
-					// new ExampleCard(), new ExampleCard()
-					// )
-					.withPadding(true).withSpacing(true).withAutoFlow(GridLayoutComponent.AutoFlow.ROW_DENSE)
-					.withOverflow(GridLayoutComponent.Overflow.AUTO);
-			layout.setSizeFull();
-			setSizeFull();
-			add(layout);
+	public void setColumns(int columns) {
+		List<TemplateRowsAndColsUnit> lengths = new ArrayList<TemplateRowsAndColsUnit>();
+		for (int i = 0; i < columns; i++) {
+			// lengths.add(new Length("250px"));
+			lengths.add(new Auto());
 		}
+		// gridLayout.setTemplateColumns(lengths.toArray(new
+		// TemplateRowsAndColsUnit[lengths.size()]));
 	}
 
 }

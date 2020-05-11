@@ -67,11 +67,11 @@ public class CStringIntervalLayout extends CustomField<StringInterval> implement
 	}
 
 	private HorizontalLayout buildMainLayout() {
-		getElement().getStyle().set("display", "inline");
+//		getElement().getStyle().set("display", "inline");
 		getElement().getStyle().set("--lumo-text-field-size", "var(--lumo-size-s)");
 
 		mainLayout = new HorizontalLayout();
-		mainLayout.setWidth("100%");
+		mainLayout.setWidth("300px");
 		mainLayout.setHeight("-1px");
 		mainLayout.setMargin(false);
 		mainLayout.setSpacing(true);

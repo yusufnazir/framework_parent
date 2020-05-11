@@ -171,6 +171,7 @@ public class ApplicationUserForm extends FormView {
 
 		// emailFld
 		emailFld = userInfoLayout.add(CEmailField.class, ApplicationUserProperty.EMAIL);
+		emailFld.setRequiredIndicatorVisible(true);
 		emailFld.setReadOnly(true);
 		// emailFld.setWidth("250px");
 
